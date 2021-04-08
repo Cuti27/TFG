@@ -1,0 +1,83 @@
+<template>
+  <div class="dayList">
+    <slot></slot>
+    <div v-for="(day, index) in days" :key="index" @click.prevent="togleValue(index)">
+      <input :id="day+'-'+index" type="radio" :checked="daysValue[index]">
+      <label :class="{ blanco: !daysValue[index]}" :for="day+'-'+index">{{day}}</label>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    // Creamos un array para comprobar el día
+    return { days: ["L", "M", "X", "J", "V", "S", "D"] };
+  },
+  methods: {
+    // Llamamos a la actualización del indice
+    togleValue(index){
+      // this.daysValue[index] = !this.daysValue[index];
+      this.$store.dispatch("updateDays",index);
+    }
+  },
+  // Recuperamos el valor
+  computed: {
+    daysValue(){
+      //console.log(this.$store.getters.programDays)
+      return this.$store.getters.programDays;
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+@import "src/css/colorSchema.scss";
+
+input, label {
+  background: $ligthGreen;
+  color: #fff;
+}
+
+label:hover{
+  background: $darkGreen;
+}
+
+input{
+  display: none;
+}
+
+label {
+  display: inline-block;
+  width: 50px;
+  border-radius: 50%;
+  height: 50px;
+  text-align: center;
+  border: 2px;
+  box-shadow: 2px 2px 4px $darkGreen;
+  margin: 5px;
+  line-height: 50px;
+  cursor: pointer
+}
+
+label.blanco {
+  background-color: white;
+  color: black;
+  opacity: 0.3;
+
+  
+}
+
+label.blanco:hover{
+    opacity: 0.8;
+  }
+
+.dayList{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-wrap: 1;
+}
+
+</style>
