@@ -34,6 +34,7 @@ input,
 label {
   background: $ligthGreen;
   color: #fff;
+  user-select: none;
 }
 
 label:hover {

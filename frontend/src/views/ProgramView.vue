@@ -170,8 +170,10 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  background-color: blue;
-  color: white;
+ box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  padding: 20px;
+  margin: 30px;
+  margin-bottom: 40px;
 }
 
 .form {
@@ -182,7 +184,6 @@ export default {
     "activo fuentes"
     "dias fuentes"
     "hora hora"
-    ". secciones"
     "duracion secciones"
     "postriego secciones"
     "fertirrigacion fertirrigacion";
@@ -215,6 +216,16 @@ export default {
   .hora {
     grid-area: hora;
   }
+
+  .duracion, .activo, .dias, .hora, .fuente, .secciones,
+  .postriego, .fertirrigacion{
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 10px 15px;
+  }
+
+  
 
   .hora,
   .activo,
@@ -315,5 +326,6 @@ export default {
       grid-column-start: col-start -2;
     }
   }
+
 }
 </style>

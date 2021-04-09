@@ -59,6 +59,14 @@
   font-family: Helvetica, Arial, sans-serif;
 }
 
+@media (max-width: 768px) {
+  .modal-container {
+    width: 80vw;
+    margin: 0px auto;
+    padding: 10px 15px;
+  }
+}
+
 .modal-header h3 {
   margin-top: 0;
   color: #42b983;
