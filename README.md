@@ -31,6 +31,7 @@ La ejecución se realiza moviendose a la carpeta frontend y realizando ```npm ru
 - Realizar la futura conexión con la API
 - Terminar de ver el funcionamiento correcto de Vue-router y bootstrap-vue
 - Realizar el testing de la aplicación
+- Seguir mirando el tema de transiciones
 
 ## Backend conexión con la base de datos y API mediante **Laravel** PHP
 

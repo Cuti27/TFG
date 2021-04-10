@@ -12,6 +12,7 @@
     <hr />
     <day-selector :value="dias"><span>Seleccione un día válido:</span></day-selector>
     <hr />.
+    <toggle></toggle>
   </div>
 </template>
 
@@ -19,11 +20,13 @@
 import List from "@/components/List.vue";
 // import Programa from "./views/Programa.vue";
 import daySelector from "@/components/DaySelector";
+import Toggle from "@/components/Toggle"
 export default {
   components: {
     List,
     // Programa,
     daySelector,
+    Toggle
   },
   data() {
     return {

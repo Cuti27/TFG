@@ -6,29 +6,19 @@
     <div class="form">
       <div class="activo">
         <label for="Activo">Programa: </label>
-        <input
-          name="Activo"
-          type="checkbox"
-          class="toggle"
-          v-model="programa"
-        />
+        <toggle v-model="programa"></toggle>
         <label for="Activo">{{ isActive }}</label>
       </div>
       <div class="dias">
         <label for="Dias">Dias:</label>
-        <input name="Dias" type="checkbox" class="toggle" v-model="dias" />
+        <toggle v-model="dias"></toggle>
         <label for="Dias">{{ isManualDay }}</label>
         <day-selector></day-selector>
       </div>
 
       <div class="hora">
         <label for="Horas">Hora de inicio:</label>
-        <input
-          name="Horas"
-          type="checkbox"
-          class="toggle"
-          v-model="horaInicio"
-        />
+        <toggle v-model="horaInicio"></toggle>
         <label for="Horas">{{ isTempHoraInicio }}</label>
         <div v-show="!horaInicio">
           <button id="show-modal" @click="showModal = true">Show Modal</button>
@@ -37,6 +27,11 @@
             <h3 slot="header">Seleccione un programa de la lista</h3>
             <div slot='body'>
               <list :data="programas"></list>
+            </div>
+
+            <div slot="footer">
+              El programa empezará tras el programa escogido
+             
             </div>
           </modal>
         </div>
@@ -113,6 +108,8 @@ import sectionSelector from "@/components/SectionSelector";
 import numberSelector from "@/components/NumberSelector";
 import Modal from "@/components/Modal";
 import List from "@/components/List";
+import Toggle from "@/components/Toggle"
+
 
 export default {
   components: {
@@ -121,7 +118,8 @@ export default {
     sectionSelector,
     numberSelector,
     Modal,
-    List
+    List,
+    Toggle
   },
   data() {
     return {
@@ -253,48 +251,6 @@ export default {
 
   .fertirrigacion {
     grid-area: fertirrigacion;
-  }
-
-  input[type="checkbox"] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    -webkit-tap-highlight-color: transparent;
-    cursor: pointer;
-    &:focus {
-      outline: 0;
-    }
-  }
-  .toggle {
-    height: 32px;
-    width: 52px;
-    border-radius: 16px;
-    display: inline-block;
-    position: relative;
-    margin: 0;
-    border: 2px solid #474755;
-    // background: linear-gradient(180deg, #2d2f39 0%, #1f2027 100%);
-    background: rgba(150, 150, 150, 0.6);
-    transition: all 0.2s ease;
-    &:after {
-      content: "";
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: white;
-      box-shadow: 2px 2px 2px rgba(44, 44, 44, 0.2);
-      transition: all 0.2s cubic-bezier(0.5, 0.1, 0.75, 1.35);
-    }
-    &:checked {
-      border-color: #654fec;
-      background: #654fec;
-      &:after {
-        transform: translatex(20px);
-      }
-    }
   }
 }
 
