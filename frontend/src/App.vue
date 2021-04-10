@@ -17,17 +17,14 @@
         @toggle-collapse="collapse = !collapse"
       >
         <div slot="header">
-          <img v-if="!collapse" src="./assets/Logo.png" width="200px" alt="">
+          <img v-if="!collapse" src="./assets/Logo.png" width="200px" alt="" />
         </div>
-        <div  slot="toggle-icon"
-          >toggle-icon</div
-        >
+        <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
       </sidebar-menu>
     </div>
-    <div class="main">
+    <div :class="{ main: true, move: !collapse }">
       <router-view />
     </div>
-    
   </div>
 </template>
 
@@ -37,7 +34,8 @@ import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
 export default {
   components: {
     SidebarMenu,
-  },data() {
+  },
+  data() {
     return {
       cabezales: this.$root.cabezales,
       programas: this.$root.programas,
@@ -53,13 +51,24 @@ export default {
         {
           href: { name: "Home" },
           title: "Pruebas",
-          icon: "fa fa-user",
-          class: 'vsm--link_active'
+          icon: {
+            element: "font-awesome-icon",
+            attributes: {
+              // icon props:
+              icon: "wrench",
+            },
+          },
         },
         {
           href: { name: "ProgramView" },
           title: "ProgramView",
-          icon: "fa fa-chart-area",
+          icon: {
+            element: "font-awesome-icon",
+            attributes: {
+              // icon props:
+              icon: "faucet",
+            },
+          },
         },
       ],
     };
@@ -70,40 +79,22 @@ export default {
 
 
 <style lang="scss">
+@import "src/css/colorSchema.scss";
 .main {
   margin-left: 50px;
+}
+.move {
+  margin-left: 200px;
 }
 .container {
   display: inline-block;
   cursor: pointer;
 }
-
-.bar1,
-.bar2,
-.bar3 {
-  width: 35px;
-  height: 5px;
-  background-color: #333;
-  margin: 6px 0;
-  transition: 0.4s;
+.v-sidebar-menu .vsm--title {
+  color: black;
 }
 
 /* Rotate first bar */
-.change .bar1 {
-  -webkit-transform: rotate(-45deg) translate(-9px, 6px);
-  transform: rotate(-45deg) translate(-9px, 6px);
-}
-
-/* Fade out the second bar */
-.change .bar2 {
-  opacity: 0;
-}
-
-/* Rotate last bar */
-.change .bar3 {
-  -webkit-transform: rotate(45deg) translate(-8px, -8px);
-  transform: rotate(45deg) translate(-8px, -8px);
-}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -112,37 +103,57 @@ export default {
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-
 .menuHamburguesa {
   display: none;
 }
 
-.v-sidebar-menu.vsm--link_active{
-  background-color: #fff;
-  color: #333
-}
-
 @media (max-width: "480px") {
   .menuHamburguesa {
-    display: inline-block;
+    display: inline;
+    align-self: flex-start;
+    .bar1,
+    .bar2,
+    .bar3 {
+      width: 35px;
+      height: 5px;
+      background-color: #333;
+      margin: 6px 0;
+      transition: 0.4s;
+    }
+  }
+  .change {
+    .bar1,
+    .bar2,
+    .bar3 {
+      // -webkit-transform:  translateX(300px);
+      //  transform: translateX(300px);
+      margin-left: 200px;
+    }
+
+    .bar1 {
+      -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+      transform: rotate(-45deg) translate(-9px, 6px);
+    }
+
+    /* Fade out the second bar */
+    .bar2 {
+      opacity: 0;
+    }
+
+    /* Rotate last bar */
+    .bar3 {
+      -webkit-transform: rotate(45deg) translate(-8px, -8px);
+      transform: rotate(45deg) translate(-8px, -8px);
+    }
   }
   .v-sidebar-menu {
     transition: 0.3s all;
   }
   .v-sidebar-menu.vsm_collapsed {
     transform: translateX(-100%);
+  }
+  .main {
+    margin-left: 0px;
   }
 }
 </style>

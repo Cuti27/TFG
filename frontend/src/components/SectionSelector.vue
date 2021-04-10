@@ -59,6 +59,7 @@ export default {
   
   .map {
     img {
+      width: 100%;
       max-width: 600px;
     }
   }
@@ -67,6 +68,7 @@ export default {
 table {
   border-collapse: separate;
   border-spacing: 5px 15px;
+  table-layout: fixed;
 }
 
 input,
@@ -84,10 +86,7 @@ input {
 }
 
 label {
-  display: float;
   padding: 20px;
-  height: 40px;
-  width: 40px;
   text-align: center;
   border: 2px;
   box-shadow: 2px 2px 4px $darkGreen;
@@ -110,7 +109,7 @@ label.blanco:hover {
 @media (max-width: 768px) {
   table {
     border-collapse: collapse;
-    border-spacing: 0px 7px;
+    border-spacing: 5px 7px;
   }
   label {
     padding: 15px;

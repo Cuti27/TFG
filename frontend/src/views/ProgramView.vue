@@ -176,7 +176,7 @@ export default {
 
 .form {
   display: grid;
-  grid-template-columns: auto;
+  grid-template-columns: 40% 50%;
   grid-template-rows: auto;
   grid-template-areas:
     "activo fuentes"
@@ -253,6 +253,17 @@ export default {
     grid-area: fertirrigacion;
   }
 }
+@media (max-width: 1200px) {
+  .form {
+    grid-template-areas:
+      "activo fuentes"
+    "dias fuentes"
+    "hora hora"
+    "duracion postriego"
+    "secciones secciones"
+    "fertirrigacion fertirrigacion";
+  }
+}
 
 @media (max-width: 768px) {
   .form {
@@ -264,8 +275,13 @@ export default {
       "secciones secciones"
       "duracion postriego"
       "ferrigacion ferrigacion";
+      .fertirrigacion {
+      grid-column-start: col-start -3;
+    }
   }
 }
+
+
 
 @media (max-width: 576px) {
   .form {
