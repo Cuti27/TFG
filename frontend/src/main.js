@@ -4,10 +4,10 @@ import router from './router'
 import store from './store'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faWrench, faArrowsAltH, faFaucet } from '@fortawesome/free-solid-svg-icons'
+import { faWrench, faArrowsAltH, faFaucet, faLeaf, faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faWrench, faArrowsAltH, faFaucet);
+library.add(faWrench, faArrowsAltH, faFaucet, faLeaf, faArrowCircleLeft, faArrowCircleRight);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(BootstrapVue);

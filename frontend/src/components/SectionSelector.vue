@@ -5,7 +5,8 @@
       <transition name="fade" mode="out-in">
         <div v-if="show" key="table">
           <table>
-            <tr v-for="i in row" :key="i + 'columna'">
+            <tbody>
+              <tr v-for="i in row" :key="i + 'columna'">
               <td v-for="n in col" :key="i + n">
                 <input :id="i + '-' + n" type="radio" />
                 <label :class="{ blanco: false }" :for="i + '-' + n">
@@ -21,6 +22,7 @@
                 }}</label>
               </td>
             </tr>
+            </tbody>
           </table>
         </div>
 
@@ -90,7 +92,7 @@ label {
   text-align: center;
   border: 2px;
   box-shadow: 2px 2px 4px $darkGreen;
-  margin: 10px;
+  margin: 5px;
   line-height: 50px;
   cursor: pointer;
   user-select: none;
@@ -124,6 +126,7 @@ label.blanco:hover {
     height: 25px;
     width: 25px;
     font-size: 15px;
+    margin: 3px;
   }
 }
 </style>

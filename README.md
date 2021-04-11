@@ -4,6 +4,7 @@
   - [Frontend realizado mediante **Vue**](#frontend-realizado-mediante-vue)
   - [Backend conexión con la base de datos y API mediante **Laravel** PHP](#backend-conexión-con-la-base-de-datos-y-api-mediante-laravel-php)
     - [Conexión con los dispositivos mediante **Node-Red**](#conexión-con-los-dispositivos-mediante-node-red)
+  - [Dudas respecto al diseño de la página web](#dudas-respecto-al-diseño-de-la-página-web)
 
 ## Frontend realizado mediante **Vue**
 
@@ -22,6 +23,8 @@ La ejecución se realiza moviendose a la carpeta frontend y realizando ```npm ru
   - SectionSelector: Matriz de seleccionables, con siete columnas, donde se van añadiendo botones dependiendo del tamaño especificado
   - SorceSelecto: Similar al anterior, pero sin la limitación de las columnas, la idea es utilizarlo para las bombas
 - Creado una vista para ir probando los componentes, y otra para empezar a maquetar el visor del programa seleccionado
+- Creado una barra de navegación provisional
+- Comenzado con el desarrollo de la pestaña de fertirrigacion
 
 **TODO:**
 - Centralizar la información completa del programa en Vuex
@@ -85,3 +88,12 @@ En node-red, se añadirá una pequeña autenticación para comprobar que se esta
 }
 ```
 
+## Dudas respecto al diseño de la página web
+
+- Secciones deben ser 7 columnas forzadamente
+- La barra de navegación va a ser superior o lateral
+- Si es lateral, debe desaparecer al tocar el contenido o únicamente cuando le demos expresamente a cerrar
+- Fuentes son únicamente 4 o pueden ser más (se que pone que son 4, pero no se si por caso general o porque es así siempre. Se quiere que a la fuerza este en una matriz de 2 x 2)
+- Colores comunes a la aplicación
+- Temporizadores mejor que se vean en la aplicacion o que se habra una pestaña aparte para configurarlos
+- Se podrá guardar la fertirrigación para usar la misma en varias.

@@ -9,6 +9,7 @@
           :value="value"
            :min="min" :max="max"
           required
+          @input="updateValue($event.target.value)"
         />
         <label for="name" class="form__label">{{placeholder}}</label>
       </div>
@@ -29,7 +30,12 @@ export default {
         placeholder: {
             type: String
         }
-    }
+    },
+    methods: {
+      updateValue(val){
+         this.$emit('input', val)
+      }
+}
 
 }
 </script>

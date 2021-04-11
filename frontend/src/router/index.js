@@ -15,6 +15,12 @@ const routes = [{
         name: 'ProgramView',
         component: () =>
             import ( /* webpackChunkName: "about" */ "../views/ProgramView.vue"),
+    },
+    {
+        path: '/fertirrigacion',
+        name: 'Fertirrigacion',
+        component: () =>
+            import ( /* webpackChunkName: "about" */ "../views/Fertirrigacion.vue"),
     }
 ]
 

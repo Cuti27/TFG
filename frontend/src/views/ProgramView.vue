@@ -36,7 +36,11 @@
           </modal>
         </div>
       </div>
-
+       <div class="emisor">
+        <label for="Emisor">Seleccionar tipo de emisor:</label>
+        <toggle v-model="emisor"></toggle>
+        <label for="Emisor">{{ isEmisor }}</label>
+      </div>
       <div class="fuente">
         <label for="">Selecciona una fuente</label>
         <source-selector :options="fuentes"></source-selector>
@@ -54,18 +58,21 @@
             :min="0"
             :max="99"
             placeholder="Horas"
+            @input="horas = value"
           ></number-selector>
           <number-selector
-            :value="horas"
+            :value="minutos"
             :min="0"
             :max="59"
             placeholder="Min"
+            @input="minutos = value"
           ></number-selector>
           <number-selector
-            :value="horas"
+            :value="segundos"
             :min="0"
             :max="59"
             placeholder="Seg"
+            @input="segundos = value"
           ></number-selector>
         </div>
       </div>
@@ -74,22 +81,25 @@
         <label for="">Seleccione el tiempo del postriego</label>
         <div class="selectorHora">
           <number-selector
-            :value="horas"
+            :value="postHoras"
             :min="0"
             :max="99"
             placeholder="Horas"
+            @input="postHoras = value"
           ></number-selector>
           <number-selector
-            :value="horas"
+            :value="postMinutos"
             :min="0"
             :max="59"
             placeholder="Min"
+            @input="postMinutos = value"
           ></number-selector>
           <number-selector
-            :value="horas"
+            :value="postSegundos"
             :min="0"
             :max="59"
             placeholder="Seg"
+            @input="postSegundos = value"
           ></number-selector>
         </div>
       </div>
@@ -145,9 +155,15 @@ export default {
         "Fuente 4",
       ],
       horas: 10,
+      minutos: 10,
+      segundos: 10,
+      postHoras: 10,
+      postMinutos: 10,
+      postSegundos: 10,
       programa: false,
       dias: false,
       horaInicio: false,
+      emisor: false,
     };
   },
   computed: {
@@ -162,6 +178,11 @@ export default {
         ? "Programación por parte del usuario"
         : "Despues de un programa";
     },
+    isEmisor(){
+      return this.emisor
+        ? "Goteo"
+        : "Aspersion";
+    }
   },
 };
 </script>
@@ -182,6 +203,7 @@ export default {
     "activo fuentes"
     "dias fuentes"
     "hora hora"
+    "emisor emisor"
     "duracion secciones"
     "postriego secciones"
     "fertirrigacion fertirrigacion";
@@ -196,6 +218,10 @@ export default {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
+  }
+
+  .emisor {
+    grid-area: emisor;
   }
 
   .duracion {
@@ -216,7 +242,7 @@ export default {
   }
 
   .duracion, .activo, .dias, .hora, .fuente, .secciones,
-  .postriego, .fertirrigacion{
+  .postriego, .fertirrigacion, .emisor{
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     border-radius: 5px;
     margin: 10px;
@@ -259,6 +285,7 @@ export default {
       "activo fuentes"
     "dias fuentes"
     "hora hora"
+    "emisor emisor"
     "duracion postriego"
     "secciones secciones"
     "fertirrigacion fertirrigacion";
@@ -272,6 +299,7 @@ export default {
       "dias dias"
       "fuentes fuentes"
       "hora hora"
+      "emisor emisor"
       "secciones secciones"
       "duracion postriego"
       "ferrigacion ferrigacion";

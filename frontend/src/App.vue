@@ -22,7 +22,7 @@
         <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
       </sidebar-menu>
     </div>
-    <div :class="{ main: true, move: !collapse }">
+    <div @click="touchOut()" :class="{ main: true, move: !collapse }">
       <router-view />
     </div>
   </div>
@@ -70,9 +70,26 @@ export default {
             },
           },
         },
+        {
+          href: { name: "Fertirrigacion" },
+          title: "Fertirrigacion",
+          icon: {
+            element: "font-awesome-icon",
+            attributes: {
+              // icon props:
+              icon: "leaf",
+            },
+          },
+        },
       ],
     };
   },
+  methods: {
+    touchOut() {
+      if(!this.collapse)
+        this.collapse= true;
+    }
+  }
 };
 </script>
 
