@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+    <!-- <div class="header">
+      <sticky-header>
+        <h3>Prueba</h3>
+      </sticky-header>
+    </div> -->
     <div id="nav">
       <div
         :class="{ container: true, change: !collapse, menuHamburguesa: true }"
@@ -25,15 +30,20 @@
     <div @click="touchOut()" :class="{ main: true, move: !collapse }">
       <router-view />
     </div>
+    <footer>
+      <p class="cp-text">© Copyright 2021 Cuti27. All rights reserved.</p>
+    </footer>
   </div>
 </template>
 
 <script>
 import { SidebarMenu } from "vue-sidebar-menu";
 import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
+// import StickyHeader from "@/components/StickyHeader";
 export default {
   components: {
     SidebarMenu,
+    // StickyHeader
   },
   data() {
     return {
@@ -97,8 +107,12 @@ export default {
 
 <style lang="scss">
 @import "src/css/colorSchema.scss";
+
+
+
 .main {
   margin-left: 50px;
+  flex-grow: 3;
 }
 .move {
   margin-left: 200px;
@@ -118,6 +132,29 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+
+  display: flex;
+  align-items: space-between;
+  justify-content: space-between;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+
+  main {
+    flex: 1 0 auto;
+  }
+
+  footer {
+    color: $white;
+    padding: 18px 0px;
+    background-color: $primary;
+    flex-shrink: 0;
+    margin-top: 30px;
+    .cp-text {
+      color: rgba(0, 0, 0, 0.7);
+      text-shadow: 0 1px $secondaryShadow;
+    }
+  }
 }
 
 .menuHamburguesa {
@@ -133,7 +170,7 @@ export default {
     .bar3 {
       width: 35px;
       height: 5px;
-      background-color: #333;
+      background-color: $primaryDark;
       margin: 6px 0;
       transition: 0.4s;
     }

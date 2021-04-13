@@ -97,3 +97,4 @@ En node-red, se añadirá una pequeña autenticación para comprobar que se esta
 - Colores comunes a la aplicación
 - Temporizadores mejor que se vean en la aplicacion o que se habra una pestaña aparte para configurarlos
 - Se podrá guardar la fertirrigación para usar la misma en varias.
+- Ultimo parámetro fertirrigación, como debería llamarla

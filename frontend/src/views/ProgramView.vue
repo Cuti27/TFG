@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="root">
     <div class="header">
       <h1>{{ name }}</h1>
     </div>
@@ -188,6 +188,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// 
+
 .header {
  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   padding: 20px;
@@ -197,7 +199,7 @@ export default {
 
 .form {
   display: grid;
-  grid-template-columns: 40% 50%;
+  grid-template-columns: 40% 60%;
   grid-template-rows: auto;
   grid-template-areas:
     "activo fuentes"

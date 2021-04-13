@@ -7,21 +7,21 @@
           <table>
             <tbody>
               <tr v-for="i in row" :key="i + 'columna'">
-              <td v-for="n in col" :key="i + n">
-                <input :id="i + '-' + n" type="radio" />
-                <label :class="{ blanco: false }" :for="i + '-' + n">
-                  {{ n }}
-                </label>
-              </td>
-            </tr>
-            <tr v-if="last">
-              <td v-for="j in last" :key="j + last + 'ultima'">
-                <input :id="'last -' + j" type="radio" />
-                <label :class="{ blanco: false }" :for="'last -' + j">{{
-                  j
-                }}</label>
-              </td>
-            </tr>
+                <td v-for="n in col" :key="i + n">
+                  <input :id="i + '-' + n" type="radio" />
+                  <label :class="{ blanco: false }" :for="i + '-' + n">
+                    {{ n }}
+                  </label>
+                </td>
+              </tr>
+              <tr v-if="last">
+                <td v-for="j in last" :key="j + last + 'ultima'">
+                  <input :id="'last -' + j" type="radio" />
+                  <label :class="{ blanco: false }" :for="'last -' + j">{{
+                    j
+                  }}</label>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -35,11 +35,12 @@
 </template>
 
 <script>
-import Toggle from "@/components/Toggle"
+import Toggle from "@/components/Toggle";
 export default {
   components: {
-    Toggle
-    },data() {
+    Toggle,
+  },
+  data() {
     return {
       row: 3,
       col: 7,
@@ -58,7 +59,7 @@ export default {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  
+  transition: background .3s;
   .map {
     img {
       width: 100%;
@@ -75,12 +76,12 @@ table {
 
 input,
 label {
-  background: $ligthGreen;
+  background: $secondaryDark;
   color: #fff;
 }
 
 label:hover {
-  background: $darkGreen;
+  background: $secondary;
 }
 
 input {
@@ -91,7 +92,7 @@ label {
   padding: 20px;
   text-align: center;
   border: 2px;
-  box-shadow: 2px 2px 4px $darkGreen;
+  box-shadow: 2px 2px 4px $primaryShadow;
   margin: 5px;
   line-height: 50px;
   cursor: pointer;
@@ -99,8 +100,8 @@ label {
 }
 
 label.blanco {
-  background-color: white;
-  color: black;
+  background-color: $white;
+  color: $black;
   opacity: 0.3;
 }
 

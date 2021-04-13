@@ -21,6 +21,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/css/colorSchema.scss";
+
 input {
   margin-left: 10px;
   margin-right: 10px;
@@ -35,6 +37,8 @@ input[type="checkbox"] {
   &:focus {
     outline: 0;
   }
+
+ 
 }
 .toggle {
   height: 32px;
@@ -44,9 +48,9 @@ input[type="checkbox"] {
   position: relative;
   margin: 0;
   border: 2px solid #474755;
-  // background: linear-gradient(180deg, #2d2f39 0%, #1f2027 100%);
-  background: rgba(150, 150, 150, 0.6);
+  background: linear-gradient(90deg, $primaryShadow 0%, $gray 100%);
   transition: all 0.2s ease;
+
   &:after {
     content: "";
     position: absolute;
@@ -55,13 +59,13 @@ input[type="checkbox"] {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: white;
+    background: $white;
     box-shadow: 2px 2px 2px rgba(44, 44, 44, 0.2);
     transition: all 0.2s cubic-bezier(0.5, 0.1, 0.75, 1.35);
   }
   &:checked {
-    border-color: #654fec;
-    background: #654fec;
+    border-color: $primary;
+    background: linear-gradient(-90deg, $primary 0%, $primaryDark 100%);;
     &:after {
       transform: translatex(20px);
     }

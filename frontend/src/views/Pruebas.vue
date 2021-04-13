@@ -14,7 +14,7 @@
     <hr />.
     <toggle></toggle>
     <hr>
-    <custom-select :values="sel"></custom-select>
+    <custom-select @change="selected = $event;print(selected)" :selected="selected" :values="sel"></custom-select>
   </div>
 </template>
 
@@ -22,8 +22,9 @@
 import List from "@/components/List.vue";
 // import Programa from "./views/Programa.vue";
 import daySelector from "@/components/DaySelector";
-import Toggle from "@/components/Toggle"
-import customSelect from "@/components/Select"
+import Toggle from "@/components/Toggle";
+import customSelect from "@/components/Select";
+
 export default {
   components: {
     List,
@@ -38,9 +39,15 @@ export default {
       programas: this.$root.programas,
       dias: [false, false, false, false, false, true, true],
       checked: false,
-      sel: ["Hola","Adios", "Buenas noches"]
+      sel: ["Hola","Adios", "Buenas noches"],
+      selected: 0
     };
   },
+  methods: {
+    print(value){
+      console.log(value)
+    }
+  }
 };
 </script>
 

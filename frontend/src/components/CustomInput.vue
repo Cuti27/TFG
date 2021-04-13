@@ -1,15 +1,16 @@
 <template>
-  <div class="selector">
+  <div class="input">
         <input
-          type="number"
+          :type="type === ''? 'text' : type"
           class="form__field"
           placeholder="Name"
           name="name"
           id="name"
+          :max="max"
+          :min="min"
           :value="value"
-           :min="min" :max="max"
-          required
-          @input="updateValue($event.target.value)"
+          :step="step"
+          @input="$emit('input', $event.target.value)"
         />
         <label for="name" class="form__label">{{placeholder}}</label>
       </div>
@@ -18,51 +19,39 @@
 <script>
 export default {
     props: {
-        value: {
-            type: Number
-        },
-        max: {
-            type: Number,
-        },
-        min: {
-            type: Number,
-        },
-        placeholder: {
-            type: String
-        }
-    },
-    methods: {
-      updateValue(val){
-         this.$emit('input', val)
-      }
-}
-
+        value: [String, Number],
+        placeholder: String,
+        type: String,
+        max: String,
+        min: String,
+        step: [Number, String]
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
-
-
-.selector {
+.input {
     position: relative;
     padding: 15px 5px 0;
     margin-top: 10px;
-    width: 90px
+    width: 80%;
+    margin: 5px;
+
   }
 
   .form__field {
     width: 100%;
     // Dibujamos unicamente la linea de abajo
     border: 0;
-    border-bottom: 2px solid $gray;
+    border-bottom: 2px solid $secondary;
     // Evitamos dibujar el borde
     outline: 0;
     font-size: 1.3rem;
     padding: 7px 0;
     background: transparent;
-    transition: border-color 0.2s;
+    transition: border-color .3s;
 
     &::placeholder {
       color: transparent;
@@ -81,7 +70,7 @@ export default {
     display: block;
     transition: 0.2s;
     font-size: 1rem;
-    color: $gray;
+    color: $dirt;
   }
 
   .form__field:focus {
@@ -91,7 +80,7 @@ export default {
       display: block;
       transition: 0.2s;
       font-size: 1rem;
-      color: $primary;
+      color: $secondaryDark;
       font-weight: 700;
     }
     padding-bottom: 6px;
@@ -105,7 +94,7 @@ export default {
     &:required,
     &:invalid {
       box-shadow: none;
-       border-bottom: 2px solid $gray;
+       border-bottom: 2px solid $secondaryDark;
     }
   }
 </style>

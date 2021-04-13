@@ -28,17 +28,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "/src/css/colorSchema.scss";
+@import "@/css/colorSchema.scss";
 
 input,
 label {
-  background: $ligthGreen;
-  color: #fff;
+  background: $secondaryDark;
+  color: $white;
   user-select: none;
+  min-width: 30px;
+  transition: background .3s;
 }
 
 label:hover {
-  background: $darkGreen;
+  background: $secondary;
 }
 
 input {
@@ -51,7 +53,7 @@ label {
   height: 50px;
   text-align: center;
   border: 2px;
-  box-shadow: 2px 2px 4px $darkGreen;
+  box-shadow: 2px 2px 4px $primaryShadow;
   margin: 5px;
   line-height: 50px;
   cursor: pointer;
@@ -74,8 +76,8 @@ label {
 }
 
 label.blanco {
-  background-color: white;
-  color: black;
+  background-color: $white;
+  color: $black;
   opacity: 0.3;
 }
 
