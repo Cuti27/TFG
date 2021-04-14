@@ -44,6 +44,7 @@ La idea es que el backend, su conexión con el frontend sea mediante la exposici
 - Visto lo básico para **PHP**
 - Visto librerias de conexión mediante **MQTT**
 - Visto funcionamiento de **MQTT**
+- Instalado Laravel, y comenzado a ver lo necesario para realizar la API
 
 **TODO:**
 
@@ -92,8 +93,7 @@ En node-red, se añadirá una pequeña autenticación para comprobar que se esta
 
 - Secciones deben ser 7 columnas forzadamente
 - La barra de navegación va a ser superior o lateral
-- Si es lateral, debe desaparecer al tocar el contenido o únicamente cuando le demos expresamente a cerrar
-- Fuentes son únicamente 4 o pueden ser más (se que pone que son 4, pero no se si por caso general o porque es así siempre. Se quiere que a la fuerza este en una matriz de 2 x 2)
+- Se quiere que a la fuerza este en una matriz de 2 x 2
 - Colores comunes a la aplicación
 - Temporizadores mejor que se vean en la aplicacion o que se habra una pestaña aparte para configurarlos
 - Se podrá guardar la fertirrigación para usar la misma en varias.

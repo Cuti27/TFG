@@ -1,12 +1,17 @@
 <template>
   <div class="sourceList">
-    <slot></slot>
-    <div v-for="(item, index) in options" :key="item + index">
+    <div class="title">
+      <slot></slot>
+    </div>
+    <div class="sources">
+      <div v-for="(item, index) in options" :key="item + index">
       <input :id="item + '-' + index" type="radio" />
       <label :class="{ blanco: false }" :for="item + '-' + index">{{
         item
       }}</label>
     </div>
+    </div>
+    
   </div>
 </template>
 
@@ -89,7 +94,14 @@ label.blanco:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   flex-wrap: wrap;
-  flex-wrap: 1;
+}
+
+.sources {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 </style>

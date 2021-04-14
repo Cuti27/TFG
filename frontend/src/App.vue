@@ -38,7 +38,6 @@
 
 <script>
 import { SidebarMenu } from "vue-sidebar-menu";
-import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
 // import StickyHeader from "@/components/StickyHeader";
 export default {
   components: {
@@ -107,6 +106,11 @@ export default {
 
 <style lang="scss">
 @import "src/css/colorSchema.scss";
+$primary-color: $primary;
+$icon-color: darken( $secondaryDark, 10% );
+
+@import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
+
 
 
 
