@@ -17,6 +17,14 @@
     <custom-select @change="selected = $event;print(selected)" :selected="selected" :values="sel"></custom-select>
     <hr>
     <submit-button>Guardar</submit-button>
+    <hr>
+    <div>
+      <custom-button>Prueba</custom-button>
+    </div>
+
+    <hr>
+    <select-button :options="['Manual', 'Automatico', ]"></select-button>
+    
   </div>
 </template>
 
@@ -26,7 +34,9 @@ import List from "@/components/List.vue";
 import daySelector from "@/components/DaySelector";
 import Toggle from "@/components/Toggle";
 import customSelect from "@/components/Select";
-import SubmitButton from "@/components/SubmitButton"
+import SubmitButton from "@/components/SubmitButton";
+import CustomButton from "@/components/CustomButton";
+import SelectButton from "@/components/SelectButton";
 
 export default {
   components: {
@@ -35,7 +45,9 @@ export default {
     daySelector,
     Toggle,
     customSelect,
-    SubmitButton
+    SubmitButton,
+    CustomButton,
+    SelectButton
   },
   data() {
     return {

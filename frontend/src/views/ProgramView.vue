@@ -13,9 +13,8 @@
         <label for="Activo">{{ isActive }}</label>
       </div>
       <div class="dias">
-        <label for="Dias">Dias:</label>
-        <toggle v-model="dias"></toggle>
-        <label for="Dias">{{ isManualDay }}</label>
+        <label for="Dias">Seleccione los dias:</label>
+        <select-button name="Dias" :options="['Manual', 'Automático']"></select-button>
         <day-selector></day-selector>
       </div>
 
@@ -49,8 +48,9 @@
       </div>
       <div class="emisor">
         <label for="Emisor">Seleccionar tipo de emisor:</label>
-        <toggle v-model="emisor"></toggle>
-        <label for="Emisor">{{ isEmisor }}</label>
+        <select-button name="Emisor" :options="['Aspersion', 'Goteo']"></select-button>
+        <!-- <toggle v-model="emisor"></toggle>
+        <label for="Emisor">{{ isEmisor }}</label> -->
       </div>
       <div class="fuente">
         <source-selector :options="fuentes">
@@ -59,7 +59,7 @@
       </div>
 
       <div class="secciones">
-        <label for="">Selecciona una seccion</label>
+        <label for="">Selecciona los sectores</label>
         <section-selector></section-selector>
       </div>
       <div class="duracion">
@@ -131,7 +131,8 @@ import numberSelector from "@/components/NumberSelector";
 import Modal from "@/components/Modal";
 import List from "@/components/List";
 import Toggle from "@/components/Toggle";
-import SubmitButton from "@/components/SubmitButton"
+import SubmitButton from "@/components/SubmitButton";
+import SelectButton from "@/components/SelectButton";
 
 export default {
   components: {
@@ -142,14 +143,15 @@ export default {
     Modal,
     List,
     Toggle,
-    SubmitButton
+    SubmitButton,
+    SelectButton
   },
   data() {
     return {
       programas: this.$root.programas,
       showModal: false,
       name: "Programa de riego 1",
-      fuentes: ["Fuente 1", "Fuente 2", "Fuente 3", "Fuente 4"],
+      fuentes: ["Bombas 1", "Bombas 2", "Bombas 3", "Bombas 4"],
       horas: 10,
       minutos: 10,
       segundos: 10,
@@ -217,8 +219,13 @@ export default {
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
+  background-position-y: -150px;
   color: white;
-  background-size: 0.1;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
 }
 
 .form {
@@ -226,11 +233,13 @@ export default {
   grid-template-columns: 40% 60%;
   grid-template-rows: auto;
   grid-template-areas:
-    "activo fuentes"
-    "dias hora"
+    "activo ."
+    "dias dias"
+    "fuentes fuentes"
+    "secciones secciones"
     "emisor emisor"
-    "duracion secciones"
-    "postriego secciones"
+    "hora hora"
+    "duracion postriego"
     "fertirrigacion fertirrigacion";
   align-items: center;
   margin: 0;
@@ -260,6 +269,10 @@ export default {
 
   .dias {
     grid-area: dias;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
   }
 
   .hora {

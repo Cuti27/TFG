@@ -5,7 +5,7 @@
         <h3>Prueba</h3>
       </sticky-header>
     </div> -->
-    <div id="nav">
+    <div v-if="windowWidth < 500" id="nav">
       <div
         :class="{ container: true, change: !collapse, menuHamburguesa: true }"
         @click="collapse = !collapse"
@@ -14,19 +14,21 @@
         <div class="bar2"></div>
         <div class="bar3"></div>
       </div>
-      <sidebar-menu
-        width="200px"
-        :menu="menu"
-        :collapsed="collapse"
-        theme="white-theme"
-        @toggle-collapse="collapse = !collapse"
-      >
-        <div slot="header">
-          <img v-if="!collapse" src="./assets/Logo.png" width="200px" alt="" />
-        </div>
-        <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
-      </sidebar-menu>
     </div>
+    <sidebar-menu
+      width="200px"
+      :menu="menu"
+      :collapsed="collapse"
+      theme="white-theme"
+      @toggle-collapse="collapse = !collapse"
+      @item-click="collapse = true"
+    >
+      <div slot="header">
+        <img v-if="!collapse" src="./assets/Logo.png" width="200px" alt="" />
+      </div>
+      <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
+    </sidebar-menu>
+
     <div @click="touchOut()" :class="{ main: true, move: !collapse }">
       <router-view />
     </div>
@@ -71,6 +73,8 @@ export default {
   },
   data() {
     return {
+      windowWidth: 0,
+      windowHeight: 0,
       cabezales: this.$root.cabezales,
       programas: this.$root.programas,
       dias: [false, false, false, false, false, true, true],
@@ -119,6 +123,27 @@ export default {
     touchOut() {
       if (!this.collapse) this.collapse = true;
     },
+    getWindowWidth() {
+      this.windowWidth = document.documentElement.clientWidth;
+    },
+
+    getWindowHeight() {
+      this.windowHeight = document.documentElement.clientHeight;
+    },
+  },
+  mounted() {
+    this.$nextTick(function () {
+      window.addEventListener("resize", this.getWindowWidth);
+      window.addEventListener("resize", this.getWindowHeight);
+
+      //Init
+      this.getWindowWidth();
+      this.getWindowHeight();
+    });
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.getWindowWidth);
+    window.removeEventListener("resize", this.getWindowHeight);
   },
 };
 </script>
@@ -262,8 +287,8 @@ $icon-color: darken($secondaryDark, 10%);
     }
   }
   .move {
-      margin-left: 200px;
-    }
+    margin-left: 200px;
+  }
 }
 
 .menuHamburguesa {

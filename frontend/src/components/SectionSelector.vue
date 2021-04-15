@@ -60,6 +60,7 @@ export default {
   justify-content: center;
   flex-direction: column;
   transition: background .3s;
+  width: 100%;
   .map {
     img {
       width: 100%;
@@ -72,6 +73,7 @@ table {
   border-collapse: separate;
   border-spacing: 5px 15px;
   table-layout: fixed;
+  width: 100%;
 }
 
 input,
@@ -89,9 +91,10 @@ input {
 }
 
 label {
-  padding: 20px;
+  padding: 20px 40px;
   text-align: center;
   border: 2px;
+  border-radius: 10px;
   box-shadow: 2px 2px 4px $primaryShadow;
   margin: 5px;
   line-height: 50px;
@@ -115,7 +118,7 @@ label.blanco:hover {
     border-spacing: 5px 7px;
   }
   label {
-    padding: 15px;
+    padding: 15px 20px;
     height: 30px;
     width: 30px;
   }
