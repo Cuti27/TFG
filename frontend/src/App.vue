@@ -31,7 +31,32 @@
       <router-view />
     </div>
     <footer>
-      <p class="cp-text">© Copyright 2021 Cuti27. All rights reserved.</p>
+      <div>
+        <a href="/">Genhidro</a>
+        |
+        <a href="https://agrosolmen.es/">Agrosolmen</a>
+        |
+        <a href="/aviso-legal">Aviso Legal</a>
+        |
+        <a href="/politica-de-privacidad">Política de Privacidad</a>
+        |
+        <a href="/politica-de-cookies">Política de Cookies</a>
+      </div>
+      <div class="SocialMedia">
+        <ul class="social-icons">
+          <li>
+            <a
+              href="https://es-es.facebook.com/pages/category/Agricultural-Cooperative/Agrosolmen-1461731994040377/"
+              ><font-awesome-icon :icon="['fab', 'facebook-f']"
+            /></a>
+          </li>
+          <li>
+            <a href="https://www.linkedin.com/company/agrosolmen/"
+              ><font-awesome-icon :icon="['fab', 'linkedin-in']"
+            /></a>
+          </li>
+        </ul>
+      </div>
     </footer>
   </div>
 </template>
@@ -95,10 +120,9 @@ export default {
   },
   methods: {
     touchOut() {
-      if(!this.collapse)
-        this.collapse= true;
-    }
-  }
+      if (!this.collapse) this.collapse = true;
+    },
+  },
 };
 </script>
 
@@ -107,12 +131,9 @@ export default {
 <style lang="scss">
 @import "src/css/colorSchema.scss";
 $primary-color: $primary;
-$icon-color: darken( $secondaryDark, 10% );
+$icon-color: darken($secondaryDark, 10%);
 
 @import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
-
-
-
 
 .main {
   margin-left: 50px;
@@ -149,14 +170,98 @@ $icon-color: darken( $secondaryDark, 10% );
   }
 
   footer {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     color: $white;
-    padding: 18px 0px;
-    background-color: $primary;
+    padding: 0px;
+    background-color: $white;
     flex-shrink: 0;
     margin-top: 30px;
-    .cp-text {
-      color: rgba(0, 0, 0, 0.7);
-      text-shadow: 0 1px $secondaryShadow;
+    margin-left: 50px;
+    color: $black;
+    border-top: 1px solid $black;
+
+    a {
+      text-decoration: none;
+      transition-property: color, background-color, border-color;
+      transition-duration: 0.2s;
+      transition-timing-function: linear;
+      color: #000;
+      padding: 5px;
+
+      &:hover {
+        color: $primaryDark;
+      }
+    }
+
+    $timing: 265ms;
+    $iconColor: $secondary;
+    $accent: $secondaryDark;
+    $bluefade: $primary;
+    $gradient: #00b5f5;
+
+    @mixin transformScale($size: 1) {
+      transform: scale($size);
+      -ms-transform: scale($size);
+      -webkit-transform: scale($size);
+    }
+
+    .socialMedia {
+      width: 400px;
+      margin: 40vh auto;
+      text-align: center;
+    }
+
+    .social-icons {
+      padding: 0;
+      list-style: none;
+      margin: 1em;
+
+      li {
+        display: inline-block;
+        margin: 0.15em;
+        position: relative;
+        font-size: 1.2em;
+      }
+
+      svg {
+        color: #fff;
+        position: absolute;
+        top: 21px;
+        left: 21px;
+        transition: all $timing ease-out;
+      }
+
+      a {
+        display: inline-block;
+        padding: 0px;
+        &:before {
+          @include transformScale();
+          content: " ";
+          width: 60px;
+          height: 60px;
+          border-radius: 100%;
+          display: block;
+          background: linear-gradient(45deg, $iconColor, $accent);
+          transition: all $timing ease-out;
+        }
+
+        &:hover:before {
+          transform: scale(0);
+          transition: all $timing ease-in;
+        }
+
+        &:hover svg {
+          @include transformScale(2.2);
+          color: $iconColor;
+          background: -webkit-linear-gradient(45deg, $iconColor, $accent);
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          transition: all $timing ease-in;
+        }
+      }
     }
   }
 }
@@ -212,6 +317,10 @@ $icon-color: darken( $secondaryDark, 10% );
   }
   .main {
     margin-left: 0px;
+  }
+
+  footer {
+    margin-left: 0px !important;
   }
 }
 </style>
