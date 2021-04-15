@@ -30,7 +30,7 @@
     <div @click="touchOut()" :class="{ main: true, move: !collapse }">
       <router-view />
     </div>
-    <footer>
+    <footer :class="{ move: !collapse }">
       <div>
         <a href="/">Genhidro</a>
         |
@@ -88,7 +88,6 @@ export default {
           icon: {
             element: "font-awesome-icon",
             attributes: {
-              // icon props:
               icon: "wrench",
             },
           },
@@ -99,7 +98,6 @@ export default {
           icon: {
             element: "font-awesome-icon",
             attributes: {
-              // icon props:
               icon: "faucet",
             },
           },
@@ -110,7 +108,6 @@ export default {
           icon: {
             element: "font-awesome-icon",
             attributes: {
-              // icon props:
               icon: "leaf",
             },
           },
@@ -264,6 +261,9 @@ $icon-color: darken($secondaryDark, 10%);
       }
     }
   }
+  .move {
+      margin-left: 200px;
+    }
 }
 
 .menuHamburguesa {

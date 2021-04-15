@@ -4,7 +4,7 @@
       <h1>{{ name }}</h1>
     </div>
     <div class="guardar">
-      <button>Guardar</button>
+      <submit-button>Guardar</submit-button>
     </div>
     <div class="form">
       <div class="activo">
@@ -21,11 +21,11 @@
 
       <div class="hora">
         <div class="horaHead">
-           <label for="Horas">Hora de inicio:</label>
-        <toggle v-model="horaInicio"></toggle>
-        <label for="Horas">{{ isTempHoraInicio }}</label>
+          <label for="Horas">Hora de inicio:</label>
+          <toggle v-model="horaInicio"></toggle>
+          <label for="Horas">{{ isTempHoraInicio }}</label>
         </div>
-       
+
         <div v-if="!horaInicio">
           <button id="show-modal" @click="showModal = true">Show Modal</button>
           <!-- use the modal component, pass in the prop -->
@@ -43,13 +43,8 @@
         <div class="temporizadores" v-else>
           <label for="addTemp">Añadir un nuevo temporizador: </label>
           <div class="buttonTemp">
-             <font-awesome-icon
-          id="addTemp"
-          icon="plus-circle"
-          size="3x"
-          />
+            <font-awesome-icon id="addTemp" icon="plus-circle" size="3x" />
           </div>
-         
         </div>
       </div>
       <div class="emisor">
@@ -122,7 +117,7 @@
       </div>
 
       <div class="fertirrigacion">
-        <button>Fertirrigacion</button>
+        <submit-button @click="goFertirrigacion()">Fertirrigacion</submit-button>
       </div>
     </div>
   </div>
@@ -136,6 +131,7 @@ import numberSelector from "@/components/NumberSelector";
 import Modal from "@/components/Modal";
 import List from "@/components/List";
 import Toggle from "@/components/Toggle";
+import SubmitButton from "@/components/SubmitButton"
 
 export default {
   components: {
@@ -146,6 +142,7 @@ export default {
     Modal,
     List,
     Toggle,
+    SubmitButton
   },
   data() {
     return {
@@ -181,24 +178,29 @@ export default {
       return this.emisor ? "Goteo" : "Aspersion";
     },
   },
+  methods:{
+    goFertirrigacion(){
+      this.$router.push("Fertirrigacion");
+    }
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
-.guardar{
+.guardar {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  cursor: pointer;
+  bottom: 50px;
+  right: 80px;
+  z-index: 9999;
 }
 
-.buttonTemp{
+.buttonTemp {
   padding-left: 10px;
   color: $primary;
   cursor: pointer;
-  :hover{
+  :hover {
     color: $primaryDark;
   }
 }
@@ -209,13 +211,11 @@ export default {
   padding: 20px;
   margin: 20px;
   margin-bottom: 40px;
-   background:  linear-gradient(
-    $primaryShadow, 
-    $secondaryShadow
-    ), url("../assets/header.jpg");
-   background-repeat: no-repeat;
+  background: linear-gradient($primaryShadow, $secondaryShadow),
+    url("../assets/header.jpg");
+  background-repeat: no-repeat;
   background-attachment: fixed;
-  background-position: center; 
+  background-position: center;
   background-size: cover;
   color: white;
   background-size: 0.1;
@@ -269,7 +269,7 @@ export default {
     justify-content: center;
     flex-direction: column;
 
-    .temporizadores{
+    .temporizadores {
       padding-left: 10px;
     }
   }
@@ -330,22 +330,28 @@ export default {
       "fertirrigacion fertirrigacion";
   }
 
-  .temporizadores{
-      padding-top: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-    }
+  .temporizadores {
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
 
-    #addTemp{
-  padding-left: 0px;
-}
+  #addTemp {
+    padding-left: 0px;
+  }
+
+  .guardar{
+    right: 100px;
+    a {
+      font-size: 1em;
+    }
+  }
 }
 
 @media (max-width: 768px) {
   .form {
-    
     grid-template-areas:
       "activo activo"
       "dias dias"
@@ -373,9 +379,16 @@ export default {
       "duracion duracion"
       "postriego postriego"
       "ferrigacion ferrigacion";
-     
+
     .fertirrigacion {
       grid-column-start: col-start -2;
+    }
+  }
+
+  .guardar{
+    right: 70px;
+    a {
+      font-size: 0.9em;
     }
   }
 }

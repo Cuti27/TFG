@@ -15,6 +15,8 @@
     <toggle></toggle>
     <hr>
     <custom-select @change="selected = $event;print(selected)" :selected="selected" :values="sel"></custom-select>
+    <hr>
+    <submit-button>Guardar</submit-button>
   </div>
 </template>
 
@@ -24,6 +26,7 @@ import List from "@/components/List.vue";
 import daySelector from "@/components/DaySelector";
 import Toggle from "@/components/Toggle";
 import customSelect from "@/components/Select";
+import SubmitButton from "@/components/SubmitButton"
 
 export default {
   components: {
@@ -31,7 +34,8 @@ export default {
     // Programa,
     daySelector,
     Toggle,
-    customSelect
+    customSelect,
+    SubmitButton
   },
   data() {
     return {
