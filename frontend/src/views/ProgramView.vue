@@ -230,7 +230,7 @@ export default {
 
 .form {
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: auto;
   grid-template-rows: auto;
   grid-template-areas:
     "activo ."

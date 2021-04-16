@@ -78,12 +78,12 @@ table {
 
 input,
 label {
-  background: $secondaryDark;
+  background: $primaryDark;
   color: #fff;
 }
 
 label:hover {
-  background: $secondary;
+  background: $primary;
 }
 
 input {

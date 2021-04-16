@@ -153,7 +153,7 @@ export default {
 <style lang="scss">
 @import "src/css/colorSchema.scss";
 $primary-color: $primary;
-$icon-color: darken($secondaryDark, 10%);
+$icon-color: darken($primaryDark, 10%);
 
 @import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
 
@@ -219,9 +219,9 @@ $icon-color: darken($secondaryDark, 10%);
     }
 
     $timing: 265ms;
-    $iconColor: $secondary;
-    $accent: $secondaryDark;
-    $bluefade: $primary;
+    $iconColor: $primary;
+    $accent: $primaryDark;
+    $bluefade: $secondary;
     $gradient: #00b5f5;
 
     @mixin transformScale($size: 1) {

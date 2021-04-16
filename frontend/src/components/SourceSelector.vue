@@ -37,15 +37,16 @@ export default {
 
 input,
 label {
-  background: $secondaryDark;
+  background: $primaryDark;
   color: $white;
   user-select: none;
   min-width: 30px;
   transition: background .3s;
+  border-radius: 8px;
 }
 
 label:hover {
-  background: $secondary;
+  background: $primary;
 }
 
 input {

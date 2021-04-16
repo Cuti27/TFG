@@ -49,7 +49,7 @@ export default {
     position: relative;
     padding: 15px 5px 0;
     margin-top: 10px;
-    width: 90px
+    width: 60px
   }
 
   .form__field {

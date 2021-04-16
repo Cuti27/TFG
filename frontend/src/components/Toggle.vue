@@ -64,8 +64,8 @@ input[type="checkbox"] {
     transition: all 0.2s cubic-bezier(0.5, 0.1, 0.75, 1.35);
   }
   &:checked {
-    border-color: $primary;
-    background: linear-gradient(-90deg, $primary 0%, $primaryDark 100%);;
+    border-color: $secondary;
+    background: linear-gradient(-90deg, $secondary 0%, $secondaryDark 100%);;
     &:after {
       transform: translatex(20px);
     }

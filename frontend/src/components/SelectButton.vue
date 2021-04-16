@@ -26,7 +26,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
-$green: linear-gradient($primary,$primaryDark);
+$green: linear-gradient($secondary, $secondaryDark);
 .middle {
   width: 100%;
   text-align: center;
@@ -37,7 +37,7 @@ $green: linear-gradient($primary,$primaryDark);
     &:checked {
       + .box {
         background: $green;
-        box-shadow: rgb(8, 80, 76) 0px 20px 30px -10px;
+        box-shadow: $primaryDark 0px 20px 30px -18px;
         transition: box-shadow .5s ease-in-out;
         span {
           color: white;

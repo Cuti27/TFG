@@ -35,13 +35,13 @@ export default {
 @import "src/css/colorSchema.scss";
 
 input, label {
-  background: $secondaryDark;
+  background: $primaryDark;
   color: #fff;
   transition: background .3s
 }
 
 label:hover{
-  background: $secondary;
+  background: $primary;
 }
 
 input{
