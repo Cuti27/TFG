@@ -26,11 +26,13 @@
     <select-button :options="['Manual', 'Automatico', ]"></select-button>
     <hr>
     <div class="temporizadores">
-      <temporizador :title="true">Temporizador 1</temporizador>
+      <temporizador v-model="temporizador1" :title="true">Temporizador 1</temporizador>
       <temporizador>Temporizador 2</temporizador>
       <temporizador>Temporizador 3</temporizador>
+      <submit-button>Nuevo temporizador</submit-button>
     </div>
-    
+    <hr>
+    <temporizador-menu></temporizador-menu>
   </div>
 </template>
 
@@ -44,6 +46,7 @@ import SubmitButton from "@/components/SubmitButton";
 import CustomButton from "@/components/CustomButton";
 import SelectButton from "@/components/SelectButton";
 import Temporizador from '@/components/Temporizador.vue';
+import temporizadorMenu from "@/components/TemporizadorMenu"
 
 export default {
   components: {
@@ -55,7 +58,8 @@ export default {
     SubmitButton,
     CustomButton,
     SelectButton,
-    Temporizador
+    Temporizador,
+    temporizadorMenu
   },
   data() {
     return {
@@ -64,7 +68,8 @@ export default {
       dias: [false, false, false, false, false, true, true],
       checked: false,
       sel: ["Hola","Adios", "Buenas noches"],
-      selected: 0
+      selected: 0,
+      temporizador1: [],
     };
   },
   methods: {
@@ -77,12 +82,6 @@ export default {
 
 
 <style lang="scss" scoped>
-.temporizadores {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-}
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
