@@ -2,13 +2,14 @@
   <div class="temporizador">
       <h3 :style="{'align-self': title && windowWidth >= 990? 'end' : 'center'}"><slot></slot></h3>
     <div class="inicio">
-      <h3 v-if="title || windowWidth < 990">Hora de inicio</h3>
+      <h3 v-if="title || windowWidth < 1030">Hora de inicio</h3>
          <div>
         <number-selector
           :value="inicioHora"
           :min="0"
           :max="99"
           placeholder="Horas"
+          :disabled="disabled"
           @input="inicioHora = parseInt($event); update()"
         ></number-selector>
         <number-selector
@@ -16,6 +17,7 @@
           :min="0"
           :max="59"
           placeholder="Min"
+          :disabled="disabled"
           @input="inicioMinutos = parseInt($event); update()"
         ></number-selector>
         <number-selector
@@ -23,18 +25,20 @@
           :min="0"
           :max="59"
           placeholder="Seg"
+          :disabled="disabled"
           @input="inicioSegundos = parseInt($event); update()"
         ></number-selector>
       </div>
     </div>
     <div class="duracion">
-      <h3 v-if="title || windowWidth < 990">Duración</h3>
+      <h3 v-if="title || windowWidth < 1030">Duración</h3>
       <div>
         <number-selector
           :value="duracionHora"
           :min="0"
           :max="99"
           placeholder="Horas"
+          :disabled="disabled"
           @input="duracionHora = parseInt($event); update()"
         ></number-selector>
         <number-selector
@@ -42,6 +46,7 @@
           :min="0"
           :max="59"
           placeholder="Min"
+          :disabled="disabled"
           @input="duracionMinutos = parseInt($event); update()"
         ></number-selector>
         <number-selector
@@ -49,18 +54,20 @@
           :min="0"
           :max="59"
           placeholder="Seg"
+          :disabled="disabled"
           @input="duracionSegundos = parseInt($event); update()"
         ></number-selector>
       </div>
     </div>
     <div class="postriego">
-      <h3 v-if="title || windowWidth < 990">Tiempo de postriego</h3>
+      <h3 v-if="title || windowWidth < 1030">Tiempo de postriego</h3>
       <div>
         <number-selector
           :value="postHora"
           :min="0"
           :max="99"
           placeholder="Horas"
+          :disabled="disabled"
           @input="postHora = parseInt($event); update()"
         ></number-selector>
         <number-selector
@@ -68,6 +75,7 @@
           :min="0"
           :max="59"
           placeholder="Min"
+          :disabled="disabled"
           @input="postMinutos = parseInt($event); update()"
         ></number-selector>
         <number-selector
@@ -75,11 +83,12 @@
           :min="0"
           :max="59"
           placeholder="Seg"
+          :disabled="disabled"
           @input="postSegundos = parseInt($event); update()"
         ></number-selector>
       </div>
     </div>
-    <font-awesome-icon :style="{'align-self': title && windowWidth >= 990? 'end' : 'center'}" @click="$emit('delete',id)" icon="trash-alt" size="2x" />
+    <font-awesome-icon :style="{'align-self': title && windowWidth >= 1030? 'end' : 'center'}" @click="$emit('delete',id)" icon="trash-alt" size="2x" />
   </div>
  
 </template>
@@ -94,7 +103,8 @@ export default {
   props: {
       title: Boolean,
       id: Number,
-      value: Object
+      value: Object,
+      disabled: Boolean,
   },
   data() {
     return {
@@ -165,7 +175,7 @@ export default {
   border: 1px solid $primaryDark;
   border-radius: 15px;
   padding: 20px;
-  box-shadow: rgba(22, 62, 93, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  box-shadow: rgba(22, 62, 93, 0.5) 0px 1px 2px 0px, rgba(60, 64, 67, 0.3) 0px 2px 6px 2px;
   
 
   .inicio,
@@ -195,7 +205,7 @@ export default {
 }
 
 
-@media (max-width: 990px) {
+@media (max-width: 1030px) {
   .temporizador {
       justify-content: center;
     margin: 10px 15px;

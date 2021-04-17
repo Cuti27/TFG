@@ -1,8 +1,7 @@
 <template>
   <div class="temporizadores">
-   <transition-group tag="ul" name="list"></transition-group>
     <temporizador
-    :class="{remove: removing == index}" 
+    :class="{disabled: disabled, remove: removing == index, creando: success && temporizadores.length == index + 1}" 
       v-for="(temp, index) in temporizadores"
       :key="'Temporizador' + getHash(index)"
       v-model="temporizadores[index]"
@@ -10,17 +9,18 @@
       @delete="remove($event)"
       :id="index"
       :value="temporizadores[index]"
+      :disabled="disabled"
       >Temporizador {{ index + 1 }}</temporizador
     >
 
-    <a
+    <a v-if="!disabled"
       @click.prevent="add()"
       :class="{ button: true, success }"
       href="#"
       role="button"
     >
       <span>Añadir</span>
-      <div class="icon">
+      <div class="icon" >
         <font-awesome-icon v-if="!success" icon="plus-square" size="2x" />
         <font-awesome-icon v-else icon="check" size="3x" />
       </div>
@@ -33,6 +33,12 @@ import Temporizador from "@/components/Temporizador";
 export default {
   components: {
     Temporizador,
+  },
+  props: {
+    disabled: {
+      type: Boolean,
+      required: true
+    }
   },
   data() {
     return {
@@ -55,7 +61,7 @@ export default {
           duracion: [0, 0, 0],
           post: [0, 0, 0],
         });
-      setTimeout(() => (this.success = false), 1000);
+      setTimeout(() => (this.success = false), 600);
     },
     remove(event) {
       this.removing = event;
@@ -76,12 +82,125 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
+.disabled {
+  opacity: 0.3;
+}
+
 .remove {
-   animation: 0.4s ease-in-out 0.2s remove
+  -webkit-animation: 0.4s ease-in 0.2s remove; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: 0.4s ease-in 0.2s remove; /* Firefox < 16 */
+        -ms-animation: 0.4s ease-in 0.2s remove; /* Internet Explorer */
+         -o-animation: 0.4s ease-in 0.2s remove; /* Opera < 12.1 */
+            animation: 0.4s ease-in 0.2s remove;
+   animation: 0.4s ease-in 0.2s remove;
+}
+
+.creando{
+  opacity: 0;
+  animation: 0.4s ease-in 0.2s create;
+}
+
+@-webkit-keyframes create {
+  0% { opacity: 0; transform: scale(0, 0); height: 0px; }
+  99% {
+    transform: scale(1.1, 1.1);
+    height: auto;
+  }
+  100% { opacity: 1; height: auto;  }
+}
+
+@-moz-keyframes create {
+  0% { opacity: 0; transform: scale(0, 0); height: 0px; }
+  99% {
+    transform: scale(1.1, 1.1);
+    height: auto;
+  }
+  100% { opacity: 1; height: auto;  }
+}
+
+@-ms-keyframes create {
+  0% { opacity: 0; transform: scale(0, 0); height: 0px; }
+  99% {
+    transform: scale(1.1, 1.1);
+    height: auto;
+  }
+  100% { opacity: 1; height: auto;  }
+}
+
+@keyframes create {
+  0% { opacity: 0; transform: scale(0, 0); height: 0px; }
+  99% {
+    transform: scale(1.1, 1.1);
+    height: auto;
+  }
+  100% { opacity: 1; height: auto;  }
 }
 
 @keyframes remove {
-  from {
+     from {
+    transform: scale(1, 1);
+  }
+  
+  30% {
+    transform: scale(1.1, 1.1);
+  }
+
+  99% {
+    transform: scale(0, 0);
+    height: 0;
+  }
+  
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes remove {
+     from {
+    transform: scale(1, 1);
+  }
+  
+  30% {
+    transform: scale(1.1, 1.1);
+  }
+
+  99% {
+    transform: scale(0, 0);
+    height: 0;
+  }
+  
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes remove {
+     from {
+    transform: scale(1, 1);
+  }
+  
+  30% {
+    transform: scale(1.1, 1.1);
+  }
+
+  99% {
+    transform: scale(0, 0);
+    height: 0;
+  }
+  
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+/* Internet Explorer */
+@-ms-keyframes remove {
+     from {
     transform: scale(1, 1);
   }
   
@@ -114,15 +233,15 @@ $transition: all #{$speed} cubic-bezier(0.31, -0.105, 0.43, 1.4);
 .button {
   display: block;
   background-color: $primary;
-  width: 300px;
-  height: 100px;
+  width: 200px;
+  height: 75px;
   line-height: 100px;
   margin: auto;
   margin-top: 20px;
   color: #fff;
   position: relative;
-  margin-right: 100px;
-  margin-left: 100px;
+  margin-right: 50px;
+  margin-left: 50px;
   cursor: pointer;
   border-radius: 25px;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
@@ -134,7 +253,7 @@ $transition: all #{$speed} cubic-bezier(0.31, -0.105, 0.43, 1.4);
     height: 100%;
     text-align: center;
     position: absolute;
-    top: 0;
+    top: -10px;
   }
 
   span {
@@ -151,7 +270,7 @@ $transition: all #{$speed} cubic-bezier(0.31, -0.105, 0.43, 1.4);
       width: 2px;
       height: 70%;
       position: absolute;
-      top: 15%;
+      top: 25%;
       right: -1px;
     }
   }
@@ -160,7 +279,7 @@ $transition: all #{$speed} cubic-bezier(0.31, -0.105, 0.43, 1.4);
     width: 28%;
     right: 0;
     transition: $transition;
-    top: 8px;
+    top: -5px;
 
     .fa {
       font-size: 30px;

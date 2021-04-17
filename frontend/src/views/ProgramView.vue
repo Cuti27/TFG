@@ -8,7 +8,7 @@
     </div>
     <div class="form">
       <div class="activo">
-        <label for="Activo">Programa: </label>
+        <h2 for="Activo">Programa: </h2>
         <toggle v-model="programa"></toggle>
         <label for="Activo">{{ isActive }}</label>
       </div>
@@ -20,9 +20,9 @@
 
       <div class="hora">
         <div class="horaHead">
-          <label for="Horas">Hora de inicio:</label>
-          <toggle v-model="horaInicio"></toggle>
-          <label for="Horas">{{ isTempHoraInicio }}</label>
+          <h3 for="Horas">Hora de inicio:</h3>
+          
+           <select-button xl v-model="horaInicio" name="hora" :options="['Despues de programa','Mediante temporizador']"></select-button>
         </div>
 
         <div v-if="!horaInicio">
@@ -40,80 +40,24 @@
           </modal>
         </div>
         <div class="temporizadores" v-else>
-          <label for="addTemp">Añadir un nuevo temporizador: </label>
-          <div class="buttonTemp">
-            <font-awesome-icon id="addTemp" icon="plus-circle" size="3x" />
-          </div>
+          <h3 for="Horas">Temporización:</h3>
+           <select-button :sel="temporizador" v-model="temporizador" name="temporizacion" :options="['Manual', 'Automático']"></select-button>
+          <temporizador-menu :disabled="temporizador == 1"></temporizador-menu>
         </div>
       </div>
       <div class="emisor">
-        <label for="Emisor">Seleccionar tipo de emisor:</label>
+        <h3 for="Emisor">Seleccionar tipo de emisor:</h3>
         <select-button name="Emisor" :options="['Aspersion', 'Goteo']"></select-button>
-        <!-- <toggle v-model="emisor"></toggle>
-        <label for="Emisor">{{ isEmisor }}</label> -->
       </div>
       <div class="fuente">
         <source-selector :options="fuentes">
-          Selecciona una fuente
+          <h3>Selecciona una fuente</h3> 
         </source-selector>
       </div>
 
       <div class="secciones">
-        <label for="">Selecciona los sectores</label>
+        <h3 for="">Selecciona los sectores</h3>
         <section-selector></section-selector>
-      </div>
-      <div class="duracion">
-        <label for="">Seleccione el tiempo del programa</label>
-        <div class="selectorHora">
-          <number-selector
-            :value="horas"
-            :min="0"
-            :max="99"
-            placeholder="Horas"
-            @input="horas = value"
-          ></number-selector>
-          <number-selector
-            :value="minutos"
-            :min="0"
-            :max="59"
-            placeholder="Min"
-            @input="minutos = value"
-          ></number-selector>
-          <number-selector
-            :value="segundos"
-            :min="0"
-            :max="59"
-            placeholder="Seg"
-            @input="segundos = value"
-          ></number-selector>
-        </div>
-      </div>
-
-      <div class="postriego">
-        <label for="">Seleccione el tiempo del postriego</label>
-        <div class="selectorHora">
-          <number-selector
-            :value="postHoras"
-            :min="0"
-            :max="99"
-            placeholder="Horas"
-            @input="postHoras = value"
-          ></number-selector>
-          <number-selector
-            :value="postMinutos"
-            :min="0"
-            :max="59"
-            placeholder="Min"
-            @input="postMinutos = value"
-          ></number-selector>
-          <number-selector
-            :value="postSegundos"
-            :min="0"
-            :max="59"
-            placeholder="Seg"
-            @input="postSegundos = value"
-          ></number-selector>
-        </div>
       </div>
 
       <div class="fertirrigacion">
@@ -127,24 +71,24 @@
 import daySelector from "@/components/DaySelector";
 import sourceSelector from "@/components/SourceSelector";
 import sectionSelector from "@/components/SectionSelector";
-import numberSelector from "@/components/NumberSelector";
 import Modal from "@/components/Modal";
 import List from "@/components/List";
 import Toggle from "@/components/Toggle";
 import SubmitButton from "@/components/SubmitButton";
 import SelectButton from "@/components/SelectButton";
+import temporizadorMenu from "@/components/TemporizadorMenu";
 
 export default {
   components: {
     daySelector,
     sourceSelector,
     sectionSelector,
-    numberSelector,
     Modal,
     List,
     Toggle,
     SubmitButton,
-    SelectButton
+    SelectButton,
+    temporizadorMenu
   },
   data() {
     return {
@@ -162,6 +106,7 @@ export default {
       dias: false,
       horaInicio: false,
       emisor: false,
+      temporizador: 0
     };
   },
   computed: {
@@ -190,6 +135,10 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
+
+h3{
+  margin-bottom: 5px;
+}
 
 .guardar {
   position: fixed;
@@ -333,27 +282,7 @@ export default {
 @media (max-width: 1200px) {
   .form {
     grid-template-columns: 50% 50%;
-    grid-template-areas:
-      "activo fuentes"
-      "dias fuentes"
-      "hora hora"
-      "emisor emisor"
-      "duracion postriego"
-      "secciones secciones"
-      "fertirrigacion fertirrigacion";
-  }
-
-  .temporizadores {
-    padding-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-  }
-
-  #addTemp {
-    padding-left: 0px;
-  }
+    
 
   .guardar{
     right: 100px;
@@ -362,18 +291,19 @@ export default {
     }
   }
 }
+}
 
 @media (max-width: 768px) {
   .form {
     grid-template-areas:
       "activo activo"
-      "dias dias"
-      "fuentes fuentes"
-      "hora hora"
-      "emisor emisor"
-      "secciones secciones"
-      "duracion postriego"
-      "ferrigacion ferrigacion";
+    "dias dias"
+    "fuentes fuentes"
+    "secciones secciones"
+    "emisor emisor"
+    "hora hora"
+    "duracion postriego"
+    "fertirrigacion fertirrigacion";
     .fertirrigacion {
       grid-column-start: col-start -3;
     }
@@ -382,17 +312,6 @@ export default {
 
 @media (max-width: 576px) {
   .form {
-    grid-template-areas:
-      "activo activo"
-      "dias dias"
-      "fuentes fuentes"
-      "hora hora"
-      "emisor emisor"
-      "secciones secciones"
-      "duracion duracion"
-      "postriego postriego"
-      "ferrigacion ferrigacion";
-
     .fertirrigacion {
       grid-column-start: col-start -2;
     }

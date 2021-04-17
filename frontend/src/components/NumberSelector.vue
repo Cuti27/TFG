@@ -10,6 +10,7 @@
            :min="min" :max="max"
           required
           @input="updateValue($event.target.value)"
+          :disabled="disabled"
         />
         <label for="name" class="form__label">{{placeholder}}</label>
       </div>
@@ -29,7 +30,8 @@ export default {
         },
         placeholder: {
             type: String
-        }
+        },
+        disabled: Boolean
     },
     methods: {
       updateValue(val){
