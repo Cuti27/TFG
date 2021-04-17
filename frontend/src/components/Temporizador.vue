@@ -1,9 +1,9 @@
 <template>
   <div class="temporizador">
-      <h3><slot></slot></h3>
+      <h3 :style="{'align-self': title && windowWidth >= 990? 'end' : 'center'}"><slot></slot></h3>
     <div class="inicio">
       <h3 v-if="title || windowWidth < 990">Hora de inicio</h3>
-      <div>
+         <div>
         <number-selector
           :value="inicioHora"
           :min="0"
@@ -61,7 +61,7 @@
           :min="0"
           :max="99"
           placeholder="Horas"
-          @input="postHoras = parseInt($event); update()"
+          @input="postHora = parseInt($event); update()"
         ></number-selector>
         <number-selector
           :value="postMinutos"
@@ -79,7 +79,7 @@
         ></number-selector>
       </div>
     </div>
-    <font-awesome-icon @click="$emit('click',id)" icon="trash-alt" size="2x" />
+    <font-awesome-icon :style="{'align-self': title && windowWidth >= 990? 'end' : 'center'}" @click="$emit('delete',id)" icon="trash-alt" size="2x" />
   </div>
  
 </template>
@@ -93,21 +93,23 @@ export default {
   },
   props: {
       title: Boolean,
-      id: Number
+      id: Number,
+      value: Object
   },
   data() {
     return {
-      inicioHora: 0,
-      inicioMinutos: 0,
-      inicioSegundos: 0,
-      duracionHora: 0,
-      duracionMinutos: 0,
-      duracionSegundos: 0,
-      postHora: 0,
-      postMinutos: 0,
-      postSegundos: 0,
+      inicioHora: this.value.inicio[0],
+      inicioMinutos: this.value.inicio[1],
+      inicioSegundos: this.value.inicio[2],
+      duracionHora: this.value.duracion[0],
+      duracionMinutos: this.value.duracion[1],
+      duracionSegundos: this.value.duracion[2],
+      postHora: this.value.post[0],
+      postMinutos: this.value.post[1],
+      postSegundos: this.value.post[2],
       windowWidth: 0,
       windowHeight: 0,
+      
     };
   },
   computed: {
@@ -160,6 +162,11 @@ export default {
   flex-wrap: wrap;
   width: 100%;
   min-width: 220px;
+  border: 1px solid $primaryDark;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: rgba(22, 62, 93, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+  
 
   .inicio,
   .duracion,
@@ -180,10 +187,11 @@ export default {
     color: $primaryDark;
     cursor: pointer;
 
-    &:hover{
+    &:hover {
       color: $primary;
     }
   }
+
 }
 
 

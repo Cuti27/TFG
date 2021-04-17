@@ -25,13 +25,6 @@
     <hr>
     <select-button :options="['Manual', 'Automatico', ]"></select-button>
     <hr>
-    <div class="temporizadores">
-      <temporizador v-model="temporizador1" :title="true">Temporizador 1</temporizador>
-      <temporizador>Temporizador 2</temporizador>
-      <temporizador>Temporizador 3</temporizador>
-      <submit-button>Nuevo temporizador</submit-button>
-    </div>
-    <hr>
     <temporizador-menu></temporizador-menu>
   </div>
 </template>
@@ -45,7 +38,6 @@ import customSelect from "@/components/Select";
 import SubmitButton from "@/components/SubmitButton";
 import CustomButton from "@/components/CustomButton";
 import SelectButton from "@/components/SelectButton";
-import Temporizador from '@/components/Temporizador.vue';
 import temporizadorMenu from "@/components/TemporizadorMenu"
 
 export default {
@@ -58,7 +50,6 @@ export default {
     SubmitButton,
     CustomButton,
     SelectButton,
-    Temporizador,
     temporizadorMenu
   },
   data() {

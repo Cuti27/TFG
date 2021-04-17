@@ -1,17 +1,27 @@
 <template>
   <div class="temporizadores">
+   <transition-group tag="ul" name="list"></transition-group>
     <temporizador
+    :class="{remove: removing == index}" 
       v-for="(temp, index) in temporizadores"
-      :key="'Temporizador' + index"
+      :key="'Temporizador' + getHash(index)"
       v-model="temporizadores[index]"
       :title="index == 0"
-      @click="remove($event)"
+      @delete="remove($event)"
       :id="index"
-    >Temporizador {{ index+1 }}</temporizador>
-    <a @click.prevent="add()" :class="{ button: true, success }" href="#" role="button">
+      :value="temporizadores[index]"
+      >Temporizador {{ index + 1 }}</temporizador
+    >
+
+    <a
+      @click.prevent="add()"
+      :class="{ button: true, success }"
+      href="#"
+      role="button"
+    >
       <span>Añadir</span>
       <div class="icon">
-        <font-awesome-icon v-if="!success" icon="plus-square" size="3x" />
+        <font-awesome-icon v-if="!success" icon="plus-square" size="2x" />
         <font-awesome-icon v-else icon="check" size="3x" />
       </div>
     </a>
@@ -26,28 +36,69 @@ export default {
   },
   data() {
     return {
-      temporizadores: [[]],
+      temporizadores: [
+        {
+          inicio: [0, 0, 0],
+          duracion: [0, 0, 0],
+          post: [0, 0, 0],
+        },
+      ],
       success: false,
+      removing: -100
     };
   },
   methods: {
     add() {
       this.success = true;
-      this.temporizadores.push([]);
-       setTimeout(() => this.success = false, 1000);
+      this.temporizadores.push({
+          inicio: [0, 0, 0],
+          duracion: [0, 0, 0],
+          post: [0, 0, 0],
+        });
+      setTimeout(() => (this.success = false), 1000);
     },
-    remove(event){
-        console.log(event)
-        if(this.temporizadores.length >= 2)
-            this.temporizadores.splice(event - 1,1);
+    remove(event) {
+      this.removing = event;
+      if (this.temporizadores.length >= 2)
+        setTimeout(() => {
+          this.temporizadores.splice(event, 1);
+          this.removing = -100
+        }, 600);
+        
+    },
+    getHash(){
+      return Math.floor(Math.random() * 10000);
     }
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
+.remove {
+   animation: 0.4s ease-in-out 0.2s remove
+}
+
+@keyframes remove {
+  from {
+    transform: scale(1, 1);
+  }
+  
+  30% {
+    transform: scale(1.1, 1.1);
+  }
+
+  99% {
+    transform: scale(0, 0);
+    height: 0;
+  }
+  
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
 // Variables
 $speed: "0.25s";
 $transition: all #{$speed} cubic-bezier(0.31, -0.105, 0.43, 1.4);
@@ -109,7 +160,7 @@ $transition: all #{$speed} cubic-bezier(0.31, -0.105, 0.43, 1.4);
     width: 28%;
     right: 0;
     transition: $transition;
-    top: 10px;
+    top: 8px;
 
     .fa {
       font-size: 30px;
@@ -166,6 +217,35 @@ $transition: all #{$speed} cubic-bezier(0.31, -0.105, 0.43, 1.4);
 
   &:active {
     opacity: 1;
+  }
+}
+
+@media (max-width: 990px){
+  .button {
+    width: 200px;
+    height: 75px;
+    .icon {
+      top: -2px;
+    }
+    span{
+      top: -9px;
+      &:after{
+        top: 17px;
+      }
+    }
+  }
+}
+@media (max-width: 576px) {
+  .button {
+    .icon {
+      top: -5px;
+    }
+    span{
+      top: -12px;
+      &:after{
+        top: 22px;
+      }
+    }
   }
 }
 </style>
