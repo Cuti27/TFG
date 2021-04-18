@@ -3,12 +3,19 @@
     <!-- Header con el nombre del programa -->
     <div class="header">
       <h1>{{ name }}</h1>
+      <div class="ayuda">
+      <a @click.prevent="$tours['myTour'].start()">
+        <font-awesome-icon icon="info-circle"/>
+      </a>
+    </div>
     </div>
 
     <!-- Botón flotante con el que se puede guardar -->
     <div class="guardar">
       <submit-button>Guardar</submit-button>
     </div>
+
+    
 
     <!-- Cuerpo donde se va a mostrar todo el contenido de la página -->
     <div class="form">
@@ -102,11 +109,7 @@
       </div>
     </div>
 
-    <v-tour
-      name="myTour"
-      :steps="steps"
-      :options="{ highlight: true }"
-    ></v-tour>
+    <v-tour name="myTour" :steps="steps" :options="myOptions"></v-tour>
   </div>
 </template>
 
@@ -144,6 +147,15 @@ export default {
       horaInicio: false,
       emisor: false,
       temporizador: 0,
+      myOptions: {
+        useKeyboardNavigation: true,
+        labels: {
+          buttonSkip: "Saltar tour",
+          buttonPrevious: "Anterior",
+          buttonNext: "Siguiente",
+          buttonStop: "Finalizar",
+        },
+      },
       steps: [
         {
           target: ".activo",
@@ -155,24 +167,26 @@ export default {
         {
           target: ".dias",
           header: {
-            title: "Nombre del programa",
+            title: "Dias de activación",
           },
           content:
             "Escoge como se van a realizar la selección de los días de manera automática o manual. En caso de ser manual debe escoger los días de la lista ",
         },
-         {
+        {
           target: ".fuente",
           header: {
             title: "Fuentes disponibles",
           },
-          content: "Selecciona las fuen que deseas activar (azul significa que se ha escogido, blanco significa que no)",
+          content:
+            "Selecciona las fuen que deseas activar (azul significa que se ha escogido, blanco significa que no)",
         },
         {
           target: ".secciones",
           header: {
             title: "Secciones disponibles",
           },
-          content: "Puedes escoger atraves de un mapa o atraves de de un seleccionable los sectores que se desean regar (azul significa que se ha escogido, blanco significa que no)",
+          content:
+            "Puedes escoger atraves de un mapa o atraves de de un seleccionable los sectores que se desean regar (azul significa que se ha escogido, blanco significa que no)",
         },
         {
           target: ".emisor",
@@ -186,14 +200,16 @@ export default {
           header: {
             title: "Programación temporal",
           },
-          content: "En primer lugar se debe escoger si se quiere programar despues de un programa o mediante temporizadores. En caso de ser por temporizadores, se puede escoger de manera manual y poner tantos como quieras. Como de manera automática y se decidirá automáticamente los tiempos",
+          content:
+            "En primer lugar se debe escoger si se quiere programar despues de un programa o mediante temporizadores. En caso de ser por temporizadores, se puede escoger de manera manual y poner tantos como quieras. Como de manera automática y se decidirá automáticamente los tiempos",
         },
         {
           target: ".fertirrigacion",
           header: {
             title: "Fertirrigación",
           },
-          content: "Permite acceder al programa de fertirrigación, que se asociará a este programa",
+          content:
+            "Permite acceder al programa de fertirrigación, que se asociará a este programa",
         },
       ],
     };
@@ -219,14 +235,70 @@ export default {
       this.$router.push("Fertirrigacion");
     },
   },
-  mounted() {
-    this.$tours["myTour"].start();
-  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
+
+.ayuda{
+   display: inline-block;
+    margin: 0.15em;
+    position: absolute;
+    font-size: 1.2em;
+    $timing: 265ms;
+    $iconColor: $primary;
+    $accent: $primaryDark;
+    $bluefade: $secondary;
+
+
+    top: 190px;
+    right: 30px;
+    z-index: 9999;
+
+    @mixin transformScale($size: 1) {
+      transform: scale($size);
+      -ms-transform: scale($size);
+      -webkit-transform: scale($size);
+    }
+
+
+      svg {
+        color: $white;
+        position: absolute;
+        top: 6px;
+        left: 5px;
+        transition: all $timing ease-out;
+      }
+
+      a {
+        display: inline-block;
+        padding: 0px;
+        &:before {
+          @include transformScale();
+          content: " ";
+          width: 40px;
+          height: 40px;
+          border-radius: 100%;
+          display: block;
+          background: linear-gradient(45deg, $iconColor, $accent);
+          transition: all $timing ease-out;
+        }
+
+        &:hover:before {
+          transform: scale(0);
+          transition: all $timing ease-in;
+        }
+
+        &:hover svg {
+          @include transformScale(2.2);
+          color: $white;
+          -webkit-text-fill-color: transparent;
+          transition: all $timing ease-in;
+        }
+      }
+    }
+    
 
 h3 {
   margin-bottom: 5px;
@@ -411,6 +483,12 @@ h3 {
     a {
       font-size: 0.9em;
     }
+  }
+}
+
+@media (max-width: "480px"){
+  .ayuda{
+    top: 230px;
   }
 }
 </style>

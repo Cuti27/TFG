@@ -25,6 +25,7 @@
     >
       <div slot="header">
         <img v-if="!collapse" src="./assets/Logo.png" width="200px" alt="" />
+        
       </div>
       <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
     </sidebar-menu>
@@ -89,6 +90,16 @@ export default {
         },
         {
           href: { name: "Home" },
+          title: "Home",
+          icon: {
+            element: "font-awesome-icon",
+            attributes: {
+              icon: "home",
+            },
+          },
+        },
+        {
+          href: { name: "Prueba" },
           title: "Pruebas",
           icon: {
             element: "font-awesome-icon",

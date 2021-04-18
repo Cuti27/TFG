@@ -6,8 +6,8 @@ import Prueba from '../views/Pruebas.vue'
 Vue.use(VueRouter)
 
 const routes = [{
-        path: '/',
-        name: 'Home',
+        path: '/Prueba',
+        name: 'Prueba',
         component: Prueba
     },
     {
@@ -21,6 +21,12 @@ const routes = [{
         name: 'Fertirrigacion',
         component: () =>
             import ( /* webpackChunkName: "about" */ "../views/Fertirrigacion.vue"),
+    },
+    {
+        path: '/',
+        name: 'Home',
+        component: () =>
+            import ( /* webpackChunkName: "about" */ "../views/Home.vue"),
     }
 ]
 
