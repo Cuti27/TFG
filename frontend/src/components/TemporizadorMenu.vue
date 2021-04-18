@@ -64,12 +64,13 @@ export default {
       setTimeout(() => (this.success = false), 600);
     },
     remove(event) {
-      this.removing = event;
-      if (this.temporizadores.length >= 2)
+      if (this.temporizadores.length >= 2){
+        this.removing = event;
         setTimeout(() => {
           this.temporizadores.splice(event, 1);
           this.removing = -100
         }, 600);
+      }
         
     },
     getHash(){

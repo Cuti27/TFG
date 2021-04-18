@@ -7,6 +7,9 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faFacebookF, faLinkedinIn } from '@fortawesome/free-brands-svg-icons'
 import { faTrashAlt, faCheck, faPlusSquare, faPlusCircle, faWrench, faArrowsAltH, faFaucet, faLeaf, faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import VueTour from 'vue-tour';
+
+require('vue-tour/dist/vue-tour.css')
 
 library.add(faTrashAlt, faCheck, faPlusSquare, faLinkedinIn, faFacebookF, faPlusCircle, faWrench, faArrowsAltH, faFaucet, faLeaf, faArrowCircleLeft, faArrowCircleRight);
 
@@ -14,6 +17,8 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.config.productionTip = false
+
+Vue.use(VueTour)
 
 new Vue({
     router,

@@ -30,7 +30,8 @@
     </sidebar-menu>
 
     <div @click="touchOut()" :class="{ main: true, move: !collapse }">
-      <router-view />
+      <transition name="slide" mode="out-in"><router-view /></transition>
+      
     </div>
     <footer :class="{ move: !collapse }">
       <div>
@@ -157,6 +158,17 @@ $icon-color: darken($primaryDark, 10%);
 
 @import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
 
+.slide-enter-active,
+.slide-leave-active {
+  transition: opacity .5s, transform .5s;
+}
+
+.slide-enter,
+.slide-leave-to{
+  opacity: 0;
+  transform: translateX(-30%);
+}
+
 .main {
   margin-left: 50px;
   flex-grow: 3;
@@ -172,6 +184,14 @@ $icon-color: darken($primaryDark, 10%);
   color: black;
 }
 
+#nav {
+  margin-left: 25px;
+}
+
+body{
+  background-color: rgb(245, 245, 245);
+}
+
 /* Rotate first bar */
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -179,7 +199,7 @@ $icon-color: darken($primaryDark, 10%);
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-
+  
   display: flex;
   align-items: space-between;
   justify-content: space-between;

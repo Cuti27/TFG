@@ -64,7 +64,7 @@ label {
 label.blanco {
   background-color: $white;
   color: $black;
-  opacity: 0.3;
+  opacity: 0.5;
 
   
 }

@@ -1,5 +1,8 @@
 <template>
   <div class="view">
+    <div class="header">
+      <h1>Configuracion de Fertirrigación</h1>
+    </div>
     <div class="phControl">
       <div class="phPre">
         <label for="phPre">CONTROL DE pH EN PRERIEGO: </label>
@@ -126,11 +129,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/css/colorSchema.scss";
+
 .view {
   display: grid;
   grid-template-columns: auto;
   grid-template-rows: auto;
   grid-template-areas:
+    "header header"
     "phControl ph"
     "phControl ph"
     "phControl  lineaAbono"
@@ -145,12 +151,36 @@ export default {
   .selectorAbono,
   .consigna,
   .selector,
-  .tiempo {
+  .tiempo,
+  .header {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     border-radius: 5px;
     margin: 10px;
     padding: 10px 15px;
+    background: $white;
   }
+
+  .header {
+    grid-area: header;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  padding: 20px;
+  margin: 20px;
+  margin-bottom: 40px;
+  background: linear-gradient($primaryShadow, $secondaryShadow),
+    url("../assets/header.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  background-position-y: -150px;
+  color: white;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+}
 
   .phControl {
     grid-area: phControl;
@@ -186,6 +216,7 @@ export default {
 @media (max-width: 768px) {
   .view {
     grid-template-areas:
+    "header header"
       "phControl phControl"
       "ph  lineaAbono"
       "controlAbono controlAbono"
@@ -198,6 +229,7 @@ export default {
 @media (max-width: 633px) {
   .view {
     grid-template-areas:
+    "header header"
       "phControl phControl"
       "ph ph"
       "controlAbono controlAbono"

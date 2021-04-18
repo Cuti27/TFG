@@ -1,28 +1,71 @@
 <template>
   <div class="root">
+    <!-- Header con el nombre del programa -->
     <div class="header">
       <h1>{{ name }}</h1>
     </div>
+
+    <!-- Botón flotante con el que se puede guardar -->
     <div class="guardar">
       <submit-button>Guardar</submit-button>
     </div>
+
+    <!-- Cuerpo donde se va a mostrar todo el contenido de la página -->
     <div class="form">
+      <!-- Toggle encargado de activar el programa -->
       <div class="activo">
-        <h2 for="Activo">Programa: </h2>
-        <toggle v-model="programa"></toggle>
-        <label for="Activo">{{ isActive }}</label>
+        <div>
+          <h2 for="Activo">Programa:</h2>
+          <toggle v-model="programa"></toggle>
+          <label for="Activo">{{ isActive }}</label>
+        </div>
       </div>
+
+      <!-- Selector de días -->
       <div class="dias">
         <label for="Dias">Seleccione los dias:</label>
-        <select-button name="Dias" :options="['Manual', 'Automático']"></select-button>
+        <select-button
+          name="Dias"
+          :options="['Manual', 'Automático']"
+        ></select-button>
         <day-selector></day-selector>
       </div>
 
+      <!-- Selector de fuentes -->
+      <div class="fuente">
+        <source-selector :options="fuentes">
+          <h3>Selecciona una fuente</h3>
+        </source-selector>
+      </div>
+
+      <!-- Selector de sectores -->
+      <div class="secciones">
+        <h3 for="">Selecciona los sectores</h3>
+        <section-selector></section-selector>
+      </div>
+
+      <!-- Seleccion de tipo de emisior -->
+      <div class="emisor">
+        <div>
+          <h3 for="Emisor">Seleccionar tipo de emisor:</h3>
+          <select-button
+            name="Emisor"
+            :options="['Aspersion', 'Goteo']"
+          ></select-button>
+        </div>
+      </div>
+
+      <!-- Selector de  tiempo-->
       <div class="hora">
         <div class="horaHead">
           <h3 for="Horas">Hora de inicio:</h3>
-          
-           <select-button xl v-model="horaInicio" name="hora" :options="['Despues de programa','Mediante temporizador']"></select-button>
+
+          <select-button
+            xl
+            v-model="horaInicio"
+            name="hora"
+            :options="['Despues de programa', 'Mediante temporizador']"
+          ></select-button>
         </div>
 
         <div v-if="!horaInicio">
@@ -41,29 +84,29 @@
         </div>
         <div class="temporizadores" v-else>
           <h3 for="Horas">Temporización:</h3>
-           <select-button :sel="temporizador" v-model="temporizador" name="temporizacion" :options="['Manual', 'Automático']"></select-button>
+          <select-button
+            :sel="temporizador"
+            v-model="temporizador"
+            name="temporizacion"
+            :options="['Manual', 'Automático']"
+          ></select-button>
           <temporizador-menu :disabled="temporizador == 1"></temporizador-menu>
         </div>
       </div>
-      <div class="emisor">
-        <h3 for="Emisor">Seleccionar tipo de emisor:</h3>
-        <select-button name="Emisor" :options="['Aspersion', 'Goteo']"></select-button>
-      </div>
-      <div class="fuente">
-        <source-selector :options="fuentes">
-          <h3>Selecciona una fuente</h3> 
-        </source-selector>
-      </div>
 
-      <div class="secciones">
-        <h3 for="">Selecciona los sectores</h3>
-        <section-selector></section-selector>
-      </div>
-
+      <!-- Acceso al panel de fertirrigacion -->
       <div class="fertirrigacion">
-        <submit-button @click="goFertirrigacion()">Fertirrigacion</submit-button>
+        <submit-button @click="goFertirrigacion()"
+          >Fertirrigacion</submit-button
+        >
       </div>
     </div>
+
+    <v-tour
+      name="myTour"
+      :steps="steps"
+      :options="{ highlight: true }"
+    ></v-tour>
   </div>
 </template>
 
@@ -88,25 +131,71 @@ export default {
     Toggle,
     SubmitButton,
     SelectButton,
-    temporizadorMenu
+    temporizadorMenu,
   },
   data() {
     return {
-      programas: this.$root.programas,
-      showModal: false,
-      name: "Programa de riego 1",
-      fuentes: ["Bombas 1", "Bombas 2", "Bombas 3", "Bombas 4"],
-      horas: 10,
-      minutos: 10,
-      segundos: 10,
-      postHoras: 10,
-      postMinutos: 10,
-      postSegundos: 10,
+      programas: this.$root.programas, // TODO: eliminar esto en la version final
+      showModal: false, // Variable que indica si mostrar o no el modal
+      name: "Programa de riego 1", // Nombre del programa
+      fuentes: ["Bombas 1", "Bombas 2", "Bombas 3", "Bombas 4"], // Nombre de las bombas, se pueden especificar los que quieran
       programa: false,
       dias: false,
       horaInicio: false,
       emisor: false,
-      temporizador: 0
+      temporizador: 0,
+      steps: [
+        {
+          target: ".activo",
+          header: {
+            title: "Activación del programa",
+          },
+          content: "Permite activar el programa actual",
+        },
+        {
+          target: ".dias",
+          header: {
+            title: "Nombre del programa",
+          },
+          content:
+            "Escoge como se van a realizar la selección de los días de manera automática o manual. En caso de ser manual debe escoger los días de la lista ",
+        },
+         {
+          target: ".fuente",
+          header: {
+            title: "Fuentes disponibles",
+          },
+          content: "Selecciona las fuen que deseas activar (azul significa que se ha escogido, blanco significa que no)",
+        },
+        {
+          target: ".secciones",
+          header: {
+            title: "Secciones disponibles",
+          },
+          content: "Puedes escoger atraves de un mapa o atraves de de un seleccionable los sectores que se desean regar (azul significa que se ha escogido, blanco significa que no)",
+        },
+        {
+          target: ".emisor",
+          header: {
+            title: "Tipo de emision",
+          },
+          content: "Permite escoger entre riego por aspersión o por goteo",
+        },
+        {
+          target: ".hora",
+          header: {
+            title: "Programación temporal",
+          },
+          content: "En primer lugar se debe escoger si se quiere programar despues de un programa o mediante temporizadores. En caso de ser por temporizadores, se puede escoger de manera manual y poner tantos como quieras. Como de manera automática y se decidirá automáticamente los tiempos",
+        },
+        {
+          target: ".fertirrigacion",
+          header: {
+            title: "Fertirrigación",
+          },
+          content: "Permite acceder al programa de fertirrigación, que se asociará a este programa",
+        },
+      ],
     };
   },
   computed: {
@@ -125,10 +214,13 @@ export default {
       return this.emisor ? "Goteo" : "Aspersion";
     },
   },
-  methods:{
-    goFertirrigacion(){
+  methods: {
+    goFertirrigacion() {
       this.$router.push("Fertirrigacion");
-    }
+    },
+  },
+  mounted() {
+    this.$tours["myTour"].start();
   },
 };
 </script>
@@ -136,7 +228,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
-h3{
+h3 {
   margin-bottom: 5px;
 }
 
@@ -182,13 +274,11 @@ h3{
   grid-template-columns: auto;
   grid-template-rows: auto;
   grid-template-areas:
-    "activo ."
-    "dias dias"
-    "fuentes fuentes"
+    "activo activo"
+    "dias fuentes"
     "secciones secciones"
     "emisor emisor"
     "hora hora"
-    "duracion postriego"
     "fertirrigacion fertirrigacion";
   align-items: center;
   margin: 0;
@@ -237,18 +327,19 @@ h3{
   }
 
   .duracion,
-  .activo,
+  .activo div,
   .dias,
   .hora,
   .fuente,
   .secciones,
   .postriego,
   .fertirrigacion,
-  .emisor {
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  .emisor div:first-child {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 5px;
     margin: 10px;
     padding: 10px 15px;
+    background: $white;
   }
 
   .hora,
@@ -282,28 +373,26 @@ h3{
 @media (max-width: 1200px) {
   .form {
     grid-template-columns: 50% 50%;
-    
 
-  .guardar{
-    right: 100px;
-    a {
-      font-size: 1em;
+    .guardar {
+      right: 100px;
+      a {
+        font-size: 1em;
+      }
     }
   }
-}
 }
 
 @media (max-width: 768px) {
   .form {
     grid-template-areas:
       "activo activo"
-    "dias dias"
-    "fuentes fuentes"
-    "secciones secciones"
-    "emisor emisor"
-    "hora hora"
-    "duracion postriego"
-    "fertirrigacion fertirrigacion";
+      "dias dias"
+      "fuentes fuentes"
+      "secciones secciones"
+      "emisor emisor"
+      "hora hora"
+      "fertirrigacion fertirrigacion";
     .fertirrigacion {
       grid-column-start: col-start -3;
     }
@@ -317,7 +406,7 @@ h3{
     }
   }
 
-  .guardar{
+  .guardar {
     right: 70px;
     a {
       font-size: 0.9em;

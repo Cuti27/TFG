@@ -1,6 +1,6 @@
 <template>
   <div class="SectionSelector">
-    <toggle v-model="show"></toggle>
+     <select-button v-model="show" name="seccion" :options="['Mapa','Sectores']"></select-button>
     <div class="content">
       <transition name="fade" mode="out-in">
         <div v-if="show" key="table">
@@ -35,10 +35,10 @@
 </template>
 
 <script>
-import Toggle from "@/components/Toggle";
+import SelectButton from "@/components/SelectButton";
 export default {
   components: {
-    Toggle,
+    SelectButton,
   },
   data() {
     return {
