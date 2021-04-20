@@ -1,83 +1,59 @@
 <template>
   <div class="home">
-    <section class="intro">
-      <div class="intro1">
-        <img src="@/assets/Logo.png" alt="Logo de Genhidro" />
-        <h2>- Genhidro -</h2>
+    <section class="banner">
+      <div class="content">
+        <h1>Genhidro</h1>
+        <p class="major">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente unde
+          adipisci perspiciatis hic, et tempore rem magnam ut, distinctio
+          dolorum reprehenderit autem, consectetur eaque corporis voluptas
+          minima eius magni temporibus! Corporis qui quidem alias dignissimos.
+          Voluptatum odio possimus quia. Qui minima harum distinctio voluptatem
+          laborum, quae suscipit quisquam perferendis obcaecati repellendus
+          cumque nesciunt, ea facere, blanditiis animi ex enim. Quas. Quis amet,
+          vitae iure in nobis laboriosam magni, mollitia officiis provident
+          atque quibusdam aliquid quod quo aut eveniet repellendus harum iste
+          fugiat eligendi quisquam. Ab harum quaerat aperiam eum adipisci!
+        </p>
         <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque ipsa
-          ratione labore aspernatur, inventore quae esse, aperiam ab dolor sunt
-          incidunt deserunt dolores dolorem officia? Officiis corporis sequi
-          necessitatibus molestias. Minus eveniet deleniti sed iste inventore et
-          libero perspiciatis nostrum illum, voluptate earum illo ad! Aliquam
-          natus voluptates, quia reiciendis laborum, id aut perspiciatis ea in
-          tempore odit nostrum molestiae! Non, asperiores! Dolor error
-          architecto exercitationem libero, totam odit sapiente distinctio qui
-          aspernatur. Exercitationem, eligendi aliquid. Laudantium, illo atque
-          harum dolorem corporis praesentium molestiae? Eveniet exercitationem
-          iusto fugit dolor obcaecati? Vel ex, ipsa magni soluta laborum eum
-          minus maxime quidem vitae ad impedit, perspiciatis velit magnam?
-          Dolorem consequatur quam magni libero tenetur unde enim dolorum, ex
-          iure nulla quis quod.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
+          dolores officiis corporis recusandae! Vel eaque, consequuntur nihil
+          magnam enim quia unde tempora maiores iusto! Illum numquam nostrum vel
+          voluptate ipsa?
         </p>
       </div>
-      <div class="introImg">
-        <img
-          src="https://picsum.photos/seed/picsum/1200/1300"
-          alt=""
-        />
+      <div class="image">
+        <img src="../assets/Home1.jpg" alt="" />
       </div>
     </section>
 
-    <section class="explicacion1">
-      <div class="explicacion1Img">
-        <img
-          src="https://picsum.photos/id/870/200/300?grayscale&blur=2"
-          alt=""
-        />
-      </div>
-      <div class="text1">
-        <h2>- Programación de riego -</h2>
+    <section class="section1 reverse">
+      <div class="content">
+        <h2>Programación Riego</h2>
         <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Neque ipsa
-          ratione labore aspernatur, inventore quae esse, aperiam ab dolor sunt
-          incidunt deserunt dolores dolorem officia? Officiis corporis sequi
-          necessitatibus molestias. Minus eveniet deleniti sed iste inventore et
-          libero perspiciatis nostrum illum, voluptate earum illo ad! Aliquam
-          natus voluptates, quia reiciendis laborum, id aut perspiciatis ea in
-          tempore odit nostrum molestiae! Non, asperiores! Dolor error
-          architecto exercitationem libero, totam odit sapiente distinctio qui
-          aspernatur. Exercitationem, eligendi aliquid. Laudantium, illo atque
-          harum dolorem corporis praesentium molestiae? Eveniet exercitationem
-          iusto fugit dolor obcaecati? Vel ex, ipsa magni soluta laborum eum
-          minus maxime quidem vitae ad impedit, perspiciatis velit magnam?
-          Dolorem consequatur quam magni libero tenetur unde enim dolorum, ex
-          iure nulla quis quod.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
+          dolores officiis corporis recusandae! Vel eaque, consequuntur nihil
+          magnam enim quia unde tempora maiores iusto! Illum numquam nostrum vel
+          voluptate ipsa?
         </p>
+      </div>
+      <div class="image">
+        <img src="../assets/Home2.jpg" alt="" />
       </div>
     </section>
 
-    <section class="explicacion2">
-      <div class="text2">
-        <h2>- Fertirrigación -</h2>
+    <section class="section1">
+      <div class="content">
+        <h2>Fertirrigación</h2>
         <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rem vel odit
-          delectus assumenda consequatur ipsum atque iure sed neque dolor,
-          dolorum nesciunt fugiat ab dolores maiores distinctio omnis reiciendis
-          quam? Dignissimos maxime, labore laborum nihil consequatur sed culpa!
-          Minus dolor expedita ea quibusdam unde illo, autem ipsa blanditiis,
-          earum similique in soluta, culpa accusantium nemo voluptates dolores
-          repudiandae vero nihil. Quia earum aut inventore, vel dolores
-          laboriosam quisquam cum, nobis omnis ea assumenda accusantium, sequi
-          tenetur ipsa quas ab minima molestiae! Distinctio laborum explicabo
-          eveniet dolorem non facilis, delectus nihil!
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
+          dolores officiis corporis recusandae! Vel eaque, consequuntur nihil
+          magnam enim quia unde tempora maiores iusto! Illum numquam nostrum vel
+          voluptate ipsa?
         </p>
       </div>
-      <div class="explicacion2Img">
-        <img
-          src="https://picsum.photos/id/870/200/300?grayscale&blur=2"
-          alt=""
-        />
+      <div class="image">
+        <img src="../assets/Home2.jpg" alt="" />
       </div>
     </section>
   </div>
@@ -89,97 +65,210 @@ export default {};
 
 <style lang="scss" scoped>
 .home {
-  display: flex;
-  flex-direction: column;
 
-  .intro {
-    display: flex;
+  section{
+    box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.075);
+  }
+ 
+  p {
+    margin: 0 0 2rem 0;
+  }
+
+  .image {
+    border: 0;
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+  }
+
+  h1{
+    font-size: 3.5rem;
+    line-height: 1.2;
+  }
+
+  h2{
+    font-size: 2.25rem;
+  }
+
+  .banner {
+    box-shadow: none !important;
     min-height: 100vh;
-    grid-area: intro;
-    min-width: 91vw;
+    align-items: stretch;
     display: flex;
-    border: 1px solid;
-    background: white;
-    margin: 15px 0px;
-    border-radius: 5px;
+    justify-content: flex-end;
+    position: relative;
+    text-align: left;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    text-align: left;
 
-    .intro1 {
-      width: 50vw;
-      overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-      img {
-        max-height: 33vh;
-      }
+    .content{
+      padding: 7rem 7rem 5rem 7rem;
+      -moz-align-self: center;
+      -webkit-align-self: center;
+      -ms-align-self: center;
+      align-self: center;
+      -moz-flex-grow: 1;
+      -webkit-flex-grow: 1;
+      -ms-flex-grow: 1;
+      flex-grow: 1;
+      -moz-flex-shrink: 1;
+      -webkit-flex-shrink: 1;
+      -ms-flex-shrink: 1;
+      flex-shrink: 1;
+      width: 50%;
+      max-width: 48rem;
+      margin: 0 auto;
+      border-radius: 76px 0px 0px 76px;
+      background: #f6f6f6;
+      box-shadow:  41px 41px 82px #c5c4c4,
+             -41px -41px 82px #ffffff;
     }
 
-    .introImg {
-      width: 50vw;
-      overflow: hidden;
+    p.major {
+      font-size: 1.25rem;
+    }
+
+    .image {
+      -moz-flex-grow: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-grow: 0;
+      flex-grow: 0;
+      -moz-flex-shrink: 0;
+      -webkit-flex-shrink: 0;
+      -ms-flex-shrink: 0;
+      flex-shrink: 0;
+      border-radius: 0;
+      width: 50%;
+      background-color: rgba(0, 0, 0, 0.125);
+      border: 0;
+      border-radius: 4px;
+      display: inline-block;
+      position: relative;
       img {
-        max-height: 100vh;
+        -moz-object-position: right;
+        -webkit-object-position: right;
+        -ms-object-position: right;
+        object-position: right;
+        -moz-object-fit: cover;
+        -webkit-object-fit: cover;
+        -ms-object-fit: cover;
+        object-fit: cover;
+        -moz-object-position: center;
+        -webkit-object-position: center;
+        -ms-object-position: center;
+        object-position: center;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
       }
     }
   }
 
-  .explicacion1 {
+  .section1 {
+        -moz-align-items: -moz-stretch;
+    -webkit-align-items: -webkit-stretch;
+    -ms-align-items: -ms-stretch;
+    align-items: stretch;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: -ms-flex;
     display: flex;
-    grid-area: exp1;
-    height: 50vh;
-    width: 93vw;
-    border: 1px solid;
-    background: white;
-    margin: 15px 0px;
-    border-radius: 5px;
+    -moz-flex-direction: row;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -moz-justify-content: -moz-flex-end;
+    -webkit-justify-content: -webkit-flex-end;
+    -ms-justify-content: -ms-flex-end;
+    justify-content: flex-end;
+    position: relative;
+    overflow-x: hidden;
+    text-align: left;
+    min-height: 50vh;
 
-    .text1{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+
+    .content {
+      padding: 7rem 7rem 5rem 7rem;
+      -moz-align-self: center;
+      -webkit-align-self: center;
+      -ms-align-self: center;
+      align-self: center;
+      -moz-flex-grow: 1;
+      -webkit-flex-grow: 1;
+      -ms-flex-grow: 1;
+      flex-grow: 1;
+      -moz-flex-shrink: 1;
+      -webkit-flex-shrink: 1;
+      -ms-flex-shrink: 1;
+      flex-shrink: 1;
+      width: 65%;
+      max-width: 64rem;
+      margin: 0 auto;
+      border-radius: 76px 0px 0px 76px;
+      background: #f6f6f6;
+      box-shadow:  41px 41px 82px #c5c4c4,
+             -41px -41px 82px #ffffff;
     }
 
-    .explicacion1Img {
-      grid-area: exp1Img;
-      height: 50vh;
-      width: 33vw;
-        
-      img{
-        height: 50vh;
-        min-width: 33vw;
+    .image {
+      -moz-flex-grow: 0;
+      -webkit-flex-grow: 0;
+      -ms-flex-grow: 0;
+      flex-grow: 0;
+      -moz-flex-shrink: 0;
+      -webkit-flex-shrink: 0;
+      -ms-flex-shrink: 0;
+      flex-shrink: 0;
+      width: 35%;
+      min-width: 25rem;
+      border-radius: 0;
+      img {
+        -moz-object-fit: cover;
+        -webkit-object-fit: cover;
+        -ms-object-fit: cover;
+        object-fit: cover;
+        -moz-object-position: center;
+        -webkit-object-position: center;
+        -ms-object-position: center;
+        object-position: center;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
       }
     }
   }
+  .reverse{
+      flex-direction: row-reverse;
 
-  .explicacion2 {
-    display: flex;
-    grid-area: exp2;
-    height: 50vh;
-    width: 93vw;
-    border: 1px solid;
-    background: white;
-    margin: 15px 0px;
-    border-radius: 5px;
-
-    .text2{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .explicacion2Img {
-      grid-area: exp1Img;
-      height: 50vh;
-      width: 33vw;
-
-      img{
-        height: 50vh;
-        min-width: 33vw;
+      .content {
+        border-radius: 0px 76px 76px 0px;
+      background: #f6f6f6;
+      box-shadow:  41px 41px 82px #c5c4c4,
+             -41px -41px 82px #ffffff;
       }
     }
+}
+
+@media (max-width: 1680px) {
+  .content {
+    padding: 5rem 5rem 3rem 5rem;
+  }
+}
+
+@media (max-width: 1280px) {
+  .content {
+    padding: 4rem 4rem 2rem 4rem;
   }
 }
 </style>
