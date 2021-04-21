@@ -1,0 +1,73 @@
+// Mensaje enviar información de programador de riego al servidor
+{
+    "id": 12345678,
+    "fecha": "12/12/2000 12:12:12",
+    "tipo": 2,
+    "valor": "95%"
+}
+
+0 - > Ack - > Correcto
+1 - > noAck - > No Correcto
+2 - > Humedad
+3 - > Sensor x
+4 - > Sensor y
+    ...
+
+// Mensaje telemetria acumulada
+{
+    "id": 1234567,
+    "tipo": 2,
+    "datos": [{
+            "fecha": "12/12/2000 12:12:12",
+            "valor": "95%"
+        },
+        {
+            "fecha": "12/12/2000 12:12:50",
+            "valor": "93%"
+        },
+        {
+            "fecha": "12/12/2000 12:13:15",
+            "valor": "93%"
+        }
+        ...
+    ]
+}
+
+
+// Programe de riego
+{
+    "id": 1234,
+    "programa": 1234123,
+    "activado": true,
+    "fecha1": "12/12/2021 12:12:12",
+    "fecha2": [12, 12, 2021, 12, 12, 12],
+    "dias": [true, true, true, true, true, false, false],
+    "bombas": [false, false, true, true],
+    "sectores": [false, false, true, false],
+    "emision": "aspersion/Goteo - 0/1",
+    "temporizadores": [{
+            "HoraI": "12:12:12",
+            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
+            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
+        },
+        {
+            "HoraI": "12:12:12",
+            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
+            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
+        },
+        {
+            "HoraI": "12:12:12",
+            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
+            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
+        },
+        {
+            "HoraI": "12:12:12",
+            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
+            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
+        },
+    ]
+
+
+}
+
+Programador riego - > mosquitto mqtt - > node - red - > mysql

@@ -23,16 +23,26 @@
       @toggle-collapse="collapse = !collapse"
       @item-click="collapse = true"
     >
-      <div slot="header">
-        <img v-if="!collapse" src="./assets/Logo.png" width="200px" alt="" />
-        
+      <div slot="header" v-if="!collapse">
+        <img src="./assets/Logo.png" width="200px" alt="" />
+      </div>
+      <div slot="footer">
+        <div class="login">
+          <login-button @click="showLogin = true" v-show="!collapse">Login</login-button>
+          <login-button v-show="!collapse">Registro</login-button>
+          <login-button @click="showLogin = true" v-show="collapse"><font-awesome-icon icon="sign-in-alt" /></login-button>
+        </div>
       </div>
       <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
     </sidebar-menu>
 
-    <div @click="touchOut()" :class="{ main: true, move: !collapse }">
-      <transition name="slide" mode="out-in"><router-view /></transition>
-      
+    <div @click="touchOut()" :class="{ main: true, move: !collapse }"> 
+      <transition name="slide" mode="out-in">
+        <router-view/>
+      </transition>
+      <modal v-if="showLogin" @close="showModal = false">
+          <login></login>
+      </modal>
     </div>
     <footer :class="{ move: !collapse }">
       <div>
@@ -67,14 +77,20 @@
 
 <script>
 import { SidebarMenu } from "vue-sidebar-menu";
+import loginButton from "@/components/LoginButton";
+import modal from "@/components/Modal"
+import login from "@/components/Modals/Login"
 // import StickyHeader from "@/components/StickyHeader";
 export default {
   components: {
     SidebarMenu,
-    // StickyHeader
+    loginButton,
+    modal,
+    login
   },
   data() {
     return {
+      showLogin: false,
       windowWidth: 0,
       windowHeight: 0,
       cabezales: this.$root.cabezales,
@@ -171,11 +187,11 @@ $icon-color: darken($primaryDark, 10%);
 
 .slide-enter-active,
 .slide-leave-active {
-  transition: opacity .5s, transform .5s;
+  transition: opacity 0.5s, transform 0.5s;
 }
 
 .slide-enter,
-.slide-leave-to{
+.slide-leave-to {
   opacity: 0;
   transform: translateX(-30%);
 }
@@ -195,12 +211,24 @@ $icon-color: darken($primaryDark, 10%);
   color: black;
 }
 
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 5px;
+
+  button {
+    margin-top: 5px;
+  }
+}
+
 #nav {
   margin-left: 25px;
 }
 
-body{
-  background-color: rgb(245, 245, 245);
+body {
+  background-color: $base;
 }
 
 /* Rotate first bar */
@@ -210,7 +238,7 @@ body{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  
+
   display: flex;
   align-items: space-between;
   justify-content: space-between;

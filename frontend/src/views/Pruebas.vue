@@ -18,14 +18,14 @@
     <hr>
     <submit-button>Guardar</submit-button>
     <hr>
-    <div>
-      <custom-button>Prueba</custom-button>
-    </div>
-
-    <hr>
     <select-button :options="['Manual', 'Automatico', ]"></select-button>
     <hr>
     <temporizador-menu></temporizador-menu>
+    <hr>
+    <login-button>Login</login-button>
+    <hr>
+    <login-button>Registro</login-button>
+    <hr>
   </div>
 </template>
 
@@ -36,9 +36,9 @@ import daySelector from "@/components/DaySelector";
 import Toggle from "@/components/Toggle";
 import customSelect from "@/components/Select";
 import SubmitButton from "@/components/SubmitButton";
-import CustomButton from "@/components/CustomButton";
 import SelectButton from "@/components/SelectButton";
-import temporizadorMenu from "@/components/TemporizadorMenu"
+import temporizadorMenu from "@/components/TemporizadorMenu";
+import loginButton from "@/components/LoginButton";
 
 export default {
   components: {
@@ -48,9 +48,9 @@ export default {
     Toggle,
     customSelect,
     SubmitButton,
-    CustomButton,
     SelectButton,
-    temporizadorMenu
+    temporizadorMenu,
+    loginButton
   },
   data() {
     return {

@@ -3,8 +3,8 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-
-          <div class="modal-header">
+          <slot></slot>
+          <!-- <div class="modal-header">
             <slot name="header">
               default header
             </slot>
@@ -23,7 +23,7 @@
             <button class="modal-default-button" @click="$emit('close')">
                 OK
               </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -97,9 +97,15 @@
   opacity: 0;
 }
 
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
+.modal-enter .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+  opacity:1;
+}
+
+.modal-leave-active .modal-container{
+  -webkit-transform: scale(0);
+  transform: scale(0);
+  opacity: 0;
 }
 </style>

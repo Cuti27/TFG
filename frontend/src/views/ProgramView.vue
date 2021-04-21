@@ -308,7 +308,7 @@ h3 {
   position: fixed;
   bottom: 50px;
   right: 80px;
-  z-index: 9999;
+  z-index: 9990;
 }
 
 .buttonTemp {

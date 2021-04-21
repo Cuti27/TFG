@@ -23,6 +23,7 @@
         </p>
       </div>
       <div class="image">
+        <img class="logo" src="../assets/Logo.png" alt="">
         <img src="../assets/Home1.jpg" alt="" />
       </div>
     </section>
@@ -64,6 +65,8 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+@import "@/css/colorSchema.scss";
+
 .home {
 
   section{
@@ -123,8 +126,8 @@ export default {};
       margin: 0 auto;
       border-radius: 76px 0px 0px 76px;
       background: #f6f6f6;
-      box-shadow:  41px 41px 82px #c5c4c4,
-             -41px -41px 82px #ffffff;
+      box-shadow: 41px 21px 82px #c5c4c4,
+             -41px -41px 82px $base;
     }
 
     p.major {
@@ -167,6 +170,31 @@ export default {};
         width: 100%;
         height: 100%;
         border-radius: 0;
+      }
+
+      .logo{
+        -moz-object-position: right;
+        -webkit-object-position: right;
+        -ms-object-position: right;
+        object-position: right;
+        -moz-object-fit: cover;
+        -webkit-object-fit: cover;
+        -ms-object-fit: cover;
+        object-fit: cover;
+        -moz-object-position: center;
+        -webkit-object-position: center;
+        -ms-object-position: center;
+        object-position: center;
+        display: block;
+        position: absolute;
+        top: 25%;
+        left: 25%;
+        width: 50%;
+        height: auto;
+        border-radius: 25px;
+        padding: 40px;
+        z-index: 9990;
+        background: rgba(255,255,255,0.5);
       }
     }
   }
@@ -213,8 +241,8 @@ export default {};
       margin: 0 auto;
       border-radius: 76px 0px 0px 76px;
       background: #f6f6f6;
-      box-shadow:  41px 41px 82px #c5c4c4,
-             -41px -41px 82px #ffffff;
+      box-shadow:  41px 21px 82px #c5c4c4,
+             -41px -41px 82px $base;
     }
 
     .image {
@@ -254,8 +282,8 @@ export default {};
       .content {
         border-radius: 0px 76px 76px 0px;
       background: #f6f6f6;
-      box-shadow:  41px 41px 82px #c5c4c4,
-             -41px -41px 82px #ffffff;
+      box-shadow:  41px 21px 82px #c5c4c4,
+             -41px -41px 82px $base;
       }
     }
 }
