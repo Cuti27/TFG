@@ -25,16 +25,18 @@ La ejecución se realiza moviendose a la carpeta frontend y realizando ```npm ru
 - Creado una vista para ir probando los componentes, y otra para empezar a maquetar el visor del programa seleccionado
 - Creado una barra de navegación provisional
 - Comenzado con el desarrollo de la pestaña de fertirrigacion
+- Realziado pantalla principal
+- Realizado Login y Registro
+- Realización de tour de ayuda
 
 **TODO:**
 - Centralizar la información completa del programa en Vuex
 - Mirar si utilizar un servicio de autenticación o como se va realizar la autenticación con el backend
 - Mejorar la vista del programa, y realizar el resto de vistas
-- Crear una maqueta de la aplicación final
 - Realizar la futura conexión con la API
-- Terminar de ver el funcionamiento correcto de Vue-router y bootstrap-vue
 - Realizar el testing de la aplicación
-- Seguir mirando el tema de transiciones
+- Centralizar animaciones
+- Reordenar el código en subcarpetas
 
 ## Backend conexión con la base de datos y API mediante **Laravel** PHP
 
@@ -45,12 +47,14 @@ La idea es que el backend, su conexión con el frontend sea mediante la exposici
 - Visto librerias de conexión mediante **MQTT**
 - Visto funcionamiento de **MQTT**
 - Instalado Laravel, y comenzado a ver lo necesario para realizar la API
+- Avanzado con el desarrollo de los mensajes
 
 **TODO:**
 
-- Seguir viendo Laravel
-- Practicar PHP
-- Terminar de ver como realizar correctamente la conexión
+- Verme el curso de Laravel
+- Terminar de concretar los mensajes
+- Realizar parte de Node-Red
+- Mirar seguridad
 
 ### Conexión con los dispositivos mediante **Node-Red**
 
@@ -58,43 +62,77 @@ En node-red, se añadirá una pequeña autenticación para comprobar que se esta
 
 ```json
 {
-   "sent":"usuario",
-   "receiver":123457,
-   "topico": "proyecto/usuario/dispositivo",
-   "program":"Programa de riego (probablemente mejor con numeros)",
-   "date":"formate fecha a especificar",
-   "numParams":3,
-   "params":{
-      "days":[
-         0,
-         1,
-         1,
-         0,
-         0,
-         0,
-         1
-      ],
-      "numTemp":1,
-      "temp":[
-         {
-            "start":"fecha",
-            "end":"fecha",
-            "pre-irrigation":"tiempo",
-            "post-irrigation":"tiempo",
-            "fertigation":"numPrograma"
-         }
-      ],
-		
-   }
+    "id": 12345678,
+    "fecha": "12/12/2000 12:12:12",
+    "tipo": 2,
+    "valor": "95%"
+}
+
+0 - > Ack - > Correcto
+1 - > noAck - > No Correcto
+2 - > Humedad
+3 - > Sensor x
+4 - > Sensor y
+    ...
+
+// Mensaje telemetria acumulada
+{
+    "id": 1234567,
+    "tipo": 2,
+    "datos": [{
+            "fecha": "12/12/2000 12:12:12",
+            "valor": "95%"
+        },
+        {
+            "fecha": "12/12/2000 12:12:50",
+            "valor": "93%"
+        },
+        {
+            "fecha": "12/12/2000 12:13:15",
+            "valor": "93%"
+        }
+        ...
+    ]
+}
+
+
+// Programa de riego
+{
+    "id": 1234,
+    "programa": 1234123,
+    "activado": true,
+    "fecha1": "12/12/2021 12:12:12",
+    "fecha2": [12, 12, 2021, 12, 12, 12],
+    "dias": [true, true, true, true, true, false, false],
+    "bombas": [false, false, true, true],
+    "sectores": [false, false, true, false],
+    "emision": "aspersion/Goteo - 0/1",
+    "temporizadores": [{
+            "HoraI": "12:12:12",
+            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
+            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
+        },
+        {
+            "HoraI": "12:12:12",
+            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
+            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
+        },
+        {
+            "HoraI": "12:12:12",
+            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
+            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
+        },
+        {
+            "HoraI": "12:12:12",
+            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
+            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
+        },
+    ]
+
+
 }
 ```
 
 ## Dudas respecto al diseño de la página web
 
-- Secciones deben ser 7 columnas forzadamente
-- La barra de navegación va a ser superior o lateral
-- Se quiere que a la fuerza este en una matriz de 2 x 2
-- Colores comunes a la aplicación
-- Temporizadores mejor que se vean en la aplicacion o que se habra una pestaña aparte para configurarlos
-- Se podrá guardar la fertirrigación para usar la misma en varias.
-- Ultimo parámetro fertirrigación, como debería llamarla
+- 

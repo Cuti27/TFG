@@ -29,7 +29,7 @@
       <div slot="footer">
         <div class="login">
           <login-button @click="showLogin = true" v-show="!collapse">Login</login-button>
-          <login-button v-show="!collapse">Registro</login-button>
+          <login-button @click="showRegistro = true" v-show="!collapse">Registro</login-button>
           <login-button @click="showLogin = true" v-show="collapse"><font-awesome-icon icon="sign-in-alt" /></login-button>
         </div>
       </div>
@@ -40,8 +40,9 @@
       <transition name="slide" mode="out-in">
         <router-view/>
       </transition>
-      <modal v-if="showLogin" @close="showLogin = false">
-          <login ></login>
+      <modal v-if="showLogin || showRegistro" @close="showLogin = false; showRegistro = false">
+          <login v-if="showLogin" @registro="showLogin = false; showRegistro = true"></login>
+          <registro v-if="showRegistro" @login="showLogin = true; showRegistro = false"></registro>
       </modal>
     </div>
     <footer :class="{ move: !collapse }">
@@ -78,19 +79,23 @@
 <script>
 import { SidebarMenu } from "vue-sidebar-menu";
 import loginButton from "@/components/LoginButton";
-import modal from "@/components/Modal"
-import login from "@/components/Modals/Login"
+import modal from "@/components/Modal";
+import login from "@/components/Modals/Login";
+import registro from "@/components/Modals/Registro";
+
 // import StickyHeader from "@/components/StickyHeader";
 export default {
   components: {
     SidebarMenu,
     loginButton,
     modal,
-    login
+    login,
+    registro
   },
   data() {
     return {
       showLogin: false,
+      showRegistro: false,
       windowWidth: 0,
       windowHeight: 0,
       cabezales: this.$root.cabezales,

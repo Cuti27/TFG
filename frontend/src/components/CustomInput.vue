@@ -1,18 +1,18 @@
 <template>
-  <div class="input" @click="focus()">
-        <input ref="inputPanel"
+  <div class="input" >
+        <input :ref="'inputPanel'+placeholder"
           :type="type === ''? 'text' : type"
           class="form__field"
           :placeholder="placeholder"
-          :name="type+placeholder"
-          id="name"
+          :name="type+placeholder+'login'"
+          :id="type+placeholder+'id'"
           :max="max"
           :min="min"
           :value="value"
           :step="step"
           @input="$emit('input', $event.target.value)"
         />
-        <label for="name" class="form__label">{{placeholder}}</label>
+        <label @click="focus()" for="name" class="form__label">{{placeholder}}</label>
       </div>
 </template>
 
@@ -28,7 +28,8 @@ export default {
     },
     methods: {
       focus(){
-        this.$refs.inputPanel.focus();
+        console.log("Tonto")
+        this.$refs["inputPanel"+this.placeholder].focus();
       }
     }
 }

@@ -1,30 +1,18 @@
 <template>
-  <div class="login">
-    <!-- <div>
-          <div class="header">
-              <h3>Bienvenido al programa de riego de <span>Genhidro</span></h3>
-          </div>
-          <div class="body">
-            <custom-input type="text" placeholder="Username"></custom-input>
-            <custom-input type="password" placeholder="Contraseña"></custom-input>
-          </div>
-          <div class="footer">
-              <login-button>Cancelar</login-button>
-              <login-button>Login</login-button>
-          </div>
-      </div> -->
-    <section class="login" id="login">
+  <div class="registro">
+    <section class="registro" id="registro">
       <header>
         <h2>Genhidro</h2>
-        <h3>Login</h3>
+        <h3>Registro de usuario</h3>
       </header>
-      <form action="" class="login-form">
-        <custom-input type="text" placeholder="Username"></custom-input>
+      <form action="" class="registro-form">
+        <custom-input type="text" placeholder="Nombre"></custom-input>
+        <custom-input type="text" placeholder="Usuario"></custom-input>
         <custom-input type="password" placeholder="Contraseña"></custom-input>
-       <login-button id="recuperar">Has olvidado la contraseña?</login-button>
-       <login-button @click="$emit('registro')" id="registro">Registrate</login-button>
+        <custom-input type="password" placeholder="Repita la contraseña"></custom-input>
+       <login-button id="login" @click="$emit('login')">Ya tienes cuenta?</login-button>
         <div class="submit-container">
-          <login-button @click="close()">Cancelar</login-button>
+          <login-button @click.prevent="close()">Cancelar</login-button>
           <login-button>Entrar</login-button>
         </div>
       </form>
@@ -105,12 +93,32 @@ export default {
   }
 }
 
-#recuperar{
-    margin-top: 20px;
+
+/* Login Form */
+.registro-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 340px;
+  height: auto;
+  padding: 5px;
+  box-sizing: border-box;
 }
 
 
-.login {
+.registro-container p {
+  align-self: flex-start;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.registro-container p a {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.registro {
   position: relative;
   width: 100%;
   padding: 10px;
@@ -124,7 +132,7 @@ export default {
     0 3px 1px -2px rgba(0, 0, 0, 0.2);
 }
 
-.login > header {
+.registro > header {
   position: relative;
   width: 100%;
   padding: 10px;
@@ -140,7 +148,7 @@ export default {
     0px 1px 5px 0px rgba(0, 0, 0, 0.12), 0px 3px 1px -2px rgba(0, 0, 0, 0.2);
 }
 
-.login > header:before {
+.registro > header:before {
   content: "";
   display: flex;
   justify-content: center;
@@ -158,31 +166,31 @@ export default {
   z-index: 5;
 }
 
-.login.error_1 > header:before,
-.login.error_2 > header:before {
+.registro.error_1 > header:before,
+.registro.error_2 > header:before {
   animation: error_before 3s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
-.login.error_1 > header:before {
+.registro.error_1 > header:before {
   content: "Invalid username or password!";
 }
 
-.login.error_2 > header:before {
+.registro.error_2 > header:before {
   content: "Invalid or expired Token!";
 }
 
-.login > header h2 {
+.registro > header h2 {
   margin: 50px 0 10px 0;
 }
 
-.login > header h3 {
+.registro > header h3 {
   font-size: 0.7em;
   animation: text_opacity 1.5s cubic-bezier(0.55, 0, 0.1, 1);
   color: rgba(255, 255, 255, 0.4);
 }
 
 /* Form */
-.login-form {
+.registro-form {
   padding: 15px;
   box-sizing: border-box;
   width: 95%;
