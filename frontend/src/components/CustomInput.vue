@@ -1,10 +1,10 @@
 <template>
-  <div class="input">
-        <input
+  <div class="input" @click="focus()">
+        <input ref="inputPanel"
           :type="type === ''? 'text' : type"
           class="form__field"
-          placeholder="Name"
-          name="name"
+          :placeholder="placeholder"
+          :name="type+placeholder"
           id="name"
           :max="max"
           :min="min"
@@ -25,6 +25,11 @@ export default {
         max: String,
         min: String,
         step: [Number, String]
+    },
+    methods: {
+      focus(){
+        this.$refs.inputPanel.focus();
+      }
     }
 }
 </script>

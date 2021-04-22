@@ -74,5 +74,6 @@ export default {
   padding: 0.7em 1em;
   letter-spacing: 0.05rem;
   border-radius: 10px;
+  margin: 5px;
 }
 </style>

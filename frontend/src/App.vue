@@ -40,8 +40,8 @@
       <transition name="slide" mode="out-in">
         <router-view/>
       </transition>
-      <modal v-if="showLogin" @close="showModal = false">
-          <login></login>
+      <modal v-if="showLogin" @close="showLogin = false">
+          <login ></login>
       </modal>
     </div>
     <footer :class="{ move: !collapse }">

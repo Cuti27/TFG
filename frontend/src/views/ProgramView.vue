@@ -254,7 +254,7 @@ export default {
 
     top: 190px;
     right: 30px;
-    z-index: 9999;
+    z-index: 9990;
 
     @mixin transformScale($size: 1) {
       transform: scale($size);

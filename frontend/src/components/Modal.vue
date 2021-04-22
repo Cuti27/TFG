@@ -46,17 +46,15 @@
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
+  
 }
 
 .modal-container {
-  width: 60vw;
+  width: 40vw;
   margin: 0px auto;
   padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+  border-radius: 25px;
   transition: all .3s ease;
-  font-family: Helvetica, Arial, sans-serif;
 }
 
 @media (max-width: 768px) {
@@ -65,19 +63,6 @@
     margin: 0px auto;
     padding: 10px 15px;
   }
-}
-
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
-}
-
-.modal-body {
-  margin: 20px 0;
-}
-
-.modal-default-button {
-  float: right;
 }
 
 /*
