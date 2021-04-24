@@ -135,4 +135,5 @@ En node-red, se añadirá una pequeña autenticación para comprobar que se esta
 
 ## Dudas respecto al diseño de la página web
 
-- 
+- Temporizadores en vertical mejor?
+- Sectores por defecto mapa o por defecto botones

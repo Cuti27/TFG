@@ -26,6 +26,7 @@
     <hr>
     <login-button>Registro</login-button>
     <hr>
+    <custom-table :label="{Id: 'id',Nombre: 'nombre',Fecha: 'fecha' }" :pageSize="5"></custom-table>
   </div>
 </template>
 
@@ -39,6 +40,7 @@ import SubmitButton from "@/components/SubmitButton";
 import SelectButton from "@/components/SelectButton";
 import temporizadorMenu from "@/components/TemporizadorMenu";
 import loginButton from "@/components/LoginButton";
+import customTable from "@/components/CustomTable";
 
 export default {
   components: {
@@ -50,7 +52,8 @@ export default {
     SubmitButton,
     SelectButton,
     temporizadorMenu,
-    loginButton
+    loginButton,
+    customTable
   },
   data() {
     return {

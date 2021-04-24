@@ -1,11 +1,6 @@
 <template>
   <div id="app">
-    <!-- <div class="header">
-      <sticky-header>
-        <h3>Prueba</h3>
-      </sticky-header>
-    </div> -->
-    <div v-if="windowWidth < 500" id="nav">
+    <div v-if="windowWidth < 500" id="nav" :class="{change: !collapse}">
       <div
         :class="{ container: true, change: !collapse, menuHamburguesa: true }"
         @click="collapse = !collapse"
@@ -27,10 +22,16 @@
         <img src="./assets/Logo.png" width="200px" alt="" />
       </div>
       <div slot="footer">
-        <div class="login">
-          <login-button @click="showLogin = true" v-show="!collapse">Login</login-button>
-          <login-button @click="showRegistro = true" v-show="!collapse">Registro</login-button>
-          <login-button @click="showLogin = true" v-show="collapse"><font-awesome-icon icon="sign-in-alt" /></login-button>
+        <div v-if="logged" class="auxiliares">
+          
+          <login-button @click="showProgramador = true; collapse = true" v-show="!collapse">Añadir dispositivo</login-button>
+          <login-button  v-show="!collapse">Cerrar sesion</login-button>
+          <login-button @click="showProgramador = true; collapse = true" v-show="collapse"><font-awesome-icon icon="plus-square" /></login-button>
+        </div>
+        <div v-else  class="login">
+          <login-button @click="showLogin = true; collapse = true" v-show="!collapse">Login</login-button>
+          <login-button @click="showRegistro = true; collapse = true" v-show="!collapse">Registro</login-button>
+          <login-button @click="showLogin = true; collapse = true" v-show="collapse"><font-awesome-icon icon="sign-in-alt" /></login-button>
         </div>
       </div>
       <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
@@ -40,9 +41,10 @@
       <transition name="slide" mode="out-in">
         <router-view/>
       </transition>
-      <modal v-if="showLogin || showRegistro" @close="showLogin = false; showRegistro = false">
+      <modal v-if="showLogin || showRegistro || showProgramador" @close="showLogin = false; showRegistro = false">
           <login v-if="showLogin" @registro="showLogin = false; showRegistro = true"></login>
           <registro v-if="showRegistro" @login="showLogin = true; showRegistro = false"></registro>
+          <add-programador v-if="showProgramador"></add-programador>
       </modal>
     </div>
     <footer :class="{ move: !collapse }">
@@ -82,6 +84,7 @@ import loginButton from "@/components/LoginButton";
 import modal from "@/components/Modal";
 import login from "@/components/Modals/Login";
 import registro from "@/components/Modals/Registro";
+import addProgramador from "@/components/Modals/AddProgramador";
 
 // import StickyHeader from "@/components/StickyHeader";
 export default {
@@ -90,12 +93,14 @@ export default {
     loginButton,
     modal,
     login,
-    registro
+    registro,
+    addProgramador,
   },
   data() {
     return {
       showLogin: false,
       showRegistro: false,
+      showProgramador: false,
       windowWidth: 0,
       windowHeight: 0,
       cabezales: this.$root.cabezales,
@@ -150,6 +155,7 @@ export default {
           },
         },
       ],
+      logged: false,
     };
   },
   methods: {
@@ -206,17 +212,23 @@ $icon-color: darken($primaryDark, 10%);
   flex-grow: 3;
 }
 .move {
-  margin-left: 200px;
+  width: 100vw;
 }
 .container {
   display: inline-block;
   cursor: pointer;
 }
-.v-sidebar-menu .vsm--title {
-  color: black;
-}
+.v-sidebar-menu{
+  max-height: 100vh;
+  z-index: 9990;
+  position: fixed;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  .vsm--title {
+    color: black;
+  }
+} 
 
-.login {
+.login, .auxiliares {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,7 +241,16 @@ $icon-color: darken($primaryDark, 10%);
 }
 
 #nav {
-  margin-left: 25px;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 9995;
+  background-color:$white;
+  overflow: hidden;
+  border-radius: 5px;
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+box-shadow:  20px 20px 60px #d9d9d9,
+             -20px -20px 60px #ffffff;
 }
 
 body {
@@ -350,8 +371,9 @@ body {
       }
     }
   }
+
   .move {
-    margin-left: 200px;
+    width: calc(99vw - 50px);
   }
 }
 
@@ -360,6 +382,12 @@ body {
 }
 
 @media (max-width: "480px") {
+  #app .move {
+    width: 98vw;
+  }
+  #nav.change{
+    left: 220px;
+  }
   .menuHamburguesa {
     display: inline;
     align-self: flex-start;
@@ -368,19 +396,21 @@ body {
     .bar3 {
       width: 35px;
       height: 5px;
-      background-color: $primaryDark;
+      background-color: $secondary;
+      border-radius: 10px;
       margin: 6px 0;
       transition: 0.4s;
     }
   }
   .change {
-    .bar1,
-    .bar2,
-    .bar3 {
-      // -webkit-transform:  translateX(300px);
-      //  transform: translateX(300px);
-      margin-left: 200px;
-    }
+    // .bar1,
+    // .bar2,
+    // .bar3 {
+    //   // -webkit-transform:  translateX(300px);
+    //   //  transform: translateX(300px);
+    //   margin-left: 200px;
+    //   border: 0px;
+    // }
 
     .bar1 {
       -webkit-transform: rotate(-45deg) translate(-9px, 6px);
