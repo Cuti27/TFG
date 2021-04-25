@@ -5,13 +5,13 @@ import store from './store';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faFacebookF, faLinkedinIn } from '@fortawesome/free-brands-svg-icons'
-import { faQuestion, faSignInAlt, faHome, faInfoCircle, faTrashAlt, faCheck, faPlusSquare, faPlusCircle, faWrench, faArrowsAltH, faFaucet, faLeaf, faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons'
+import { faHouseUser, faQuestion, faSignInAlt, faHome, faInfoCircle, faTrashAlt, faCheck, faPlusSquare, faPlusCircle, faWrench, faArrowsAltH, faFaucet, faLeaf, faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import VueTour from 'vue-tour';
 
 require('vue-tour/dist/vue-tour.css')
 
-library.add(faQuestion, faSignInAlt, faHome, faInfoCircle, faTrashAlt, faCheck, faPlusSquare, faLinkedinIn, faFacebookF, faPlusCircle, faWrench, faArrowsAltH, faFaucet, faLeaf, faArrowCircleLeft, faArrowCircleRight);
+library.add(faHouseUser, faQuestion, faSignInAlt, faHome, faInfoCircle, faTrashAlt, faCheck, faPlusSquare, faLinkedinIn, faFacebookF, faPlusCircle, faWrench, faArrowsAltH, faFaucet, faLeaf, faArrowCircleLeft, faArrowCircleRight);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(BootstrapVue);

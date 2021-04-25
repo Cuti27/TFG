@@ -1,8 +1,6 @@
 <template>
   <div class="view">
-    <div class="header">
-      <h1>Configuracion de Fertirrigación</h1>
-    </div>
+    <header-custom name="Configuracion de Fertirrigación"></header-custom>
     <div class="phControl">
       <div class="phPre">
         <label for="phPre">CONTROL DE pH EN PRERIEGO: </label>
@@ -83,6 +81,7 @@ import numberSelector from "@/components/NumberSelector";
 import customSelect from "@/components/Select";
 import CustomInput from "@/components/CustomInput";
 import SourceSelector from "@/components/SourceSelector";
+import headerCustom from "@/components/Header";
 export default {
   components: {
     Toggle,
@@ -90,6 +89,7 @@ export default {
     customSelect,
     CustomInput,
     SourceSelector,
+    headerCustom
   },
   data() {
     return {

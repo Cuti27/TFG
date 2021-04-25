@@ -1,14 +1,13 @@
 <template>
   <div class="root">
     <!-- Header con el nombre del programa -->
-    <div class="header">
-      <h1>{{ name }}</h1>
+    <header-custom :name="name">
       <div class="ayuda">
       <a @click.prevent="$tours['myTour'].start()">
         <font-awesome-icon icon="info-circle"/>
       </a>
     </div>
-    </div>
+    </header-custom>
 
     <!-- Botón flotante con el que se puede guardar -->
     <div class="guardar">
@@ -123,6 +122,7 @@ import Toggle from "@/components/Toggle";
 import SubmitButton from "@/components/SubmitButton";
 import SelectButton from "@/components/SelectButton";
 import temporizadorMenu from "@/components/TemporizadorMenu";
+import headerCustom from "@/components/Header";
 
 export default {
   components: {
@@ -135,6 +135,7 @@ export default {
     SubmitButton,
     SelectButton,
     temporizadorMenu,
+    headerCustom
   },
   data() {
     return {
@@ -318,27 +319,6 @@ h3 {
   :hover {
     color: $primaryDark;
   }
-}
-
-.header {
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
-    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-  padding: 20px;
-  margin: 20px;
-  margin-bottom: 40px;
-  background: linear-gradient($primaryShadow, $secondaryShadow),
-    url("../assets/header.jpg");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
-  background-size: cover;
-  background-position-y: -150px;
-  color: white;
-  height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5em;
 }
 
 .form {

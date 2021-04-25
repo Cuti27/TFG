@@ -70,12 +70,14 @@
             {{ object[key.charAt(0).toLowerCase() + key.slice(1)] }} 
           </td>
           <td class="acciones">
-            <custom-button @click="getData();getCountData()">
+            <div class="action">
+              <custom-button @click="getData();getCountData()">
               Acceder
             </custom-button>
-            <custom-button @click="getData();getCountData()">
+            <custom-button @click="openEdit(object)">
               Editar
             </custom-button>
+            </div>
           </td>
         </tr>
       </table>
@@ -87,16 +89,24 @@
       <span>- {{ currentPage }} -</span>
       <custom-button @click="nextPage">Siguiente</custom-button>
     </div>
+
+    <modal v-if="showEdit">
+        <edit-cabezal :name="value"></edit-cabezal>
+    </modal>
   </div>
 </template>
 
 <script>
 import CustomButton from "@/components/CustomButton";
 import CustomInput from "@/components/CustomInput";
+import modal from "@/components/Modal";
+import editCabezal from "@/components/Modals/EditCabezal"
 export default {
   components: {
     CustomButton,
     CustomInput,
+    modal,
+    editCabezal
   },
   props: {
     pageSize: {
@@ -114,8 +124,8 @@ export default {
       filtros: false, // Booleano para mostrar o no el menu de los filtros
       dateStart: "", // Texto que indica una fecha escrita en el filtro
       dateEnd: "", // Texto que indica una fecha escrita en el filtro
-      
-
+      showEdit: false,
+      value: "",
     };
   },
   
@@ -128,22 +138,22 @@ export default {
       // return this.$store.state.userInfo;
       return [
         {
-          id: 1,
+          id: 1356434634,
           nombre: "Cabezal 1",
           fecha: "12/12/2020 12:12:12"
         },
         {
-          id: 2,
+          id: 2346346346,
           nombre: "Cabezal 2",
           fecha: "12/12/2020 12:22:12"
         },
         {
-          id: 3,
+          id: 3346346343,
           nombre: "Cabezal 3",
           fecha: "12/12/2020 12:32:12"
         },
         {
-          id: 4,
+          id: 412321346,
           nombre: "Cabezal 4",
           fecha: "12/12/2020 12:42:12"
         },
@@ -159,6 +169,11 @@ export default {
     }
   },
   methods: {
+    openEdit(object){
+      console.log(object.nombre)
+      this.value = object.nombre;
+      this.showEdit = true;
+    },
     sort(s) {
       //if s == current sort, reverse
       if (s === this.currentSort) {
@@ -207,7 +222,7 @@ export default {
   margin: 10px 50px;
   border-radius: 5px;
   box-shadow: $gray 0px 14px 28px, $gray 0px 10px 10px;
-
+  background: $white;
   // Centramos todos los elementos
   .button,
   .filtros {
@@ -222,6 +237,7 @@ export default {
 }
 
 .page, .table {
+  background: $white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -251,14 +267,30 @@ export default {
     width: 100%;
     max-width: 100vw;
     background-color: white;
+    table-layout: fixed;
     td {
       border-right: 1px solid $white;
-      font-size: 12px;
+      font-size: 18px;
+      width: auto;
+
+      .action{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+       
+      }
     }
     td,
     th {
       text-align: left;
       padding: 8px;
+    }
+
+    td:last-child{
+      width: 10px;
+    }
+    td:first-child{
+      width: 10px;
     }
 
     thead {
@@ -283,6 +315,12 @@ export default {
       }
     }
   
+  }
+}
+
+@media (max-width: 1280px) {
+  .action{
+     flex-direction: column;
   }
 }
 

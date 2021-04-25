@@ -26,7 +26,9 @@
     <hr>
     <login-button>Registro</login-button>
     <hr>
-    <custom-table :label="{Id: 'id',Nombre: 'nombre',Fecha: 'fecha' }" :pageSize="5"></custom-table>
+    <custom-table :label="{Id: 'id',Nombre: 'nombre',Fecha: 'fecha' }" :pageSize="5">
+      
+    </custom-table>
   </div>
 </template>
 

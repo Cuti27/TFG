@@ -154,6 +154,16 @@ export default {
             },
           },
         },
+        {
+          href: { name: "Cabezales" },
+          title: "Cabezales",
+          icon: {
+            element: "font-awesome-icon",
+            attributes: {
+              icon: "house-user",
+            },
+          },
+        },
       ],
       logged: false,
     };
