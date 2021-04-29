@@ -28,7 +28,6 @@ export default {
     },
     methods: {
       focus(){
-        console.log("Tonto")
         this.$refs["inputPanel"+this.placeholder].focus();
       }
     }

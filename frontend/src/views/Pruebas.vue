@@ -10,7 +10,7 @@
     <!-- <hr />
     <programa :programa="programas[0]"></programa> -->
     <hr />
-    <day-selector :value="dias"><span>Seleccione un día válido:</span></day-selector>
+    <day-selector :disabled="disableDay" :value="dias"><span>Seleccione un día válido:</span></day-selector>
     <hr />.
     <toggle></toggle>
     <hr>
@@ -66,6 +66,8 @@ export default {
       sel: ["Hola","Adios", "Buenas noches"],
       selected: 0,
       temporizador1: [],
+      disableDay: false,
+
     };
   },
   methods: {

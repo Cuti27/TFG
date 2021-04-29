@@ -23,6 +23,12 @@ const routes = [{
             import ( /* webpackChunkName: "about" */ "../views/Cabezales.vue"),
     },
     {
+        path: '/programas',
+        name: 'Programas',
+        component: () =>
+            import ( /* webpackChunkName: "about" */ "../views/Programas.vue"),
+    },
+    {
         path: '/fertirrigacion',
         name: 'Fertirrigacion',
         component: () =>

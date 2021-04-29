@@ -3,28 +3,37 @@
     <slot></slot>
     <div v-for="(day, index) in days" :key="index" @click.prevent="togleValue(index)">
       <input :id="day+'-'+index" type="radio" :checked="daysValue[index]">
-      <label :class="{ blanco: !daysValue[index]}" :for="day+'-'+index">{{day}}</label>
+      <label :class="{ blanco: !daysValue[index], size: true}" :for="day+'-'+index">{{day}}</label>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    disabled: Boolean,
+    dias: Array,
+  },
   data() {
     // Creamos un array para comprobar el día
-    return { days: ["L", "M", "X", "J", "V", "S", "D"] };
+    return { days: ["L", "M", "X", "J", "V", "S", "D"] 
+    };
+   
   },
   methods: {
     // Llamamos a la actualización del indice
     togleValue(index){
       // this.daysValue[index] = !this.daysValue[index];
-      this.$store.dispatch("updateDays",index);
+      if(!this.disabled)
+        this.$store.dispatch("updateDays",index);
     }
   },
   // Recuperamos el valor
   computed: {
     daysValue(){
       //console.log(this.$store.getters.programDays)
+      if(this.dias)
+        return this.dias;
       return this.$store.getters.programDays;
     }
   }
@@ -80,5 +89,6 @@ label.blanco:hover{
   flex-wrap: wrap;
   flex-wrap: 1;
 }
+
 
 </style>

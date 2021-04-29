@@ -164,6 +164,16 @@ export default {
             },
           },
         },
+        {
+          href: { name: "Programas" },
+          title: "Programas",
+          icon: {
+            element: "font-awesome-icon",
+            attributes: {
+              icon: "clock",
+            },
+          },
+        },
       ],
       logged: false,
     };
@@ -265,6 +275,9 @@ box-shadow:  20px 20px 60px #d9d9d9,
 
 body {
   background-color: $base;
+  background-image: url("./assets/cool-background.svg");
+  background-repeat: no-repeat;
+background-attachment: fixed
 }
 
 /* Rotate first bar */
@@ -281,6 +294,8 @@ body {
   flex-direction: column;
   min-height: 100vh;
   box-sizing: border-box;
+
+  
 
   main {
     flex: 1 0 auto;

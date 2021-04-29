@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="customTable">
     <!-- Tarjeta encargada de los filtros de búsqueda -->
     <div class="busqueda">
       <div class="button">
@@ -16,7 +16,7 @@
       <!-- Div con la transición para mostrar los filtros -->
       <transition name="fade">
         <div class="filtros" v-if="filtros">
-          <custom-input v-model="buscador" placeholder="Nombre cabezal" />
+          <custom-input v-model="buscador" placeholder="Nombre a buscar" />
           <custom-input
             v-model="dateStart"
             :max="dateEnd"
@@ -67,16 +67,21 @@
             :key="value + key"
             :data-label="key"
           >
-            {{ object[key.charAt(0).toLowerCase() + key.slice(1)] }} 
+            <day-selector v-if="key=='Dias'" :disabled="true" :dias="object[value]"></day-selector>
+            <p v-else> {{ object[value] }} </p>
+           
           </td>
           <td class="acciones">
-            <div class="action">
+            <div v-if="!remove" class="action">
               <custom-button @click="getData();getCountData()">
               Acceder
             </custom-button>
             <custom-button @click="openEdit(object)">
               Editar
             </custom-button>
+            </div>
+            <div v-else class="action">
+              <custom-button>Eliminar</custom-button>
             </div>
           </td>
         </tr>
@@ -100,20 +105,26 @@
 import CustomButton from "@/components/CustomButton";
 import CustomInput from "@/components/CustomInput";
 import modal from "@/components/Modal";
-import editCabezal from "@/components/Modals/EditCabezal"
+import editCabezal from "@/components/Modals/EditCabezal";
+import daySelector from "@/components/DaySelector";
+
 export default {
   components: {
     CustomButton,
     CustomInput,
     modal,
-    editCabezal
+    editCabezal,
+    daySelector
   },
   props: {
     pageSize: {
       type: Number,
       required: true
     },
-    label: Object
+    label: Object,
+    remove: Boolean,
+    countVuex: String,
+    infoVuex: String
   },
   data() {
     return {
@@ -126,6 +137,7 @@ export default {
       dateEnd: "", // Texto que indica una fecha escrita en el filtro
       showEdit: false,
       value: "",
+      
     };
   },
   
@@ -135,37 +147,10 @@ export default {
   },
   computed: {
     data(){
-      // return this.$store.state.userInfo;
-      return [
-        {
-          id: 1356434634,
-          nombre: "Cabezal 1",
-          fecha: "12/12/2020 12:12:12"
-        },
-        {
-          id: 2346346346,
-          nombre: "Cabezal 2",
-          fecha: "12/12/2020 12:22:12"
-        },
-        {
-          id: 3346346343,
-          nombre: "Cabezal 3",
-          fecha: "12/12/2020 12:32:12"
-        },
-        {
-          id: 412321346,
-          nombre: "Cabezal 4",
-          fecha: "12/12/2020 12:42:12"
-        },
-        {
-          id: 5,
-          nombre: "Cabezal 5",
-          fecha: "15/12/2020 12:12:12"
-        }
-      ]
+      return this.$store.state[this.infoVuex];
     },
     size(){
-      return this.$store.state.countUserInfo;
+      return this.$store.state[this.countVuex];
     }
   },
   methods: {
@@ -186,7 +171,7 @@ export default {
     },
     // Funciones para avanzar y retroceder una página de la tabla
     nextPage: function () {
-      if (this.currentPage * this.pageSize < this.size) {
+      if (this.currentPage + 1 <= this.size / this.pageSize) {
         this.currentPage++;
         this.getData();
       }
@@ -261,13 +246,12 @@ export default {
   table {
     border-radius: 5px;
     font-size: 12px;
-    font-weight: normal;
+    font-weight: normal;     
     border: none;
     border-collapse: collapse;
     width: 100%;
     max-width: 100vw;
     background-color: white;
-    table-layout: fixed;
     td {
       border-right: 1px solid $white;
       font-size: 18px;
@@ -286,26 +270,19 @@ export default {
       padding: 8px;
     }
 
-    td:last-child{
-      width: 10px;
-    }
-    td:first-child{
-      width: 10px;
-    }
-
     thead {
       th {
         color: $white;
-        text-shadow: 1px;
-        background: $primary;
+        text-align: center;
+        background: darken($primary,10);
         text-transform: uppercase;
         user-select: none;
         cursor: pointer;
-        text-shadow: 3px;
+        font-size: 13px;
       }
       th:nth-child(odd) {
         color: $white;
-        background: $secondary;
+        background: darken($secondary,10);
       }
       th:nth-child(even):hover {
         background: $primaryDark;
@@ -334,7 +311,7 @@ export default {
 }
 
 // Ajustamos la vista para tamaños aun más pequeños (moviles), y cambiamos diseño de la tabla
-@media (max-width: 680px) {
+@media (max-width: 916px) {
   .filtros {
     flex-direction: column;
   }
@@ -346,6 +323,10 @@ export default {
 
   .table {
     margin: 25px 30px 30px;
+
+    .acciones{
+      flex-direction: column;
+    }
 
     table {
       border: 0;
@@ -365,7 +346,7 @@ export default {
         width: 1px;
       }
       tr {
-        border-bottom: 3px solid $white;
+        border-bottom: 3px solid $primary;
         display: block;
         margin-bottom: 0.625em;
       }
