@@ -14,32 +14,39 @@ const routes = [{
         path: '/programs',
         name: 'ProgramView',
         component: () =>
-            import ( /* webpackChunkName: "about" */ "../views/ProgramView.vue"),
+            import ("../views/ProgramView.vue"),
     },
     {
         path: '/cabezales',
         name: 'Cabezales',
+        title: "test",
         component: () =>
-            import ( /* webpackChunkName: "about" */ "../views/Cabezales.vue"),
+            import ("../views/Cabezales.vue"),
     },
     {
         path: '/programas',
         name: 'Programas',
         component: () =>
-            import ( /* webpackChunkName: "about" */ "../views/Programas.vue"),
+            import ("../views/Programas.vue"),
     },
     {
         path: '/fertirrigacion',
         name: 'Fertirrigacion',
         component: () =>
-            import ( /* webpackChunkName: "about" */ "../views/Fertirrigacion.vue"),
+            import ("../views/Fertirrigacion.vue"),
     },
     {
         path: '/',
         name: 'Home',
         component: () =>
-            import ( /* webpackChunkName: "about" */ "../views/Home.vue"),
-    }
+            import ("../views/Home.vue"),
+    },
+    {
+        path: '/registrarProgramador',
+        name: 'Registrar programador',
+        component: () =>
+            import ("../views/RegistroProgramador.vue"),
+    },
 ]
 
 const router = new VueRouter({

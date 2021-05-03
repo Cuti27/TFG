@@ -38,9 +38,11 @@
     </sidebar-menu>
 
     <div @click="touchOut()" :class="{ main: true, move: !collapse }"> 
+
       <transition name="slide" mode="out-in">
         <router-view/>
       </transition>
+
       <modal v-if="showLogin || showRegistro || showProgramador" @close="showLogin = false; showRegistro = false">
           <login v-if="showLogin" @registro="showLogin = false; showRegistro = true"></login>
           <registro v-if="showRegistro" @login="showLogin = true; showRegistro = false"></registro>
@@ -275,8 +277,7 @@ box-shadow:  20px 20px 60px #d9d9d9,
 
 body {
   background-color: $base;
-  background-image: url("./assets/cool-background.svg");
-  background-repeat: no-repeat;
+  background-image: url("./assets/leaves.png");
 background-attachment: fixed
 }
 

@@ -151,10 +151,11 @@ export default {
   .selectorAbono,
   .consigna,
   .selector,
-  .tiempo,
-  .header {
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    border-radius: 5px;
+  .tiempo{
+    border-radius: 25px;
+    background: linear-gradient(145deg, #e6e6e6, #ffffff);
+    box-shadow:  5px 5px 15px $primary,
+             -5px -5px 15px #ffffff;
     margin: 10px;
     padding: 10px 15px;
     background: $white;
@@ -162,24 +163,7 @@ export default {
 
   .header {
     grid-area: header;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
-    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-  padding: 20px;
-  margin: 20px;
-  margin-bottom: 40px;
-  background: linear-gradient($primaryShadow, $secondaryShadow),
-    url("../assets/header.jpg");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
-  background-size: cover;
-  background-position-y: -150px;
-  color: white;
-  height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5em;
+  
 }
 
   .phControl {

@@ -20,6 +20,8 @@ Vue.config.productionTip = false
 
 Vue.use(VueTour)
 
+document.title = 'Genhidro';
+
 new Vue({
     router,
     store,

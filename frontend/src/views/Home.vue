@@ -69,7 +69,7 @@ export default {};
 
 .home {
   section {
-    box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 0 0 rgba(0, 0, 0, 0.1);
   }
 
   p {
@@ -239,6 +239,9 @@ export default {};
       border-radius: 76px 0px 0px 76px;
       background: #f6f6f6;
       box-shadow: 41px 21px 82px $primaryDark, -41px -41px 82px $base;
+
+      margin-top: 100px;
+      margin-bottom: 100px;
     }
 
     .image {
