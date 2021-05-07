@@ -176,6 +176,16 @@ export default {
             },
           },
         },
+        {
+          href: { name: "Registrar programador" },
+          title: "Registrar programador",
+          icon: {
+            element: "font-awesome-icon",
+            attributes: {
+              icon: "clock",
+            },
+          },
+        },
       ],
       logged: false,
     };

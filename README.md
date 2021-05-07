@@ -137,3 +137,4 @@ En node-red, se añadirá una pequeña autenticación para comprobar que se esta
 
 - Temporizadores en vertical mejor?
 - Sectores por defecto mapa o por defecto botones
+- Registrarme en google para conseguir mostrar un mapa de verdad, o no es relevante?

@@ -78,12 +78,14 @@ export default {
     cursor: pointer;
     border: none;
     text-indent: 1px;
-    text-overflow: "";
+    text-overflow: ellipsis;
     border: 1px solid;
     border-radius: 5px;
     font-size: 20px;
     padding: 10px;
     box-shadow: $primaryShadow 0px 2px 8px 0px;
+    width: 100%;
+    max-width:300px;
   }
 
   select.button {

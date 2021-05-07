@@ -42,7 +42,7 @@
 
     <div class="selectorAbono">
       <custom-select
-        :button="true"
+        button
         @change="selected = $event"
         :selected="selected"
         :values="sel"

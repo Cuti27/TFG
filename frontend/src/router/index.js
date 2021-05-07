@@ -45,7 +45,7 @@ const routes = [{
         path: '/registrarProgramador',
         name: 'Registrar programador',
         component: () =>
-            import ("../views/RegistroProgramador.vue"),
+            import ("../views/RegistroProgramador/RegistroProgramador.vue"),
     },
 ]
 
