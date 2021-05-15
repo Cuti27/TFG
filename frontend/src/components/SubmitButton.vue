@@ -7,7 +7,7 @@
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 .boton {
-    display: inline;
+  display: inline;
   cursor: pointer;
   background: $white;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;

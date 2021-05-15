@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <div v-if="windowWidth < 500" id="nav" :class="{change: !collapse}">
+  <v-app>
+    <div v-if="windowWidth < 500" id="nav" :class="{ change: !collapse }">
       <div
         :class="{ container: true, change: !collapse, menuHamburguesa: true }"
         @click="collapse = !collapse"
@@ -23,61 +23,105 @@
       </div>
       <div slot="footer">
         <div v-if="logged" class="auxiliares">
-          
-          <login-button @click="showProgramador = true; collapse = true" v-show="!collapse">Añadir dispositivo</login-button>
-          <login-button  v-show="!collapse">Cerrar sesion</login-button>
-          <login-button @click="showProgramador = true; collapse = true" v-show="collapse"><font-awesome-icon icon="plus-square" /></login-button>
+          <login-button
+            @click="
+              showProgramador = true;
+              collapse = true;
+            "
+            v-show="!collapse"
+            >Añadir dispositivo</login-button
+          >
+          <login-button v-show="!collapse">Cerrar sesion</login-button>
+          <login-button
+            @click="
+              showProgramador = true;
+              collapse = true;
+            "
+            v-show="collapse"
+            ><font-awesome-icon icon="plus-square"
+          /></login-button>
         </div>
-        <div v-else  class="login">
-          <login-button @click="showLogin = true; collapse = true" v-show="!collapse">Login</login-button>
-          <login-button @click="showRegistro = true; collapse = true" v-show="!collapse">Registro</login-button>
-          <login-button @click="showLogin = true; collapse = true" v-show="collapse"><font-awesome-icon icon="sign-in-alt" /></login-button>
+        <div v-else class="login">
+          <v-btn
+            color="primary"
+            elevation="5"
+            outlined
+            rounded
+            @click="
+              showLogin = true;
+              collapse = true;
+            "
+            v-show="!collapse"
+            >Login</v-btn
+          >
+          <v-btn
+            color="primary"
+            elevation="5"
+            outlined
+            rounded
+            @click="
+              showRegistro = true;
+              collapse = true;
+            "
+            v-show="!collapse"
+            >Registro</v-btn
+          >
+          <v-btn
+            color="primary"
+            elevation="5"
+            outlined
+            rounded
+            fab
+            small
+            @click="
+              showLogin = true;
+              collapse = true;
+            "
+            v-show="collapse"
+            ><font-awesome-icon icon="sign-in-alt"
+          /></v-btn>
+          <v-login></v-login>
         </div>
       </div>
       <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
     </sidebar-menu>
 
-    <div @click="touchOut()" :class="{ main: true, move: !collapse }"> 
+    <v-main @click="touchOut()" :class="{ main: true, move: !collapse }">
+      <!-- Provides the application the proper gutter -->
+      <v-container fluid>
+        <!-- If using vue-router -->
+        <transition name="slide" mode="out-in">
+          <router-view />
+        </transition>
 
-      <transition name="slide" mode="out-in">
-        <router-view/>
-      </transition>
-
-      <modal v-if="showLogin || showRegistro || showProgramador" @close="showLogin = false; showRegistro = false">
-          <login v-if="showLogin" @registro="showLogin = false; showRegistro = true"></login>
-          <registro v-if="showRegistro" @login="showLogin = true; showRegistro = false"></registro>
+        <modal
+          v-if="showLogin || showRegistro || showProgramador"
+          @close="
+            showLogin = false;
+            showRegistro = false;
+          "
+        >
+          <login
+            v-if="showLogin"
+            @registro="
+              showLogin = false;
+              showRegistro = true;
+            "
+          ></login>
+          <registro
+            v-if="showRegistro"
+            @login="
+              showLogin = true;
+              showRegistro = false;
+            "
+          ></registro>
           <add-programador v-if="showProgramador"></add-programador>
-      </modal>
-    </div>
-    <footer :class="{ move: !collapse }">
-      <div>
-        <a href="/">Genhidro</a>
-        |
-        <a href="https://agrosolmen.es/">Agrosolmen</a>
-        |
-        <a href="/aviso-legal">Aviso Legal</a>
-        |
-        <a href="/politica-de-privacidad">Política de Privacidad</a>
-        |
-        <a href="/politica-de-cookies">Política de Cookies</a>
-      </div>
-      <div class="SocialMedia">
-        <ul class="social-icons">
-          <li>
-            <a
-              href="https://es-es.facebook.com/pages/category/Agricultural-Cooperative/Agrosolmen-1461731994040377/"
-              ><font-awesome-icon :icon="['fab', 'facebook-f']"
-            /></a>
-          </li>
-          <li>
-            <a href="https://www.linkedin.com/company/agrosolmen/"
-              ><font-awesome-icon :icon="['fab', 'linkedin-in']"
-            /></a>
-          </li>
-        </ul>
-      </div>
-    </footer>
-  </div>
+        </modal>
+      </v-container>
+    </v-main>
+
+    <custom-footer></custom-footer>
+  </v-app>
 </template>
 
 <script>
@@ -87,16 +131,20 @@ import modal from "@/components/Modal";
 import login from "@/components/Modals/Login";
 import registro from "@/components/Modals/Registro";
 import addProgramador from "@/components/Modals/AddProgramador";
+import customFooter from "@/components/vuetify/footer";
+import vLogin from "@/components/vuetify/dialog/login";
 
 // import StickyHeader from "@/components/StickyHeader";
 export default {
   components: {
+    customFooter,
     SidebarMenu,
     loginButton,
     modal,
     login,
     registro,
     addProgramador,
+    vLogin,
   },
   data() {
     return {
@@ -219,8 +267,6 @@ export default {
 };
 </script>
 
-
-
 <style lang="scss">
 @import "src/css/colorSchema.scss";
 $primary-color: $primary;
@@ -250,17 +296,19 @@ $icon-color: darken($primaryDark, 10%);
   display: inline-block;
   cursor: pointer;
 }
-.v-sidebar-menu{
+.v-sidebar-menu {
   max-height: 100vh;
   z-index: 9990;
   position: fixed;
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
   .vsm--title {
     color: black;
   }
-} 
+}
 
-.login, .auxiliares {
+.login,
+.auxiliares {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -277,18 +325,17 @@ $icon-color: darken($primaryDark, 10%);
   top: 10px;
   left: 10px;
   z-index: 9995;
-  background-color:$white;
+  background-color: $white;
   overflow: hidden;
   border-radius: 5px;
   background: linear-gradient(145deg, #ffffff, #e6e6e6);
-box-shadow:  20px 20px 60px #d9d9d9,
-             -20px -20px 60px #ffffff;
+  box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
 }
 
 body {
   background-color: $base;
   background-image: url("./assets/leaves.png");
-background-attachment: fixed
+  background-attachment: fixed;
 }
 
 /* Rotate first bar */
@@ -305,8 +352,6 @@ background-attachment: fixed
   flex-direction: column;
   min-height: 100vh;
   box-sizing: border-box;
-
-  
 
   main {
     flex: 1 0 auto;
@@ -421,7 +466,7 @@ background-attachment: fixed
   #app .move {
     width: 98vw;
   }
-  #nav.change{
+  #nav.change {
     left: 220px;
   }
   .menuHamburguesa {

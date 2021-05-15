@@ -1,6 +1,10 @@
 <template>
   <div class="SectionSelector">
-     <select-button v-model="show" name="seccion" :options="['Mapa','Sectores']"></select-button>
+    <select-button
+      v-model="show"
+      name="seccion"
+      :options="['Mapa', 'Sectores']"
+    ></select-button>
     <div class="content">
       <transition name="fade" mode="out-in">
         <div v-if="show" key="table">
@@ -59,7 +63,7 @@ export default {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  transition: background .3s;
+  transition: background 0.3s;
   width: 100%;
   .map {
     img {

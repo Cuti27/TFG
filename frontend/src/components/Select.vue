@@ -85,7 +85,7 @@ export default {
     padding: 10px;
     box-shadow: $primaryShadow 0px 2px 8px 0px;
     width: 100%;
-    max-width:300px;
+    max-width: 300px;
   }
 
   select.button {

@@ -1,7 +1,11 @@
 <template>
   <div class="temporizadores">
     <temporizador
-    :class="{disabled: disabled, remove: removing == index, creando: success && temporizadores.length == index + 1}" 
+      :class="{
+        disabled: disabled,
+        remove: removing == index,
+        creando: success && temporizadores.length == index + 1,
+      }"
       v-for="(temp, index) in temporizadores"
       :key="'Temporizador' + getHash(index)"
       v-model="temporizadores[index]"
@@ -13,14 +17,15 @@
       >Temporizador {{ index + 1 }}</temporizador
     >
 
-    <a v-if="!disabled"
+    <a
+      v-if="!disabled"
       @click.prevent="add()"
       :class="{ button: true, success }"
       href="#"
       role="button"
     >
       <span>Añadir</span>
-      <div class="icon" >
+      <div class="icon">
         <font-awesome-icon v-if="!success" icon="plus-square" size="2x" />
         <font-awesome-icon v-else icon="check" size="3x" />
       </div>
@@ -37,8 +42,8 @@ export default {
   props: {
     disabled: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -50,32 +55,31 @@ export default {
         },
       ],
       success: false,
-      removing: -100
+      removing: -100,
     };
   },
   methods: {
     add() {
       this.success = true;
       this.temporizadores.push({
-          inicio: [0, 0, 0],
-          duracion: [0, 0, 0],
-          post: [0, 0, 0],
-        });
+        inicio: [0, 0, 0],
+        duracion: [0, 0, 0],
+        post: [0, 0, 0],
+      });
       setTimeout(() => (this.success = false), 600);
     },
     remove(event) {
-      if (this.temporizadores.length >= 2){
+      if (this.temporizadores.length >= 2) {
         this.removing = event;
         setTimeout(() => {
           this.temporizadores.splice(event, 1);
-          this.removing = -100
+          this.removing = -100;
         }, 600);
       }
-        
     },
-    getHash(){
+    getHash() {
       return Math.floor(Math.random() * 10000);
-    }
+    },
   },
 };
 </script>
@@ -89,59 +93,87 @@ export default {
 
 .remove {
   -webkit-animation: 0.4s ease-in 0.2s remove; /* Safari, Chrome and Opera > 12.1 */
-       -moz-animation: 0.4s ease-in 0.2s remove; /* Firefox < 16 */
-        -ms-animation: 0.4s ease-in 0.2s remove; /* Internet Explorer */
-         -o-animation: 0.4s ease-in 0.2s remove; /* Opera < 12.1 */
-            animation: 0.4s ease-in 0.2s remove;
-   animation: 0.4s ease-in 0.2s remove;
+  -moz-animation: 0.4s ease-in 0.2s remove; /* Firefox < 16 */
+  -ms-animation: 0.4s ease-in 0.2s remove; /* Internet Explorer */
+  -o-animation: 0.4s ease-in 0.2s remove; /* Opera < 12.1 */
+  animation: 0.4s ease-in 0.2s remove;
+  animation: 0.4s ease-in 0.2s remove;
 }
 
-.creando{
+.creando {
   opacity: 0;
   animation: 0.4s ease-in 0.2s create;
 }
 
 @-webkit-keyframes create {
-  0% { opacity: 0; transform: scale(0, 0); height: 0px; }
+  0% {
+    opacity: 0;
+    transform: scale(0, 0);
+    height: 0px;
+  }
   99% {
     transform: scale(1.1, 1.1);
     height: auto;
   }
-  100% { opacity: 1; height: auto;  }
+  100% {
+    opacity: 1;
+    height: auto;
+  }
 }
 
 @-moz-keyframes create {
-  0% { opacity: 0; transform: scale(0, 0); height: 0px; }
+  0% {
+    opacity: 0;
+    transform: scale(0, 0);
+    height: 0px;
+  }
   99% {
     transform: scale(1.1, 1.1);
     height: auto;
   }
-  100% { opacity: 1; height: auto;  }
+  100% {
+    opacity: 1;
+    height: auto;
+  }
 }
 
 @-ms-keyframes create {
-  0% { opacity: 0; transform: scale(0, 0); height: 0px; }
+  0% {
+    opacity: 0;
+    transform: scale(0, 0);
+    height: 0px;
+  }
   99% {
     transform: scale(1.1, 1.1);
     height: auto;
   }
-  100% { opacity: 1; height: auto;  }
+  100% {
+    opacity: 1;
+    height: auto;
+  }
 }
 
 @keyframes create {
-  0% { opacity: 0; transform: scale(0, 0); height: 0px; }
+  0% {
+    opacity: 0;
+    transform: scale(0, 0);
+    height: 0px;
+  }
   99% {
     transform: scale(1.1, 1.1);
     height: auto;
   }
-  100% { opacity: 1; height: auto;  }
+  100% {
+    opacity: 1;
+    height: auto;
+  }
 }
 
 @keyframes remove {
-     from {
+  from {
     transform: scale(1, 1);
   }
-  
+
   30% {
     transform: scale(1.1, 1.1);
   }
@@ -150,7 +182,7 @@ export default {
     transform: scale(0, 0);
     height: 0;
   }
-  
+
   to {
     height: 0;
     opacity: 0;
@@ -159,10 +191,10 @@ export default {
 
 /* Firefox < 16 */
 @-moz-keyframes remove {
-     from {
+  from {
     transform: scale(1, 1);
   }
-  
+
   30% {
     transform: scale(1.1, 1.1);
   }
@@ -171,7 +203,7 @@ export default {
     transform: scale(0, 0);
     height: 0;
   }
-  
+
   to {
     height: 0;
     opacity: 0;
@@ -180,10 +212,10 @@ export default {
 
 /* Safari, Chrome and Opera > 12.1 */
 @-webkit-keyframes remove {
-     from {
+  from {
     transform: scale(1, 1);
   }
-  
+
   30% {
     transform: scale(1.1, 1.1);
   }
@@ -192,7 +224,7 @@ export default {
     transform: scale(0, 0);
     height: 0;
   }
-  
+
   to {
     height: 0;
     opacity: 0;
@@ -201,10 +233,10 @@ export default {
 
 /* Internet Explorer */
 @-ms-keyframes remove {
-     from {
+  from {
     transform: scale(1, 1);
   }
-  
+
   30% {
     transform: scale(1.1, 1.1);
   }
@@ -213,7 +245,7 @@ export default {
     transform: scale(0, 0);
     height: 0;
   }
-  
+
   to {
     height: 0;
     opacity: 0;
@@ -340,16 +372,16 @@ $transition: all #{$speed} cubic-bezier(0.31, -0.105, 0.43, 1.4);
   }
 }
 
-@media (max-width: 990px){
+@media (max-width: 990px) {
   .button {
     width: 200px;
     height: 75px;
     .icon {
       top: -2px;
     }
-    span{
+    span {
       top: -9px;
-      &:after{
+      &:after {
         top: 17px;
       }
     }
@@ -360,9 +392,9 @@ $transition: all #{$speed} cubic-bezier(0.31, -0.105, 0.43, 1.4);
     .icon {
       top: -5px;
     }
-    span{
+    span {
       top: -12px;
-      &:after{
+      &:after {
         top: 22px;
       }
     }

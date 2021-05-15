@@ -37,8 +37,6 @@ input[type="checkbox"] {
   &:focus {
     outline: 0;
   }
-
- 
 }
 .toggle {
   height: 32px;
@@ -65,7 +63,7 @@ input[type="checkbox"] {
   }
   &:checked {
     border-color: $secondary;
-    background: linear-gradient(-90deg, $secondary 0%, $secondaryDark 100%);;
+    background: linear-gradient(-90deg, $secondary 0%, $secondaryDark 100%);
     &:after {
       transform: translatex(20px);
     }

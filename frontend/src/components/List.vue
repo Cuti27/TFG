@@ -51,9 +51,7 @@ export default {
   },
 };
 </script>
- 
-    
-   
+
 <style lang="scss" scoped>
 @import "src/css/colorSchema.scss";
 

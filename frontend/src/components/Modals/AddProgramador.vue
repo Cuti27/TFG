@@ -6,9 +6,15 @@
         <h3>Añadir programador de riego</h3>
       </header>
       <form action="" class="addProgramador-form">
-       <login-button id="recuperar">Generar identificador para nuevo dispositivo</login-button>
-       <h2 class="divider line one-line">O si ya has configurado un dispositivo</h2>
-       <login-button @click="$emit('registroProgramador')" id="registro">Registro programador</login-button>
+        <login-button id="recuperar"
+          >Generar identificador para nuevo dispositivo</login-button
+        >
+        <h2 class="divider line one-line">
+          O si ya has configurado un dispositivo
+        </h2>
+        <login-button @click="$emit('registroProgramador')" id="registro"
+          >Registro programador</login-button
+        >
         <div class="submit-container">
           <login-button @click="close()">Cancelar</login-button>
         </div>
@@ -23,11 +29,11 @@ export default {
   components: {
     loginButton,
   },
-  methods:{
-      close(){
-          this.$parent.$emit('close');
-      }
-  }
+  methods: {
+    close() {
+      this.$parent.$emit("close");
+    },
+  },
 };
 </script>
 
@@ -36,7 +42,7 @@ export default {
 
 .divider {
   display: flex;
-  
+
   &:before,
   &:after {
     content: "";
@@ -47,7 +53,7 @@ export default {
 .line {
   align-items: center;
   margin: 1em -1em;
-  
+
   &:before,
   &:after {
     height: 1px;
@@ -56,12 +62,12 @@ export default {
 }
 
 .one-line {
-    &:before,
-    &:after {
-      background: black;
-      min-width: 40px;
-    }
+  &:before,
+  &:after {
+    background: black;
+    min-width: 40px;
   }
+}
 
 /* Animation Keyframes */
 @keyframes scale_header {
@@ -117,10 +123,9 @@ export default {
   }
 }
 
-#recuperar{
-    margin-top: 20px;
+#recuperar {
+  margin-top: 20px;
 }
-
 
 .addProgramador {
   position: relative;
@@ -203,8 +208,8 @@ export default {
   justify-content: center;
   flex-direction: column;
 
-  a{
-      margin-top: 10px;
+  a {
+    margin-top: 10px;
   }
 }
 

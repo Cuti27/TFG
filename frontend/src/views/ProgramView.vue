@@ -3,18 +3,16 @@
     <!-- Header con el nombre del programa -->
     <header-custom :name="name">
       <div class="ayuda">
-      <a @click.prevent="$tours['myTour'].start()">
-        <font-awesome-icon icon="info-circle"/>
-      </a>
-    </div>
+        <a @click.prevent="$tours['myTour'].start()">
+          <font-awesome-icon icon="info-circle" />
+        </a>
+      </div>
     </header-custom>
 
     <!-- Botón flotante con el que se puede guardar -->
     <div class="guardar">
       <submit-button>Guardar</submit-button>
     </div>
-
-    
 
     <!-- Cuerpo donde se va a mostrar todo el contenido de la página -->
     <div class="form">
@@ -135,7 +133,7 @@ export default {
     SubmitButton,
     SelectButton,
     temporizadorMenu,
-    headerCustom
+    headerCustom,
   },
   data() {
     return {
@@ -242,64 +240,61 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
-.ayuda{
-   display: inline-block;
-    margin: 0.15em;
+.ayuda {
+  display: inline-block;
+  margin: 0.15em;
+  position: absolute;
+  font-size: 1.2em;
+  $timing: 265ms;
+  $iconColor: $primary;
+  $accent: $primaryDark;
+  $bluefade: $secondary;
+
+  top: 190px;
+  right: 30px;
+  z-index: 9990;
+
+  @mixin transformScale($size: 1) {
+    transform: scale($size);
+    -ms-transform: scale($size);
+    -webkit-transform: scale($size);
+  }
+
+  svg {
+    color: $white;
     position: absolute;
-    font-size: 1.2em;
-    $timing: 265ms;
-    $iconColor: $primary;
-    $accent: $primaryDark;
-    $bluefade: $secondary;
+    top: 6px;
+    left: 5px;
+    transition: all $timing ease-out;
+  }
 
-
-    top: 190px;
-    right: 30px;
-    z-index: 9990;
-
-    @mixin transformScale($size: 1) {
-      transform: scale($size);
-      -ms-transform: scale($size);
-      -webkit-transform: scale($size);
+  a {
+    display: inline-block;
+    padding: 0px;
+    &:before {
+      @include transformScale();
+      content: " ";
+      width: 40px;
+      height: 40px;
+      border-radius: 100%;
+      display: block;
+      background: linear-gradient(45deg, $iconColor, $accent);
+      transition: all $timing ease-out;
     }
 
-
-      svg {
-        color: $white;
-        position: absolute;
-        top: 6px;
-        left: 5px;
-        transition: all $timing ease-out;
-      }
-
-      a {
-        display: inline-block;
-        padding: 0px;
-        &:before {
-          @include transformScale();
-          content: " ";
-          width: 40px;
-          height: 40px;
-          border-radius: 100%;
-          display: block;
-          background: linear-gradient(45deg, $iconColor, $accent);
-          transition: all $timing ease-out;
-        }
-
-        &:hover:before {
-          transform: scale(0);
-          transition: all $timing ease-in;
-        }
-
-        &:hover svg {
-          @include transformScale(2.2);
-          color: $white;
-          -webkit-text-fill-color: transparent;
-          transition: all $timing ease-in;
-        }
-      }
+    &:hover:before {
+      transform: scale(0);
+      transition: all $timing ease-in;
     }
-    
+
+    &:hover svg {
+      @include transformScale(2.2);
+      color: $white;
+      -webkit-text-fill-color: transparent;
+      transition: all $timing ease-in;
+    }
+  }
+}
 
 h3 {
   margin-bottom: 5px;
@@ -466,8 +461,8 @@ h3 {
   }
 }
 
-@media (max-width: "480px"){
-  .ayuda{
+@media (max-width: "480px") {
+  .ayuda {
     top: 230px;
   }
 }

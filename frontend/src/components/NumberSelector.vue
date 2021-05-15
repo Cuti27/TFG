@@ -1,113 +1,111 @@
 <template>
   <div class="selector">
-        <input
-          type="number"
-          class="form__field"
-          placeholder="Name"
-          name="name"
-          id="name"
-          :value="value"
-           :min="min" :max="max"
-          required
-          @input="updateValue($event.target.value)"
-          :disabled="disabled"
-        />
-        <label for="name" class="form__label">{{placeholder}}</label>
-      </div>
+    <input
+      type="number"
+      class="form__field"
+      placeholder="Name"
+      name="name"
+      id="name"
+      :value="value"
+      :min="min"
+      :max="max"
+      required
+      @input="updateValue($event.target.value)"
+      :disabled="disabled"
+    />
+    <label for="name" class="form__label">{{ placeholder }}</label>
+  </div>
 </template>
 
 <script>
 export default {
-    props: {
-        value: {
-            type: Number
-        },
-        max: {
-            type: Number,
-        },
-        min: {
-            type: Number,
-        },
-        placeholder: {
-            type: String
-        },
-        disabled: Boolean
+  props: {
+    value: {
+      type: Number,
     },
-    methods: {
-      updateValue(val){
-         this.$emit('input', val)
-      }
-}
-
-}
+    max: {
+      type: Number,
+    },
+    min: {
+      type: Number,
+    },
+    placeholder: {
+      type: String,
+    },
+    disabled: Boolean,
+  },
+  methods: {
+    updateValue(val) {
+      this.$emit("input", val);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
-
-
 .selector {
-    position: relative;
-    padding: 15px 5px 0;
-    margin-top: 10px;
-    width: 60px
+  position: relative;
+  padding: 15px 5px 0;
+  margin-top: 10px;
+  width: 60px;
+}
+
+.form__field {
+  width: 100%;
+  // Dibujamos unicamente la linea de abajo
+  border: 0;
+  border-bottom: 2px solid $gray;
+  // Evitamos dibujar el borde
+  outline: 0;
+  font-size: 1.3rem;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+
+  &::placeholder {
+    color: transparent;
   }
 
-  .form__field {
-    width: 100%;
-    // Dibujamos unicamente la linea de abajo
-    border: 0;
-    border-bottom: 2px solid $gray;
-    // Evitamos dibujar el borde
-    outline: 0;
+  &:placeholder-shown ~ .form__label {
     font-size: 1.3rem;
-    padding: 7px 0;
-    background: transparent;
-    transition: border-color 0.2s;
-
-    &::placeholder {
-      color: transparent;
-    }
-
-    &:placeholder-shown ~ .form__label {
-      font-size: 1.3rem;
-      cursor: text;
-      top: 20px;
-    }
+    cursor: text;
+    top: 20px;
   }
+}
 
-  .form__label {
+.form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 1rem;
+  color: $gray;
+}
+
+.form__field:focus {
+  ~ .form__label {
     position: absolute;
     top: 0;
     display: block;
     transition: 0.2s;
     font-size: 1rem;
-    color: $gray;
-  }
-
-  .form__field:focus {
-    ~ .form__label {
-      position: absolute;
-      top: 0;
-      display: block;
-      transition: 0.2s;
-      font-size: 1rem;
-      color: $primary;
-      font-weight: 700;
-    }
-    padding-bottom: 6px;
+    color: $primary;
     font-weight: 700;
-    border-width: 3px;
-    border-image: linear-gradient(to right, $primary, $secondary);
-    border-image-slice: 1;
   }
-  /* reset input */
-  .form__field {
-    &:required,
-    &:invalid {
-      box-shadow: none;
-       border-bottom: 2px solid $gray;
-    }
+  padding-bottom: 6px;
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, $primary, $secondary);
+  border-image-slice: 1;
+}
+/* reset input */
+.form__field {
+  &:required,
+  &:invalid {
+    box-shadow: none;
+    border-bottom: 2px solid $gray;
   }
+}
 </style>

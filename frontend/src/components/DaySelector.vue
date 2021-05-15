@@ -1,9 +1,17 @@
 <template>
   <div class="dayList">
     <slot></slot>
-    <div v-for="(day, index) in days" :key="index" @click.prevent="togleValue(index)">
-      <input :id="day+'-'+index" type="radio" :checked="daysValue[index]">
-      <label :class="{ blanco: !daysValue[index], size: true}" :for="day+'-'+index">{{day}}</label>
+    <div
+      v-for="(day, index) in days"
+      :key="index"
+      @click.prevent="togleValue(index)"
+    >
+      <input :id="day + '-' + index" type="radio" :checked="daysValue[index]" />
+      <label
+        :class="{ blanco: !daysValue[index], size: true }"
+        :for="day + '-' + index"
+        >{{ day }}</label
+      >
     </div>
   </div>
 </template>
@@ -16,44 +24,41 @@ export default {
   },
   data() {
     // Creamos un array para comprobar el día
-    return { days: ["L", "M", "X", "J", "V", "S", "D"] 
-    };
-   
+    return { days: ["L", "M", "X", "J", "V", "S", "D"] };
   },
   methods: {
     // Llamamos a la actualización del indice
-    togleValue(index){
+    togleValue(index) {
       // this.daysValue[index] = !this.daysValue[index];
-      if(!this.disabled)
-        this.$store.dispatch("updateDays",index);
-    }
+      if (!this.disabled) this.$store.dispatch("updateDays", index);
+    },
   },
   // Recuperamos el valor
   computed: {
-    daysValue(){
+    daysValue() {
       //console.log(this.$store.getters.programDays)
-      if(this.dias)
-        return this.dias;
+      if (this.dias) return this.dias;
       return this.$store.getters.programDays;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "src/css/colorSchema.scss";
 
-input, label {
+input,
+label {
   background: $primaryDark;
   color: #fff;
-  transition: background .3s
+  transition: background 0.3s;
 }
 
-label:hover{
+label:hover {
   background: $primary;
 }
 
-input{
+input {
   display: none;
 }
 
@@ -67,28 +72,24 @@ label {
   box-shadow: 2px 2px 4px $darkGreen;
   margin: 5px;
   line-height: 50px;
-  cursor: pointer
+  cursor: pointer;
 }
 
 label.blanco {
   background-color: $white;
   color: $black;
   opacity: 0.5;
-
-  
 }
 
-label.blanco:hover{
-    opacity: 0.8;
-  }
+label.blanco:hover {
+  opacity: 0.8;
+}
 
-.dayList{
+.dayList {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   flex-wrap: 1;
 }
-
-
 </style>

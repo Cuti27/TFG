@@ -5,13 +5,12 @@
     </div>
     <div class="sources">
       <div v-for="(item, index) in options" :key="item + index">
-      <input :id="item + '-' + index" type="radio" />
-      <label :class="{ blanco: false }" :for="item + '-' + index">{{
-        item
-      }}</label>
+        <input :id="item + '-' + index" type="radio" />
+        <label :class="{ blanco: false }" :for="item + '-' + index">{{
+          item
+        }}</label>
+      </div>
     </div>
-    </div>
-    
   </div>
 </template>
 
@@ -41,7 +40,7 @@ label {
   color: $white;
   user-select: none;
   min-width: 30px;
-  transition: background .3s;
+  transition: background 0.3s;
   border-radius: 8px;
 }
 

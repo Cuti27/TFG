@@ -8,7 +8,7 @@
         :checked="selected == index"
       />
       <div class="front-end box">
-        <span :style="{top: xl ? '-63px' : '-55px'}">{{ element }}</span>
+        <span :style="{ top: xl ? '-63px' : '-55px' }">{{ element }}</span>
       </div>
     </label>
   </div>
@@ -18,22 +18,20 @@
 export default {
   data() {
     return {
-      selected: this.sel? this.sel : 0,
+      selected: this.sel ? this.sel : 0,
     };
   },
   props: {
     options: Array,
     name: String,
     xl: Boolean,
-    sel: Number
+    sel: Number,
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
-
-
 
 $green: linear-gradient($secondary, $secondaryDark);
 .middle {

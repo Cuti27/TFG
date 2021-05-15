@@ -1,16 +1,23 @@
 <template>
   <div class="temporizador">
-      <h3 :style="{'align-self': title && windowWidth >= 990? 'end' : 'center'}"><slot></slot></h3>
+    <h3
+      :style="{ 'align-self': title && windowWidth >= 990 ? 'end' : 'center' }"
+    >
+      <slot></slot>
+    </h3>
     <div class="inicio">
       <h3 v-if="title || windowWidth < 1030">Hora de inicio</h3>
-         <div>
+      <div>
         <number-selector
           :value="inicioHora"
           :min="0"
           :max="99"
           placeholder="Horas"
           :disabled="disabled"
-          @input="inicioHora = parseInt($event); update()"
+          @input="
+            inicioHora = parseInt($event);
+            update();
+          "
         ></number-selector>
         <number-selector
           :value="inicioMinutos"
@@ -18,7 +25,10 @@
           :max="59"
           placeholder="Min"
           :disabled="disabled"
-          @input="inicioMinutos = parseInt($event); update()"
+          @input="
+            inicioMinutos = parseInt($event);
+            update();
+          "
         ></number-selector>
         <number-selector
           :value="inicioSegundos"
@@ -26,7 +36,10 @@
           :max="59"
           placeholder="Seg"
           :disabled="disabled"
-          @input="inicioSegundos = parseInt($event); update()"
+          @input="
+            inicioSegundos = parseInt($event);
+            update();
+          "
         ></number-selector>
       </div>
     </div>
@@ -39,7 +52,10 @@
           :max="99"
           placeholder="Horas"
           :disabled="disabled"
-          @input="duracionHora = parseInt($event); update()"
+          @input="
+            duracionHora = parseInt($event);
+            update();
+          "
         ></number-selector>
         <number-selector
           :value="duracionMinutos"
@@ -47,7 +63,10 @@
           :max="59"
           placeholder="Min"
           :disabled="disabled"
-          @input="duracionMinutos = parseInt($event); update()"
+          @input="
+            duracionMinutos = parseInt($event);
+            update();
+          "
         ></number-selector>
         <number-selector
           :value="duracionSegundos"
@@ -55,7 +74,10 @@
           :max="59"
           placeholder="Seg"
           :disabled="disabled"
-          @input="duracionSegundos = parseInt($event); update()"
+          @input="
+            duracionSegundos = parseInt($event);
+            update();
+          "
         ></number-selector>
       </div>
     </div>
@@ -68,7 +90,10 @@
           :max="99"
           placeholder="Horas"
           :disabled="disabled"
-          @input="postHora = parseInt($event); update()"
+          @input="
+            postHora = parseInt($event);
+            update();
+          "
         ></number-selector>
         <number-selector
           :value="postMinutos"
@@ -76,7 +101,10 @@
           :max="59"
           placeholder="Min"
           :disabled="disabled"
-          @input="postMinutos = parseInt($event); update()"
+          @input="
+            postMinutos = parseInt($event);
+            update();
+          "
         ></number-selector>
         <number-selector
           :value="postSegundos"
@@ -84,13 +112,20 @@
           :max="59"
           placeholder="Seg"
           :disabled="disabled"
-          @input="postSegundos = parseInt($event); update()"
+          @input="
+            postSegundos = parseInt($event);
+            update();
+          "
         ></number-selector>
       </div>
     </div>
-    <font-awesome-icon :style="{'align-self': title && windowWidth >= 1030? 'end' : 'center'}" @click="$emit('delete',id)" icon="trash-alt" size="2x" />
+    <font-awesome-icon
+      :style="{ 'align-self': title && windowWidth >= 1030 ? 'end' : 'center' }"
+      @click="$emit('delete', id)"
+      icon="trash-alt"
+      size="2x"
+    />
   </div>
- 
 </template>
 
 <script>
@@ -98,13 +133,13 @@ import NumberSelector from "@/components/NumberSelector";
 
 export default {
   components: {
-    NumberSelector
+    NumberSelector,
   },
   props: {
-      title: Boolean,
-      id: Number,
-      value: Object,
-      disabled: Boolean,
+    title: Boolean,
+    id: Number,
+    value: Object,
+    disabled: Boolean,
   },
   data() {
     return {
@@ -119,23 +154,26 @@ export default {
       postSegundos: this.value.post[2],
       windowWidth: 0,
       windowHeight: 0,
-      
     };
   },
   computed: {
-      temporizador(){
-        return {
-            inicio: [this.inicioHora, this.inicioMinutos, this.inicioSegundos],
-            duracion: [this.duracionHora, this.duracionMinutos, this.duracionSegundos],
-            post: [this.postHora, this.postMinutos, this.postSegundos]
-        }
-      }
+    temporizador() {
+      return {
+        inicio: [this.inicioHora, this.inicioMinutos, this.inicioSegundos],
+        duracion: [
+          this.duracionHora,
+          this.duracionMinutos,
+          this.duracionSegundos,
+        ],
+        post: [this.postHora, this.postMinutos, this.postSegundos],
+      };
+    },
   },
-  
-   methods: {
-     update(){
-    this.$emit("input",this.temporizador);
-  },
+
+  methods: {
+    update() {
+      this.$emit("input", this.temporizador);
+    },
     getWindowWidth() {
       this.windowWidth = document.documentElement.clientWidth;
     },
@@ -175,8 +213,8 @@ export default {
   border: 1px solid $primaryDark;
   border-radius: 15px;
   padding: 20px;
-  box-shadow: rgba(22, 62, 93, 0.5) 0px 1px 2px 0px, rgba(60, 64, 67, 0.3) 0px 2px 6px 2px;
-  
+  box-shadow: rgba(22, 62, 93, 0.5) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.3) 0px 2px 6px 2px;
 
   .inicio,
   .duracion,
@@ -201,16 +239,14 @@ export default {
       color: $primary;
     }
   }
-
 }
-
 
 @media (max-width: 1030px) {
   .temporizador {
-      justify-content: center;
+    justify-content: center;
     margin: 10px 15px;
     flex-direction: column;
-     width: 30%;
+    width: 30%;
   }
 }
 

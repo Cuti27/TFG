@@ -7,6 +7,14 @@
         }}
       </caption>
       <!-- TODO: Boton con el guardado -->
+      <div class="botonera">
+        <custom-input
+          type="number"
+          :placeholder="`Número de ${title}`"
+          min="0"
+          v-model="numValues"
+        ></custom-input>
+      </div>
       <thead>
         <tr>
           <th scope="col">{{ type }}</th>
@@ -14,14 +22,14 @@
           <th scope="col">Descripcion</th>
         </tr>
       </thead>
-      <tbody v-for="n in numValue" :key="`${title}_column_${n}`">
+      <tbody v-for="n in numValues" :key="`${title}_column_${n}`">
         <tr>
           <td :data-label="type">{{ n }}</td>
           <td data-label="Selecciona uno">
-            <br>
-            <br>
+            <br />
+            <br />
             <custom-select
-            class="select"
+              class="select"
               button
               @change="selected = $event"
               :selected="selected"
@@ -39,8 +47,10 @@
 
 <script>
 import customSelect from "@/components/Select";
+import customInput from "@/components/CustomInput";
+
 export default {
-  components: { customSelect },
+  components: { customSelect, customInput },
   props: {
     options: Array,
     numValue: Number,
@@ -51,6 +61,7 @@ export default {
     return {
       selected: 0,
       width: -1,
+      numValues: 0,
     };
   },
   methods: {
@@ -137,14 +148,14 @@ table {
     text-align: right;
   }
   td::before {
-      content: attr(data-label);
-      float: left;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-    td:last-child {
-      border-bottom: 0;
-    }
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  td:last-child {
+    border-bottom: 0;
+  }
 }
 
 textarea {

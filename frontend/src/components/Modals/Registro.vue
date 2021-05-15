@@ -9,8 +9,13 @@
         <custom-input type="text" placeholder="Nombre"></custom-input>
         <custom-input type="text" placeholder="Usuario"></custom-input>
         <custom-input type="password" placeholder="Contraseña"></custom-input>
-        <custom-input type="password" placeholder="Repita la contraseña"></custom-input>
-       <login-button id="login" @click="$emit('login')">Ya tienes cuenta?</login-button>
+        <custom-input
+          type="password"
+          placeholder="Repita la contraseña"
+        ></custom-input>
+        <login-button id="login" @click="$emit('login')"
+          >Ya tienes cuenta?</login-button
+        >
         <div class="submit-container">
           <login-button @click.prevent="close()">Cancelar</login-button>
           <login-button>Entrar</login-button>
@@ -28,11 +33,11 @@ export default {
     customInput,
     loginButton,
   },
-  methods:{
-      close(){
-          this.$parent.$emit('close');
-      }
-  }
+  methods: {
+    close() {
+      this.$parent.$emit("close");
+    },
+  },
 };
 </script>
 
@@ -93,7 +98,6 @@ export default {
   }
 }
 
-
 /* Login Form */
 .registro-container {
   display: flex;
@@ -105,7 +109,6 @@ export default {
   padding: 5px;
   box-sizing: border-box;
 }
-
 
 .registro-container p {
   align-self: flex-start;
@@ -199,8 +202,8 @@ export default {
   justify-content: center;
   flex-direction: column;
 
-  a{
-      margin-top: 10px;
+  a {
+    margin-top: 10px;
   }
 }
 

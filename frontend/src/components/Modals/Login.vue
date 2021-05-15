@@ -21,8 +21,10 @@
       <form action="" class="login-form">
         <custom-input type="text" placeholder="Username"></custom-input>
         <custom-input type="password" placeholder="Contraseña"></custom-input>
-       <login-button id="recuperar">Has olvidado la contraseña?</login-button>
-       <login-button @click="$emit('registro')" id="registro">Registrate</login-button>
+        <login-button id="recuperar">Has olvidado la contraseña?</login-button>
+        <login-button @click="$emit('registro')" id="registro"
+          >Registrate</login-button
+        >
         <div class="submit-container">
           <login-button @click="close()">Cancelar</login-button>
           <login-button>Entrar</login-button>
@@ -40,11 +42,11 @@ export default {
     customInput,
     loginButton,
   },
-  methods:{
-      close(){
-          this.$parent.$emit('close');
-      }
-  }
+  methods: {
+    close() {
+      this.$parent.$emit("close");
+    },
+  },
 };
 </script>
 
@@ -105,10 +107,9 @@ export default {
   }
 }
 
-#recuperar{
-    margin-top: 20px;
+#recuperar {
+  margin-top: 20px;
 }
-
 
 .login {
   position: relative;
@@ -191,8 +192,8 @@ export default {
   justify-content: center;
   flex-direction: column;
 
-  a{
-      margin-top: 10px;
+  a {
+    margin-top: 10px;
   }
 }
 

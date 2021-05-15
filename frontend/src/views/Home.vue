@@ -304,9 +304,9 @@ export default {};
   }
   .home {
     h1 {
-    font-size: 2.7rem;
-    line-height: 1;
-  }
+      font-size: 2.7rem;
+      line-height: 1;
+    }
 
     h2 {
       font-size: 1.75rem;
@@ -332,8 +332,8 @@ export default {};
       overflow-x: hidden;
 
       p.major {
-      font-size: 1rem;
-    }
+        font-size: 1rem;
+      }
 
       p {
         font-size: 0.8rem;

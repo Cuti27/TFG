@@ -1,5 +1,5 @@
 <template>
-    <transition name="modal">
+  <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
@@ -38,15 +38,14 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, .5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: table;
-  transition: opacity .3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
-  
 }
 
 .modal-container {
@@ -54,7 +53,7 @@
   margin: 0px auto;
   padding: 20px 30px;
   border-radius: 25px;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 
 @media (max-width: 768px) {
@@ -85,10 +84,10 @@
 .modal-enter .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
-  opacity:1;
+  opacity: 1;
 }
 
-.modal-leave-active .modal-container{
+.modal-leave-active .modal-container {
   -webkit-transform: scale(0);
   transform: scale(0);
   opacity: 0;

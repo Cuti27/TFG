@@ -3,49 +3,55 @@
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
-@mixin btn-border-drawing($color: #ccc, $hover: black, $width: 2px, $vertical: top, $horizontal: left, $duration: 0.25s) {
+@mixin btn-border-drawing(
+  $color: #ccc,
+  $hover: black,
+  $width: 2px,
+  $vertical: top,
+  $horizontal: left,
+  $duration: 0.25s
+) {
   box-shadow: inset 0 0 0 $width $color;
   color: $color;
   transition: color $duration $duration/3;
   position: relative;
-  
+
   &::before,
   &::after {
     border: 0 solid transparent;
     box-sizing: border-box;
-    content: '';
+    content: "";
     pointer-events: none;
     position: absolute;
-    width: 0; height: 0;
+    width: 0;
+    height: 0;
     border-radius: 10px;
-    #{$vertical}: 0; 
+    #{$vertical}: 0;
     #{$horizontal}: 0;
   }
 
   &::before {
-    $h-side: if($horizontal == 'left', 'right', 'left');
-    
+    $h-side: if($horizontal == "left", "right", "left");
+
     border-#{$vertical}-width: $width;
     border-#{$h-side}-width: $width;
   }
-  
+
   &::after {
-    $v-side: if($vertical == 'top', 'bottom', 'top');
-    
+    $v-side: if($vertical == "top", "bottom", "top");
+
     border-#{$v-side}-width: $width;
     border-#{$horizontal}-width: $width;
   }
-  
+
   &:hover {
     color: $hover;
-    
+
     &::before,
     &::after {
       border-color: $hover;
@@ -53,10 +59,14 @@ export default {
       width: 100%;
       height: 100%;
     }
-    
-    &::before { transition-delay: 0s, 0s, $duration; }
-    
-    &::after { transition-delay: 0s, $duration, 0s; }
+
+    &::before {
+      transition-delay: 0s, 0s, $duration;
+    }
+
+    &::after {
+      transition-delay: 0s, $duration, 0s;
+    }
   }
 }
 
@@ -70,7 +80,7 @@ export default {
   border: none;
   cursor: pointer;
   line-height: 1.5;
-  font: 700 0.9rem 'Roboto Slab', sans-serif;
+  font: 700 0.9rem "Roboto Slab", sans-serif;
   padding: 0.7em 1em;
   letter-spacing: 0.05rem;
   border-radius: 10px;

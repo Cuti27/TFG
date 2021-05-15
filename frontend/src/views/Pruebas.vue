@@ -1,6 +1,6 @@
- <template>
- <div>
- <list :data="cabezales">
+<template>
+  <div>
+    <list :data="cabezales">
       <h1>Cabezales</h1>
     </list>
     <hr />
@@ -10,24 +10,36 @@
     <!-- <hr />
     <programa :programa="programas[0]"></programa> -->
     <hr />
-    <day-selector :disabled="disableDay" :value="dias"><span>Seleccione un día válido:</span></day-selector>
-    <hr />.
+    <day-selector :disabled="disableDay" :value="dias"
+      ><span>Seleccione un día válido:</span></day-selector
+    >
+    <hr />
+    .
     <toggle></toggle>
-    <hr>
-    <custom-select @change="selected = $event;print(selected)" :selected="selected" :values="sel"></custom-select>
-    <hr>
+    <hr />
+    <custom-select
+      @change="
+        selected = $event;
+        print(selected);
+      "
+      :selected="selected"
+      :values="sel"
+    ></custom-select>
+    <hr />
     <submit-button>Guardar</submit-button>
-    <hr>
-    <select-button :options="['Manual', 'Automatico', ]"></select-button>
-    <hr>
+    <hr />
+    <select-button :options="['Manual', 'Automatico']"></select-button>
+    <hr />
     <temporizador-menu></temporizador-menu>
-    <hr>
+    <hr />
     <login-button>Login</login-button>
-    <hr>
+    <hr />
     <login-button>Registro</login-button>
-    <hr>
-    <custom-table :label="{Id: 'id',Nombre: 'nombre',Fecha: 'fecha' }" :pageSize="5">
-      
+    <hr />
+    <custom-table
+      :label="{ Id: 'id', Nombre: 'nombre', Fecha: 'fecha' }"
+      :pageSize="5"
+    >
     </custom-table>
   </div>
 </template>
@@ -55,7 +67,7 @@ export default {
     SelectButton,
     temporizadorMenu,
     loginButton,
-    customTable
+    customTable,
   },
   data() {
     return {
@@ -63,24 +75,21 @@ export default {
       programas: this.$root.programas,
       dias: [false, false, false, false, false, true, true],
       checked: false,
-      sel: ["Hola","Adios", "Buenas noches"],
+      sel: ["Hola", "Adios", "Buenas noches"],
       selected: 0,
       temporizador1: [],
       disableDay: false,
-
     };
   },
   methods: {
-    print(value){
-      console.log(value)
-    }
-  }
+    print(value) {
+      console.log(value);
+    },
+  },
 };
 </script>
 
-
 <style lang="scss" scoped>
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -43,7 +43,7 @@
     </div>
 
     <div class="salidasDigitales">
-      <output-input 
+      <output-input
         title="Salidas Digitales"
         :numValue="numSalidasDigitales"
         type="Salida Digital"
@@ -51,7 +51,7 @@
       ></output-input>
     </div>
     <div class="entradasDigitales">
-      <output-input 
+      <output-input
         title="Entradas Digitales"
         :numValue="numEntradasDigitales"
         type="Entradas Digital"
@@ -59,7 +59,7 @@
       ></output-input>
     </div>
     <div class="salidasAnalogicas">
-      <output-input 
+      <output-input
         title="Salidas Analógicas"
         :numValue="numSalidasAnalogicas"
         type="Salida Analógicas"
@@ -67,14 +67,13 @@
       ></output-input>
     </div>
     <div class="entradasAnalogicas">
-      <output-input 
+      <output-input
         title="Entradas Analógicas"
         :numValue="numEntradasAnalogicas"
         type="Entradas Analógicas"
         :options="entradasAnalogicasDisponibles"
       ></output-input>
     </div>
-
   </div>
 </template>
 
@@ -83,7 +82,7 @@ import headerCustom from "@/components/Header";
 import customInput from "@/components/CustomInput";
 import customSelect from "@/components/Select";
 import loginButton from "@/components/LoginButton";
-import outputInput from "@/views/RegistroProgramador/components/outputInput"
+import outputInput from "@/views/RegistroProgramador/components/outputInput";
 
 // Imagenes necesarias
 import imageEsp32 from "@/assets/esp32.png";
@@ -155,9 +154,7 @@ export default {
       ],
     };
   },
-  computed: {
-
-  },
+  computed: {},
   beforeMount() {
     this.image = this.imagenes[this.tipoProgramador];
   },
@@ -238,7 +235,7 @@ export default {
     grid-area: salidasAnalogicas;
   }
 
-  .entradasAnalogicas{
+  .entradasAnalogicas {
     grid-area: entradasAnalogicas;
   }
 }

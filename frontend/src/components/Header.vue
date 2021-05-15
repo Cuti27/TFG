@@ -1,16 +1,16 @@
 <template>
   <div class="header">
-      <h1>{{ name }}</h1>
-      <slot></slot>
+    <h1>{{ name }}</h1>
+    <slot></slot>
   </div>
 </template>
 
 <script>
 export default {
-    props: {
-        name: String
-    }
-}
+  props: {
+    name: String,
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -18,8 +18,7 @@ export default {
 .header {
   border-radius: 50px;
   background: linear-gradient(160deg, $primary, $secondaryDark);
-  box-shadow:  20px 20px 60px $primary,
-             -20px -20px 60px #ffffff;
+  box-shadow: 20px 20px 60px $primary, -20px -20px 60px #ffffff;
   padding: 20px;
   margin: 20px;
   margin-bottom: 40px;

@@ -89,7 +89,7 @@ export default {
     customSelect,
     CustomInput,
     SourceSelector,
-    headerCustom
+    headerCustom,
   },
   data() {
     return {
@@ -151,11 +151,10 @@ export default {
   .selectorAbono,
   .consigna,
   .selector,
-  .tiempo{
+  .tiempo {
     border-radius: 25px;
     background: linear-gradient(145deg, #e6e6e6, #ffffff);
-    box-shadow:  5px 5px 15px $primary,
-             -5px -5px 15px #ffffff;
+    box-shadow: 5px 5px 15px $primary, -5px -5px 15px #ffffff;
     margin: 10px;
     padding: 10px 15px;
     background: $white;
@@ -163,8 +162,7 @@ export default {
 
   .header {
     grid-area: header;
-  
-}
+  }
 
   .phControl {
     grid-area: phControl;
@@ -200,7 +198,7 @@ export default {
 @media (max-width: 768px) {
   .view {
     grid-template-areas:
-    "header header"
+      "header header"
       "phControl phControl"
       "ph  lineaAbono"
       "controlAbono controlAbono"
@@ -213,7 +211,7 @@ export default {
 @media (max-width: 633px) {
   .view {
     grid-template-areas:
-    "header header"
+      "header header"
       "phControl phControl"
       "ph ph"
       "controlAbono controlAbono"

@@ -1,5 +1,7 @@
 <template>
-  <button class="btn" @click.prevent="$emit('click', $event.target.value)"><slot></slot></button>
+  <button class="btn" @click.prevent="$emit('click', $event.target.value)">
+    <slot></slot>
+  </button>
 </template>
 
 <style lang="scss" scoped>
@@ -21,9 +23,8 @@
   text-decoration: none;
   text-align: center;
   text-transform: uppercase;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 700;
-  
 
   &:hover,
   &:focus {
@@ -34,12 +35,12 @@
   border-color: $black;
   color: $black;
   background: {
-    image: linear-gradient(45deg,$primary 50%, transparent 50%);
+    image: linear-gradient(45deg, $primary 50%, transparent 50%);
     position: 100%;
     size: 300%;
   }
   transition: background 300ms ease-in-out;
-  
+
   &:hover {
     background-position: 0;
   }

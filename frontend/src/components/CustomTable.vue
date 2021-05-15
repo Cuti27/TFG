@@ -30,15 +30,24 @@
             type="date"
           />
 
-          <custom-button @click="getData();getCountData()">
-          Buscar
-        </custom-button>
+          <custom-button
+            @click="
+              getData();
+              getCountData();
+            "
+          >
+            Buscar
+          </custom-button>
 
           <!-- Menú especial para versión mobil, donde además nos permite ordenar las tarjetas -->
           <h3 class="mobileSort">Ordenar por:</h3>
           <div class="mobileSort">
-            <custom-button v-for="value in label" :key="value+'button'" @click="sort(`${value}`)">
-              {{ value.charAt(0).toUpperCase() + value.slice(1) }} 
+            <custom-button
+              v-for="value in label"
+              :key="value + 'button'"
+              @click="sort(`${value}`)"
+            >
+              {{ value.charAt(0).toUpperCase() + value.slice(1) }}
             </custom-button>
           </div>
         </div>
@@ -54,11 +63,8 @@
             <th v-for="(value, key) in label" :key="key" @click="sort(key)">
               {{ value }}
             </th>
-            <th>
-              Acciones
-            </th>
+            <th>Acciones</th>
           </tr>
-          
         </thead>
         <!-- Creamos columnas dinámicamente -->
         <tr v-for="(object, index) in data" :key="index">
@@ -67,18 +73,24 @@
             :key="value + key"
             :data-label="key"
           >
-            <day-selector v-if="key=='Dias'" :disabled="true" :dias="object[value]"></day-selector>
-            <p v-else> {{ object[value] }} </p>
-           
+            <day-selector
+              v-if="key == 'Dias'"
+              :disabled="true"
+              :dias="object[value]"
+            ></day-selector>
+            <p v-else>{{ object[value] }}</p>
           </td>
           <td class="acciones">
             <div v-if="!remove" class="action">
-              <custom-button @click="getData();getCountData()">
-              Acceder
-            </custom-button>
-            <custom-button @click="openEdit(object)">
-              Editar
-            </custom-button>
+              <custom-button
+                @click="
+                  getData();
+                  getCountData();
+                "
+              >
+                Acceder
+              </custom-button>
+              <custom-button @click="openEdit(object)"> Editar </custom-button>
             </div>
             <div v-else class="action">
               <custom-button>Eliminar</custom-button>
@@ -96,7 +108,7 @@
     </div>
 
     <modal v-if="showEdit">
-        <edit-cabezal :name="value"></edit-cabezal>
+      <edit-cabezal :name="value"></edit-cabezal>
     </modal>
   </div>
 </template>
@@ -114,17 +126,17 @@ export default {
     CustomInput,
     modal,
     editCabezal,
-    daySelector
+    daySelector,
   },
   props: {
     pageSize: {
       type: Number,
-      required: true
+      required: true,
     },
     label: Object,
     remove: Boolean,
     countVuex: String,
-    infoVuex: String
+    infoVuex: String,
   },
   data() {
     return {
@@ -137,25 +149,24 @@ export default {
       dateEnd: "", // Texto que indica una fecha escrita en el filtro
       showEdit: false,
       value: "",
-      
     };
   },
-  
+
   created() {
-     this.getData();
-     this.getCountData();
+    this.getData();
+    this.getCountData();
   },
   computed: {
-    data(){
+    data() {
       return this.$store.state[this.infoVuex];
     },
-    size(){
+    size() {
       return this.$store.state[this.countVuex];
-    }
+    },
   },
   methods: {
-    openEdit(object){
-      console.log(object.nombre)
+    openEdit(object) {
+      console.log(object.nombre);
       this.value = object.nombre;
       this.showEdit = true;
     },
@@ -177,10 +188,10 @@ export default {
       }
     },
     prevPage: function () {
-      if (this.currentPage > 0){
+      if (this.currentPage > 0) {
         this.currentPage--;
         this.getData();
-      } ;
+      }
     },
     // Vaciamos todos los filtros
     limpiarFiltros() {
@@ -188,13 +199,12 @@ export default {
       this.getData();
       this.getCountData();
     },
-    async getData(){
-     //TODO: llamada a vuex, para llamar a la api
-    },
-    async getCountData(){
+    async getData() {
       //TODO: llamada a vuex, para llamar a la api
     },
-    
+    async getCountData() {
+      //TODO: llamada a vuex, para llamar a la api
+    },
   },
 };
 </script>
@@ -221,7 +231,8 @@ export default {
   }
 }
 
-.page, .table {
+.page,
+.table {
   background: $white;
   display: flex;
   align-items: center;
@@ -232,9 +243,9 @@ export default {
   box-shadow: $gray 0px 14px 28px, $gray 0px 10px 10px;
 }
 
-.acciones{
-        display: flex;
-      }
+.acciones {
+  display: flex;
+}
 
 // Creamos el diseño de la tabla principal
 .table {
@@ -246,7 +257,7 @@ export default {
   table {
     border-radius: 5px;
     font-size: 12px;
-    font-weight: normal;     
+    font-weight: normal;
     border: none;
     border-collapse: collapse;
     width: 100%;
@@ -257,11 +268,10 @@ export default {
       font-size: 18px;
       width: auto;
 
-      .action{
+      .action {
         display: flex;
         align-items: center;
         justify-content: center;
-       
       }
     }
     td,
@@ -274,7 +284,7 @@ export default {
       th {
         color: $white;
         text-align: center;
-        background: darken($primary,10);
+        background: darken($primary, 10);
         text-transform: uppercase;
         user-select: none;
         cursor: pointer;
@@ -282,7 +292,7 @@ export default {
       }
       th:nth-child(odd) {
         color: $white;
-        background: darken($secondary,10);
+        background: darken($secondary, 10);
       }
       th:nth-child(even):hover {
         background: $primaryDark;
@@ -291,13 +301,12 @@ export default {
         background: $secondaryDark;
       }
     }
-  
   }
 }
 
 @media (max-width: 1280px) {
-  .action{
-     flex-direction: column;
+  .action {
+    flex-direction: column;
   }
 }
 
@@ -305,7 +314,7 @@ export default {
 @media (max-width: 768px) {
   .table,
   .busqueda,
-  .page  {
+  .page {
     margin: 10px 35px;
   }
 }
@@ -317,14 +326,14 @@ export default {
   }
 
   .busqueda,
-  .page  {
+  .page {
     margin: 10px 15px;
   }
 
   .table {
     margin: 25px 30px 30px;
 
-    .acciones{
+    .acciones {
       flex-direction: column;
     }
 
