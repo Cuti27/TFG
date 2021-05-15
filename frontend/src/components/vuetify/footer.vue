@@ -62,4 +62,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+$color-pack: false;
+
+  @import '@/css/colorSchema.scss';
+</style>

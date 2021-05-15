@@ -1,26 +1,6 @@
 <template>
-  <!-- <div class="login">
-    <section class="login" id="login">
-      <header>
-        <h2>Genhidro</h2>
-        <h3>Login</h3>
-      </header>
-      <form action="" class="login-form">
-        <custom-input type="text" placeholder="Username"></custom-input>
-        <custom-input type="password" placeholder="Contraseña"></custom-input>
-        <login-button id="recuperar">Has olvidado la contraseña?</login-button>
-        <login-button @click="$emit('registro')" id="registro"
-          >Registrate</login-button
-        >
-        <div class="submit-container">
-          <login-button @click="close()">Cancelar</login-button>
-          <login-button>Entrar</login-button>
-        </div>
-      </form>
-    </section>
-  </div> -->
-  <v-dialog btnText="Login" cancelText="Cancelar" titleText="Entrar en Genhidro">
-    <form action="" class="login-form">
+  <v-dialog @submit="login()" :show="show" btnText="Login" cancelText="Cancelar" titleText="Entrar en Genhidro" submitText="Entrar">
+    <form action="" class="login-form px-10">
       <v-text-field
         label="Usuario"
         :rules="rulesUser"
@@ -38,11 +18,8 @@
         @click:append="show1 = !show1"
       ></v-text-field>
       <v-btn id="recuperar">Has olvidado la contraseña?</v-btn>
-      <v-btn @click="$emit('registro')" id="registro">Registrate</v-btn>
-      <div class="submit-container">
-        <v-btn @click="close()">Cancelar</v-btn>
-        <v-btn>Entrar</v-btn>
-      </div>
+      <v-spacer></v-spacer>
+      <v-btn class="mt-5" @click="$emit('registro')" id="registro">Registrate</v-btn>
     </form>
   </v-dialog>
 </template>
@@ -50,6 +27,9 @@
 <script>
 import vDialog from "@/components/vuetify/dialog";
 export default {
+  props: {
+    show: Boolean
+  },
   components: {
     vDialog,
   },
@@ -68,9 +48,9 @@ export default {
     };
   },
   methods: {
-    close() {
-      this.$parent.$emit("close");
-    },
+    login(){
+      console.log("Realizar login");
+    }
   },
 };
 </script>

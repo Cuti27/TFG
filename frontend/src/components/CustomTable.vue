@@ -4,13 +4,19 @@
     <div class="busqueda">
       <div class="button">
         <!-- Botón para mostrar los filtros -->
-        <custom-button @click="filtros = !filtros">
+        <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5" @click="filtros = !filtros">
           Filtros disponibles
-        </custom-button>
+        </v-btn>
         <!-- Botón para limpiar los filtros -->
-        <custom-button @click="limpiarFiltros()">
+        <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5" @click="limpiarFiltros()">
           Limpiar filtros
-        </custom-button>
+        </v-btn>
       </div>
 
       <!-- Div con la transición para mostrar los filtros -->
@@ -30,25 +36,31 @@
             type="date"
           />
 
-          <custom-button
+          <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5"
             @click="
               getData();
               getCountData();
             "
           >
             Buscar
-          </custom-button>
+          </v-btn>
 
           <!-- Menú especial para versión mobil, donde además nos permite ordenar las tarjetas -->
           <h3 class="mobileSort">Ordenar por:</h3>
           <div class="mobileSort">
-            <custom-button
+            <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5"
               v-for="value in label"
               :key="value + 'button'"
               @click="sort(`${value}`)"
             >
               {{ value.charAt(0).toUpperCase() + value.slice(1) }}
-            </custom-button>
+            </v-btn>
           </div>
         </div>
       </transition>
@@ -82,18 +94,27 @@
           </td>
           <td class="acciones">
             <div v-if="!remove" class="action">
-              <custom-button
+              <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5"
                 @click="
                   getData();
                   getCountData();
                 "
               >
                 Acceder
-              </custom-button>
-              <custom-button @click="openEdit(object)"> Editar </custom-button>
+              </v-btn>
+              <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5" @click="openEdit(object)"> Editar </v-btn>
             </div>
             <div v-else class="action">
-              <custom-button>Eliminar</custom-button>
+              <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5">Eliminar</v-btn>
             </div>
           </td>
         </tr>
@@ -102,9 +123,15 @@
 
     <!-- Menu de paginación -->
     <div class="page">
-      <custom-button @click="prevPage">Anterior</custom-button>
+      <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5" @click="prevPage">Anterior</v-btn>
       <span>- {{ currentPage }} -</span>
-      <custom-button @click="nextPage">Siguiente</custom-button>
+      <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5" @click="nextPage">Siguiente</v-btn>
     </div>
 
     <modal v-if="showEdit">
@@ -114,7 +141,6 @@
 </template>
 
 <script>
-import CustomButton from "@/components/CustomButton";
 import CustomInput from "@/components/CustomInput";
 import modal from "@/components/Modal";
 import editCabezal from "@/components/Modals/EditCabezal";
@@ -122,7 +148,6 @@ import daySelector from "@/components/DaySelector";
 
 export default {
   components: {
-    CustomButton,
     CustomInput,
     modal,
     editCabezal,

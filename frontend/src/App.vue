@@ -31,7 +31,7 @@
             v-show="!collapse"
             >Añadir dispositivo</login-button
           >
-          <login-button v-show="!collapse">Cerrar sesion</login-button>
+          <v-btn v-show="!collapse">Cerrar sesion</v-btn>
           <login-button
             @click="
               showProgramador = true;
@@ -42,45 +42,9 @@
           /></login-button>
         </div>
         <div v-else class="login">
-          <v-btn
-            color="primary"
-            elevation="5"
-            outlined
-            rounded
-            @click="
-              showLogin = true;
-              collapse = true;
-            "
-            v-show="!collapse"
-            >Login</v-btn
-          >
-          <v-btn
-            color="primary"
-            elevation="5"
-            outlined
-            rounded
-            @click="
-              showRegistro = true;
-              collapse = true;
-            "
-            v-show="!collapse"
-            >Registro</v-btn
-          >
-          <v-btn
-            color="primary"
-            elevation="5"
-            outlined
-            rounded
-            fab
-            small
-            @click="
-              showLogin = true;
-              collapse = true;
-            "
-            v-show="collapse"
-            ><font-awesome-icon icon="sign-in-alt"
-          /></v-btn>
-          <v-login></v-login>
+         <v-registro v-if="!collapse" :show="!collapse"></v-registro>
+          <v-login 
+            :show="!collapse"></v-login>
         </div>
       </div>
       <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
@@ -133,6 +97,7 @@ import registro from "@/components/Modals/Registro";
 import addProgramador from "@/components/Modals/AddProgramador";
 import customFooter from "@/components/vuetify/footer";
 import vLogin from "@/components/vuetify/dialog/login";
+import vRegistro from "@/components/vuetify/dialog/registro";
 
 // import StickyHeader from "@/components/StickyHeader";
 export default {
@@ -145,6 +110,7 @@ export default {
     registro,
     addProgramador,
     vLogin,
+    vRegistro,
   },
   data() {
     return {

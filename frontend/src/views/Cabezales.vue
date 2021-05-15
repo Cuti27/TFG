@@ -4,15 +4,27 @@
     <header-custom name="Listado de cabezales"></header-custom>
 
     <div class="menu">
-      <custom-button>Añadir cabezal</custom-button>
-      <custom-button v-show="!remove" @click="remove = true"
-        >Eliminar cabezal</custom-button
+      <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5"> Añadir cabezal</v-btn>
+      <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5"  v-show="!remove" @click="remove = true"
+        >Eliminar cabezal</v-btn
       >
-      <custom-button v-show="remove" @click="remove = false"
-        >Completar borrado</custom-button
+      <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5" v-show="remove" @click="remove = false"
+        >Completar borrado</v-btn
       >
-      <custom-button v-show="remove" @click="remove = false"
-        >Cancelar</custom-button
+      <v-btn color="primary"
+        elevation="5"
+        outlined
+        rounded class="ma-5" v-show="remove" @click="remove = false"
+        >Cancelar</v-btn
       >
     </div>
     <div class="listado">
@@ -31,13 +43,11 @@
 <script>
 import headerCustom from "@/components/Header";
 import customTable from "@/components/CustomTable";
-import customButton from "@/components/CustomButton";
 
 export default {
   components: {
     headerCustom,
     customTable,
-    customButton,
   },
   data() {
     return {

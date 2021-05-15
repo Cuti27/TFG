@@ -11,27 +11,31 @@
         <form>
           <!-- Selector de dispositivo -->
           <custom-select
+          button
+          class="mt-3"
             @change="update($event)"
             :selected="tipoProgramador"
             :values="listaProgramadores"
           ></custom-select>
           <div v-if="tipoProgramador == 2">
             <custom-input
+            class="mt-3"
               type="text"
               placeholder="Usuario agronic"
             ></custom-input>
             <custom-input
+            class="mt-3"
               type="password"
               placeholder="Contraseña agronic"
             ></custom-input>
             <login-button>Logear</login-button>
           </div>
-          <div v-else class="id">
-            <custom-input
-              type="text"
-              placeholder="Identificador generado"
-            ></custom-input>
-            <login-button>Comprobar conexión</login-button>
+          <div v-else class="id mt-3">
+            <v-text-field
+      label="Identificador generado"
+
+    ></v-text-field>
+            <v-btn class="mt-3">Comprobar conexión</v-btn>
           </div>
         </form>
       </div>

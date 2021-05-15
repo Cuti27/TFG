@@ -5,16 +5,17 @@
         {{
           title
         }}
+        <div class="botonera center">
+          <span class="input-number-decrement" @click="numValues-- <= 0 ? 0 : numValues--">–</span
+          ><input
+            class="input-number"
+            type="text"
+            :value="numValues"
+            min="0"
+          /><span class="input-number-increment" @click="numValues++" >+</span>
+        </div>
       </caption>
       <!-- TODO: Boton con el guardado -->
-      <div class="botonera">
-        <custom-input
-          type="number"
-          :placeholder="`Número de ${title}`"
-          min="0"
-          v-model="numValues"
-        ></custom-input>
-      </div>
       <thead>
         <tr>
           <th scope="col">{{ type }}</th>
@@ -22,7 +23,7 @@
           <th scope="col">Descripcion</th>
         </tr>
       </thead>
-      <tbody v-for="n in numValues" :key="`${title}_column_${n}`">
+      <tbody v-for="n in parseInt(numValues)" :key="`${title}_column_${n}`">
         <tr>
           <td :data-label="type">{{ n }}</td>
           <td data-label="Selecciona uno">
@@ -47,13 +48,11 @@
 
 <script>
 import customSelect from "@/components/Select";
-import customInput from "@/components/CustomInput";
 
 export default {
-  components: { customSelect, customInput },
+  components: { customSelect },
   props: {
     options: Array,
-    numValue: Number,
     type: String,
     title: String,
   },
@@ -116,6 +115,64 @@ table {
     text-transform: uppercase;
   }
 }
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+
+.input-number{
+   width: 80px;
+  padding: 0 12px;
+  vertical-align: top;
+  text-align: center;
+  outline: none;
+
+}
+ 
+.input-number,
+.input-number-decrement,
+.input-number-increment{
+  border: 1px solid #ccc;
+  height: 40px;
+  user-select: none;
+}
+  
+
+.input-number-decrement,
+.input-number-increment{
+  display: inline-block;
+  width: 30px;
+  line-height: 38px;
+  background: #f1f1f1;
+  color: #444;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:active{
+    background: #ddd;
+  }
+    
+
+.input-number-decrement{
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+}
+  
+
+.input-number-increment{
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+}
+  
+}
+  
+
+  
 
 .style {
   border: 0;
