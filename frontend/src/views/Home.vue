@@ -125,7 +125,9 @@ export default {};
       margin: 0 auto;
       border-radius: 76px 0px 0px 76px;
       background: #f6f6f6;
-      box-shadow: 41px 21px 82px #c5c4c4, -41px -41px 82px $base;
+      box-shadow: 41px 21px 82px $primaryDark, -41px -41px 82px $base;
+
+      margin-right: 0;
     }
 
     p.major {
@@ -167,7 +169,7 @@ export default {};
         left: 0;
         width: 100%;
         height: 100%;
-        border-radius: 0;
+        border-radius: 15px;
       }
 
       .logo {
@@ -242,6 +244,7 @@ export default {};
 
       margin-top: 100px;
       margin-bottom: 100px;
+      margin-right: 0;
     }
 
     .image {
@@ -271,7 +274,7 @@ export default {};
         left: 0;
         width: 100%;
         height: 100%;
-        border-radius: 0;
+        border-radius: 15px;
       }
     }
   }
@@ -279,6 +282,7 @@ export default {};
     flex-direction: row-reverse;
 
     .content {
+      margin-left: 0;
       border-radius: 0px 76px 76px 0px;
       background: #f6f6f6;
       box-shadow: 41px 21px 82px $primaryDark, -41px -41px 82px $base;

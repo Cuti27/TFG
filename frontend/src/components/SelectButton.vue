@@ -79,9 +79,9 @@ $green: linear-gradient($secondary, $secondaryDark);
       transform: translate(0, 60px);
       left: 0;
       right: 0;
-      top: -55px;
+      top: -60px;
       transition: all 300ms ease;
-      font-size: 1em;
+      font-size: 0.9em;
       user-select: none;
       color: $green;
 

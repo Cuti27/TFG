@@ -42,9 +42,12 @@
           /></login-button>
         </div>
         <div v-else class="login">
-         <v-registro v-if="!collapse" :show="!collapse"></v-registro>
-          <v-login 
-            :show="!collapse"></v-login>
+          <v-registro
+            :show="!collapse"
+          ></v-registro>
+          <v-login
+            :show="!collapse"
+          ></v-login>
         </div>
       </div>
       <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
@@ -57,30 +60,6 @@
         <transition name="slide" mode="out-in">
           <router-view />
         </transition>
-
-        <modal
-          v-if="showLogin || showRegistro || showProgramador"
-          @close="
-            showLogin = false;
-            showRegistro = false;
-          "
-        >
-          <login
-            v-if="showLogin"
-            @registro="
-              showLogin = false;
-              showRegistro = true;
-            "
-          ></login>
-          <registro
-            v-if="showRegistro"
-            @login="
-              showLogin = true;
-              showRegistro = false;
-            "
-          ></registro>
-          <add-programador v-if="showProgramador"></add-programador>
-        </modal>
       </v-container>
     </v-main>
 
@@ -89,15 +68,14 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+
 import { SidebarMenu } from "vue-sidebar-menu";
 import loginButton from "@/components/LoginButton";
-import modal from "@/components/Modal";
-import login from "@/components/Modals/Login";
-import registro from "@/components/Modals/Registro";
-import addProgramador from "@/components/Modals/AddProgramador";
+// import addProgramador from "@/components/Modals/AddProgramador";
 import customFooter from "@/components/vuetify/footer";
-import vLogin from "@/components/vuetify/dialog/login";
-import vRegistro from "@/components/vuetify/dialog/registro";
+import vLogin from "@/components/vuetify/dialog/newLogin";
+import vRegistro from "@/components/vuetify/dialog/newRegistro";
 
 // import StickyHeader from "@/components/StickyHeader";
 export default {
@@ -105,17 +83,15 @@ export default {
     customFooter,
     SidebarMenu,
     loginButton,
-    modal,
-    login,
-    registro,
-    addProgramador,
+    // addProgramador,
     vLogin,
     vRegistro,
   },
+  computed: {
+    ...mapGetters(["showLogin", "showRegistro"]),
+  },
   data() {
     return {
-      showLogin: false,
-      showRegistro: false,
       showProgramador: false,
       windowWidth: 0,
       windowHeight: 0,
@@ -205,6 +181,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["updateLogin", "updateRegistro"]),
     touchOut() {
       if (!this.collapse) this.collapse = true;
     },
@@ -242,13 +219,13 @@ $icon-color: darken($primaryDark, 10%);
 
 .slide-enter-active,
 .slide-leave-active {
-  transition: opacity 0.5s, transform 0.5s;
+  transition: opacity 1s, transform 0.5s;
 }
 
 .slide-enter,
 .slide-leave-to {
   opacity: 0;
-  transform: translateX(-30%);
+  transform: translateY(90%);
 }
 
 .main {
@@ -260,14 +237,11 @@ $icon-color: darken($primaryDark, 10%);
 }
 .container {
   display: inline-block;
-  cursor: pointer;
 }
 .v-sidebar-menu {
   max-height: 100vh;
   z-index: 9990;
   position: fixed;
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
-    rgba(0, 0, 0, 0.22) 0px 15px 12px;
   .vsm--title {
     color: black;
   }
@@ -299,12 +273,19 @@ $icon-color: darken($primaryDark, 10%);
 }
 
 body {
-  background-color: $base;
-  background-image: url("./assets/leaves.png");
-  background-attachment: fixed;
+  overflow: hidden;
+  margin: auto;
+  max-width: 1920px;
 }
 
-/* Rotate first bar */
+.v-sidebar-menu {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+  .vsm--toggle-btn {
+    background-color: $primary !important;
+  }
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -318,6 +299,13 @@ body {
   flex-direction: column;
   min-height: 100vh;
   box-sizing: border-box;
+
+  background-color: $base;
+  background-image: url("./assets/leaves.png");
+  background-attachment: fixed;
+  background-position: center right;
+
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
   main {
     flex: 1 0 auto;

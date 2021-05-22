@@ -2,7 +2,7 @@
   <v-dialog
     v-model="dialog"
     transition="dialog-bottom-transition"
-    max-width="600"
+    max-width="400"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn
@@ -23,8 +23,8 @@
         <v-toolbar v-if="titleText" color="primary" dark>{{
           titleText
         }}</v-toolbar>
-        <v-container>
-          <slot></slot>
+        <v-container class="pa-4">
+          <slot @change="updateDialog()"></slot>
         </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -36,7 +36,10 @@
             v-if="submitText"
             color="blue darken-1"
             text
-            @click="dialog.value = false;submit()"
+            @click="
+              dialog.value = false;
+              submit();
+            "
           >
             {{ submitText }}
           </v-btn>
@@ -48,6 +51,9 @@
 
 <script>
 export default {
+  data: () => ({
+    dialog: false,
+  }),
   props: {
     btnText: {
       type: String,
@@ -71,10 +77,15 @@ export default {
     },
   },
   methods: {
-    submit(){
-      this.$emit('submit');
-    }
-  }
+    submit() {
+      this.$emit("submit");
+    },
+    updateDialog() {
+      console.log("Actualizamos el dialogo");
+      this.dialog.value = !this.dialog.value;
+      this.$emit("change");
+    },
+  },
 };
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <v-footer v-bind="localAttrs" :padless="padless">
+  <v-footer rounded v-bind="localAttrs" :padless="padless">
     <v-card
       flat
       tile
@@ -10,7 +10,7 @@
       <v-card-text>
         <v-btn
           v-for="(icon, index) in icons"
-          :key="icon"
+          :key="icon[1]"
           class="mx-4"
           :href="ref[index]"
           icon
@@ -65,5 +65,5 @@ export default {
 <style lang="scss" scoped>
 $color-pack: false;
 
-  @import '@/css/colorSchema.scss';
+@import "@/css/colorSchema.scss";
 </style>

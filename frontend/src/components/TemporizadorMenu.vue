@@ -260,6 +260,7 @@ $transition: all #{$speed} cubic-bezier(0.31, -0.105, 0.43, 1.4);
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 /* Main Styles */

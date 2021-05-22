@@ -4,26 +4,37 @@
     <header-custom name="Listado de cabezales"></header-custom>
 
     <div class="menu">
-      <v-btn color="primary"
+      <v-btn color="primary" elevation="5" outlined rounded class="ma-5">
+        Añadir cabezal</v-btn
+      >
+      <v-btn
+        color="primary"
         elevation="5"
         outlined
-        rounded class="ma-5"> Añadir cabezal</v-btn>
-      <v-btn color="primary"
-        elevation="5"
-        outlined
-        rounded class="ma-5"  v-show="!remove" @click="remove = true"
+        rounded
+        class="ma-5"
+        v-show="!remove"
+        @click="remove = true"
         >Eliminar cabezal</v-btn
       >
-      <v-btn color="primary"
+      <v-btn
+        color="primary"
         elevation="5"
         outlined
-        rounded class="ma-5" v-show="remove" @click="remove = false"
+        rounded
+        class="ma-5"
+        v-show="remove"
+        @click="remove = false"
         >Completar borrado</v-btn
       >
-      <v-btn color="primary"
+      <v-btn
+        color="primary"
         elevation="5"
         outlined
-        rounded class="ma-5" v-show="remove" @click="remove = false"
+        rounded
+        class="ma-5"
+        v-show="remove"
+        @click="remove = false"
         >Cancelar</v-btn
       >
     </div>

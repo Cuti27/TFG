@@ -4,17 +4,25 @@
     <div class="busqueda">
       <div class="button">
         <!-- Botón para mostrar los filtros -->
-        <v-btn color="primary"
-        elevation="5"
-        outlined
-        rounded class="ma-5" @click="filtros = !filtros">
+        <v-btn
+          color="primary"
+          elevation="5"
+          outlined
+          rounded
+          class="ma-5"
+          @click="filtros = !filtros"
+        >
           Filtros disponibles
         </v-btn>
         <!-- Botón para limpiar los filtros -->
-        <v-btn color="primary"
-        elevation="5"
-        outlined
-        rounded class="ma-5" @click="limpiarFiltros()">
+        <v-btn
+          color="primary"
+          elevation="5"
+          outlined
+          rounded
+          class="ma-5"
+          @click="limpiarFiltros()"
+        >
           Limpiar filtros
         </v-btn>
       </div>
@@ -36,10 +44,12 @@
             type="date"
           />
 
-          <v-btn color="primary"
-        elevation="5"
-        outlined
-        rounded class="ma-5"
+          <v-btn
+            color="primary"
+            elevation="5"
+            outlined
+            rounded
+            class="ma-5"
             @click="
               getData();
               getCountData();
@@ -51,10 +61,12 @@
           <!-- Menú especial para versión mobil, donde además nos permite ordenar las tarjetas -->
           <h3 class="mobileSort">Ordenar por:</h3>
           <div class="mobileSort">
-            <v-btn color="primary"
-        elevation="5"
-        outlined
-        rounded class="ma-5"
+            <v-btn
+              color="primary"
+              elevation="5"
+              outlined
+              rounded
+              class="ma-5"
               v-for="value in label"
               :key="value + 'button'"
               @click="sort(`${value}`)"
@@ -94,10 +106,12 @@
           </td>
           <td class="acciones">
             <div v-if="!remove" class="action">
-              <v-btn color="primary"
-        elevation="5"
-        outlined
-        rounded class="ma-5"
+              <v-btn
+                color="primary"
+                elevation="5"
+                outlined
+                rounded
+                class="ma-5"
                 @click="
                   getData();
                   getCountData();
@@ -105,16 +119,21 @@
               >
                 Acceder
               </v-btn>
-              <v-btn color="primary"
-        elevation="5"
-        outlined
-        rounded class="ma-5" @click="openEdit(object)"> Editar </v-btn>
+              <v-btn
+                color="primary"
+                elevation="5"
+                outlined
+                rounded
+                class="ma-5"
+                @click="openEdit(object)"
+              >
+                Editar
+              </v-btn>
             </div>
             <div v-else class="action">
-              <v-btn color="primary"
-        elevation="5"
-        outlined
-        rounded class="ma-5">Eliminar</v-btn>
+              <v-btn color="primary" elevation="5" outlined rounded class="ma-5"
+                >Eliminar</v-btn
+              >
             </div>
           </td>
         </tr>
@@ -123,15 +142,25 @@
 
     <!-- Menu de paginación -->
     <div class="page">
-      <v-btn color="primary"
+      <v-btn
+        color="primary"
         elevation="5"
         outlined
-        rounded class="ma-5" @click="prevPage">Anterior</v-btn>
+        rounded
+        class="ma-5"
+        @click="prevPage"
+        >Anterior</v-btn
+      >
       <span>- {{ currentPage }} -</span>
-      <v-btn color="primary"
+      <v-btn
+        color="primary"
         elevation="5"
         outlined
-        rounded class="ma-5" @click="nextPage">Siguiente</v-btn>
+        rounded
+        class="ma-5"
+        @click="nextPage"
+        >Siguiente</v-btn
+      >
     </div>
 
     <modal v-if="showEdit">
@@ -270,6 +299,8 @@ export default {
 
 .acciones {
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 // Creamos el diseño de la tabla principal
@@ -278,6 +309,7 @@ export default {
   margin: 35px 70px 70px;
   box-shadow: 0px 35px 50px $black;
   flex-direction: column;
+  text-align: center;
   // Formateo de la tabla
   table {
     border-radius: 5px;
@@ -301,7 +333,7 @@ export default {
     }
     td,
     th {
-      text-align: left;
+      text-align: center;
       padding: 8px;
     }
 

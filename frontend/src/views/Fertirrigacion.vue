@@ -4,19 +4,32 @@
     <div class="phControl">
       <div class="phPre">
         <label for="phPre">CONTROL DE pH EN PRERIEGO: </label>
-        <toggle v-model="phPre"></toggle>
-        <label for="phPre">{{ isActive(phPre) }}</label>
+        <!-- <toggle v-model="phPre"></toggle> -->
+
+       <v-switch
+          v-model="phPre"
+          :label="isActive(phPre)"
+        ></v-switch>
+          
       </div>
       <div class="phRie">
         <label for="phRie">CONTROL DE pH EN RIEGO: </label>
-        <toggle v-model="phRie"></toggle>
-        <label for="phRie">{{ isActive(phRie) }}</label>
+        <!-- <toggle v-model="phRie"></toggle>
+        <label for="phRie">{{ isActive(phRie) }}</label> -->
+        <v-switch
+          v-model="phRie"
+          :label="isActive(phRie)"
+        ></v-switch>
       </div>
 
       <div class="phPost">
         <label for="phPost">CONTROL DE pH EN POSTRIEGO: </label>
-        <toggle v-model="phPost"></toggle>
-        <label for="phPost">{{ isActive(phPost) }}</label>
+        <!-- <toggle v-model="phPost"></toggle>
+        <label for="phPost">{{ isActive(phPost) }}</label> -->
+        <v-switch
+          v-model="phPost"
+          :label="isActive(phPost)"
+        ></v-switch>
       </div>
     </div>
 
@@ -32,8 +45,12 @@
 
     <div class="controlAbono">
       <label for="control">CONTROL DE ABONADO: </label>
-      <toggle v-model="control"></toggle>
-      <label for="control">{{ isSecuencial }}</label>
+      <!-- <toggle v-model="control"></toggle>
+      <label for="control">{{ isSecuencial }}</label> -->
+      <v-switch
+          v-model="control"
+          :label="isSecuencial"
+        ></v-switch>
     </div>
 
     <div class="lineaAbono">
@@ -76,7 +93,6 @@
 </template>
 
 <script>
-import Toggle from "@/components/Toggle";
 import numberSelector from "@/components/NumberSelector";
 import customSelect from "@/components/Select";
 import CustomInput from "@/components/CustomInput";
@@ -84,7 +100,6 @@ import SourceSelector from "@/components/SourceSelector";
 import headerCustom from "@/components/Header";
 export default {
   components: {
-    Toggle,
     numberSelector,
     customSelect,
     CustomInput,
@@ -143,6 +158,12 @@ export default {
     "controlAbono lineaAbono"
     "selectorAbono selector"
     "consigna tiempo";
+
+  .phPre, .phRie, .phPost, .controlAbono {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
 
   .phControl,
   .ph,

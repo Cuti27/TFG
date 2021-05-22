@@ -20,8 +20,12 @@
       <div class="activo">
         <div>
           <h2 for="Activo">Programa:</h2>
-          <toggle v-model="programa"></toggle>
-          <label for="Activo">{{ isActive }}</label>
+          <!-- <toggle v-model="programa"></toggle>
+          <label for="Activo">{{ isActive }}</label> -->
+          <v-switch
+          v-model="programa"
+          :label="isActive"
+        ></v-switch>
         </div>
       </div>
 
@@ -73,18 +77,8 @@
         </div>
 
         <div v-if="!horaInicio">
-          <button id="show-modal" @click="showModal = true">Show Modal</button>
           <!-- use the modal component, pass in the prop -->
-          <modal v-if="showModal" @close="showModal = false">
-            <h3 slot="header">Seleccione un programa de la lista</h3>
-            <div slot="body">
-              <list :data="programas"></list>
-            </div>
-
-            <div slot="footer">
-              El programa empezará tras el programa escogido
-            </div>
-          </modal>
+          <program-list :show="true"></program-list>
         </div>
         <div class="temporizadores" v-else>
           <h3 for="Horas">Temporización:</h3>
@@ -114,22 +108,18 @@
 import daySelector from "@/components/DaySelector";
 import sourceSelector from "@/components/SourceSelector";
 import sectionSelector from "@/components/SectionSelector";
-import Modal from "@/components/Modal";
-import List from "@/components/List";
-import Toggle from "@/components/Toggle";
 import SubmitButton from "@/components/SubmitButton";
 import SelectButton from "@/components/SelectButton";
 import temporizadorMenu from "@/components/TemporizadorMenu";
 import headerCustom from "@/components/Header";
+import programList from "@/components/vuetify/dialog/programDialog"
 
 export default {
   components: {
     daySelector,
     sourceSelector,
     sectionSelector,
-    Modal,
-    List,
-    Toggle,
+    programList,
     SubmitButton,
     SelectButton,
     temporizadorMenu,
@@ -351,6 +341,14 @@ h3 {
 
   .activo {
     grid-area: activo;
+    div:first-child {
+      display: flex;
+      justify-content: space-between;
+      width: 35vw;
+      align-items: center;
+      max-width: 340px;
+    }
+    
   }
 
   .dias {
@@ -374,7 +372,7 @@ h3 {
   }
 
   .duracion,
-  .activo div,
+  .activo div:first-child ,
   .dias,
   .hora,
   .fuente,

@@ -6,13 +6,16 @@
           title
         }}
         <div class="botonera center">
-          <span class="input-number-decrement" @click="numValues-- <= 0 ? 0 : numValues--">–</span
+          <span
+            class="input-number-decrement"
+            @click="numValues - 1 < 0 ? 0 : numValues--"
+            >–</span
           ><input
             class="input-number"
             type="text"
             :value="numValues"
             min="0"
-          /><span class="input-number-increment" @click="numValues++" >+</span>
+          /><span class="input-number-increment" @click="numValues++">+</span>
         </div>
       </caption>
       <!-- TODO: Boton con el guardado -->
@@ -123,27 +126,24 @@ table {
   width: 100%;
 }
 
-
-.input-number{
-   width: 80px;
+.input-number {
+  width: 80px;
   padding: 0 12px;
   vertical-align: top;
   text-align: center;
   outline: none;
-
 }
- 
+
 .input-number,
 .input-number-decrement,
-.input-number-increment{
+.input-number-increment {
   border: 1px solid #ccc;
   height: 40px;
   user-select: none;
 }
-  
 
 .input-number-decrement,
-.input-number-increment{
+.input-number-increment {
   display: inline-block;
   width: 30px;
   line-height: 38px;
@@ -153,26 +153,20 @@ table {
   font-weight: bold;
   cursor: pointer;
 
-  &:active{
+  &:active {
     background: #ddd;
   }
-    
 
-.input-number-decrement{
-  border-right: none;
-  border-radius: 4px 0 0 4px;
-}
-  
+  .input-number-decrement {
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+  }
 
-.input-number-increment{
-  border-left: none;
-  border-radius: 0 4px 4px 0;
+  .input-number-increment {
+    border-left: none;
+    border-radius: 0 4px 4px 0;
+  }
 }
-  
-}
-  
-
-  
 
 .style {
   border: 0;
