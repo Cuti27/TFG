@@ -37,7 +37,7 @@
               button
               @change="selected = $event"
               :selected="selected"
-              :values="options"
+              :values="optionsName"
             ></custom-select>
           </td>
           <td data-label="Descripcion">
@@ -74,6 +74,11 @@ export default {
         return this.width <= 600;
       }
       return false;
+    },
+  },
+  computed: {
+    optionsName() {
+      return this.options.map((a) => a.type);
     },
   },
   mounted() {

@@ -31,7 +31,7 @@
             v-show="!collapse"
             >Añadir dispositivo</login-button
           >
-          <v-btn v-show="!collapse">Cerrar sesion</v-btn>
+          <v-btn @click="logout()" v-show="!collapse">Cerrar sesion</v-btn>
           <login-button
             @click="
               showProgramador = true;
@@ -42,12 +42,8 @@
           /></login-button>
         </div>
         <div v-else class="login">
-          <v-registro
-            :show="!collapse"
-          ></v-registro>
-          <v-login
-            :show="!collapse"
-          ></v-login>
+          <v-registro :show="!collapse"></v-registro>
+          <v-login :show="!collapse"></v-login>
         </div>
       </div>
       <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
@@ -88,7 +84,10 @@ export default {
     vRegistro,
   },
   computed: {
-    ...mapGetters(["showLogin", "showRegistro"]),
+    ...mapGetters(["showLogin", "showRegistro", "auth"]),
+    logged() {
+      return this.auth != "";
+    },
   },
   data() {
     return {
@@ -177,11 +176,18 @@ export default {
           },
         },
       ],
-      logged: false,
     };
   },
   methods: {
-    ...mapActions(["updateLogin", "updateRegistro"]),
+    ...mapActions([
+      "updateLogin",
+      "updateRegistro",
+      "getAnalogicalInput",
+      "getAnalogicalOutput",
+      "getDigitalInput",
+      "getDigitalOutput",
+      "logout",
+    ]),
     touchOut() {
       if (!this.collapse) this.collapse = true;
     },
@@ -206,6 +212,12 @@ export default {
   beforeDestroy() {
     window.removeEventListener("resize", this.getWindowWidth);
     window.removeEventListener("resize", this.getWindowHeight);
+  },
+  created() {
+    this.getAnalogicalInput();
+    this.getAnalogicalOutput();
+    this.getDigitalInput();
+    this.getDigitalOutput();
   },
 };
 </script>

@@ -1,11 +1,11 @@
 export default {
-  programDays: (state) => {
-    return state.program.days;
-  },
-  showLogin: (state) => {
-    return state.showLogin;
-  },
-  showRegistro: (state) => {
-    return state.showRegistro;
-  },
+    programDays: (state) => state.program.days,
+    showLogin: (state) => state.showLogin,
+    showRegistro: (state) => state.showRegistro,
+    digitalInput: (state) => state.digitalInput,
+    digitalOutput: (state) => state.digitalOutput,
+    analogicalInput: (state) => state.analogicalInput,
+    analogicalOutput: (state) => state.analogicalOutput,
+    auth: (state) => state.auth,
+
 };

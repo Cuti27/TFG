@@ -10,4 +10,14 @@ class TypeDevice extends Model
     use HasFactory;
 
     protected $table = 'type_device';
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }

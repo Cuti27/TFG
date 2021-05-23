@@ -46,39 +46,37 @@
     <div class="salidasDigitales">
       <output-input
         title="Salidas Digitales"
-        :numValue="numSalidasDigitales"
         type="Salida Digital"
-        :options="salidasDigitalesDisponibles"
+        :options="digitalOutput"
       ></output-input>
     </div>
     <div class="entradasDigitales">
       <output-input
         title="Entradas Digitales"
-        :numValue="numEntradasDigitales"
         type="Entradas Digital"
-        :options="entradasDigitalesDisponibles"
+        :options="digitalInput"
       ></output-input>
     </div>
     <div class="salidasAnalogicas">
       <output-input
         title="Salidas Analógicas"
-        :numValue="numSalidasAnalogicas"
         type="Salida Analógicas"
-        :options="salidasAnalogicasDisponibles"
+        :options="analogicalOutput"
       ></output-input>
     </div>
     <div class="entradasAnalogicas">
       <output-input
         title="Entradas Analógicas"
-        :numValue="numEntradasAnalogicas"
         type="Entradas Analógicas"
-        :options="entradasAnalogicasDisponibles"
+        :options="analogicalInput"
       ></output-input>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 import headerCustom from "@/components/Header";
 import customInput from "@/components/CustomInput";
 import customSelect from "@/components/Select";
@@ -121,32 +119,6 @@ export default {
         },
       ],
       image: {},
-      // Todo este trozo sería en la API
-      numEntradasDigitales: 4,
-      numSalidasDigitales: 8,
-      numEntradasAnalogicas: 4,
-      numSalidasAnalogicas: 4,
-      salidasDigitalesDisponibles: ["Sector", "Bomba", "Abono"],
-      salidasAnalogicasDisponibles: ["Variador de frecuencia"],
-      entradasDigitalesDisponibles: [
-        "Pulsador",
-        "Sonda de nivel",
-        "Presostato",
-        "Alarma",
-        "Pluviometro",
-        "Anemometro",
-        "contador volumetrico",
-      ],
-      entradasAnalogicasDisponibles: [
-        "Sensor de humedad",
-        "pH",
-        "Conductividad eléctrica del agua de riego",
-        "Temperatura",
-        "Radiación solar",
-        "Humedad relativa",
-        "Presión",
-        "Presostato diferencial",
-      ],
       entradasDigitales: [
         {
           tipo: "x",
@@ -155,7 +127,14 @@ export default {
       ],
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters([
+      "digitalInput",
+      "digitalOutput",
+      "analogicalInput",
+      "analogicalOutput",
+    ]),
+  },
   beforeMount() {
     this.image = this.imagenes[this.tipoProgramador];
   },

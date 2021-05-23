@@ -20,18 +20,28 @@
     </template>
     <template v-slot:default="dialog">
       <v-card>
-        <v-toolbar color="primary" dark><h2>Registrarse en Genhidro</h2></v-toolbar>
+        <v-toolbar color="primary" dark
+          ><h2>Registrarse en Genhidro</h2></v-toolbar
+        >
         <v-container class="pa-4">
           <form action="" class="login-form px-10">
             <v-text-field
               label="Usuario"
               :rules="rulesUser"
               hide-details="auto"
+              v-model="name"
             ></v-text-field>
             <v-text-field
               label="Correo"
               :rules="rulesEmail"
               hide-details="auto"
+              v-model="email"
+            ></v-text-field>
+            <v-text-field
+              label="Teléfono"
+              :rules="rulesPhone"
+              hide-details="auto"
+              v-model="phone"
             ></v-text-field>
             <v-text-field
               v-model="password"
@@ -45,7 +55,7 @@
               @click:append="show1 = !show1"
             ></v-text-field>
             <v-text-field
-              v-model="password"
+              v-model="password_confirmation"
               :append-icon="show1 ? 'fas fa-eye' : 'fas fa-eye-slash'"
               :rules="[rules.required, rules.min]"
               :type="show1 ? 'text' : 'password'"
@@ -62,17 +72,11 @@
         </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog.value = false;">
+          <v-btn color="blue darken-1" text @click="dialog.value = false">
             Cancelar
           </v-btn>
 
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="
-              dialog.value = false;
-              submit();"
-          >
+          <v-btn color="blue darken-1" text @click="submit()">
             Registrate
           </v-btn>
         </v-card-actions>
@@ -100,12 +104,23 @@ export default {
           );
         },
       ],
+      rulesPhone: [
+        (value) => !!value || "Obligatorio",
+        (value) => (value && value.length >= 9) || "Número valido",
+        (value) =>
+          (value && value.length <= 9 && value[0] != "+") ||
+          "Debes indicar el +34 (o pais correspondiente)",
+      ],
       rules: {
         required: (value) => !!value || "Obligatorio.",
         min: (value) => value.length >= 8 || "Min 8 caracteres",
       },
       show1: false,
       password: "",
+      password_confirmation: "",
+      email: "",
+      name: "",
+      phone: "",
     };
   },
   computed: {
@@ -118,21 +133,21 @@ export default {
     },
   },
   watch: {
-    dialog: function(newVal, oldVal) {
+    dialog: function (newVal, oldVal) {
       if (newVal != oldVal) this.updateRegistro(newVal);
     },
-    showLogin: function(newVal) {
+    showLogin: function (newVal) {
       if (newVal) {
         this.dialog = false;
         this.updateRegistro(false);
       }
     },
-    showRegistro: function(newVal) {
+    showRegistro: function (newVal) {
       this.dialog = newVal;
-    }
+    },
   },
   methods: {
-    ...mapActions(["updateLogin", "updateRegistro"]),
+    ...mapActions(["updateLogin", "updateRegistro", "register"]),
     registro() {
       console.log("Realizar registro");
     },
@@ -141,6 +156,18 @@ export default {
       this.updateLogin(true);
       this.updateRegistro(false);
       //   this.$parent.dialog.value = !this.dialog.value;
+    },
+    submit() {
+      this.dialog = false;
+      let form = {
+        email: this.email,
+        password: this.password,
+        password_confirmation: this.password_confirmation,
+        name: this.name,
+        phone: this.phone,
+      };
+
+      this.register(form);
     },
   },
 };

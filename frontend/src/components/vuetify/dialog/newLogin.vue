@@ -14,7 +14,7 @@
         :small="!show"
         v-bind="attrs"
         v-on="on"
-        ><div v-if="show">Login  <font-awesome-icon icon="sign-in-alt" /></div>
+        ><div v-if="show">Login <font-awesome-icon icon="sign-in-alt" /></div>
         <font-awesome-icon v-else icon="sign-in-alt" />
       </v-btn>
     </template>
@@ -25,9 +25,10 @@
           <form action="" class="login-form px-10">
             <v-text-field
               class="mt-2"
-              label="Usuario"
+              label="Correo"
               :rules="rulesUser"
               hide-details="auto"
+              v-model="email"
             ></v-text-field>
             <v-text-field
               class="mt-2"
@@ -56,13 +57,7 @@
             Cancelar
           </v-btn>
 
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="
-              dialog.value = false;
-              submit();"
-          >
+          <v-btn color="blue darken-1" text @click="submit()">
             Inicar sesion
           </v-btn>
         </v-card-actions>
@@ -83,10 +78,11 @@ export default {
       ],
       rules: {
         required: (value) => !!value || "Obligatorio.",
-        min: (v) => v.length >= 8 || "Min 8 caracteres",
+        // min: (v) => v.length >= 8 || "Min 8 caracteres",
       },
       show1: false,
       password: "",
+      email: "",
     };
   },
   props: {
@@ -100,9 +96,15 @@ export default {
   },
 
   methods: {
-    ...mapActions(["updateLogin", "updateRegistro"]),
+    ...mapActions(["updateLogin", "updateRegistro", "login"]),
     submit() {
-      this.$emit("submit");
+      this.dialog = false;
+      let form = {
+        email: this.email,
+        password: this.password,
+      };
+
+      this.login(form);
     },
     doRegistro() {
       this.dialog = false;
@@ -111,18 +113,18 @@ export default {
     },
   },
   watch: {
-    dialog: function(newVal, oldVal) {
+    dialog: function (newVal, oldVal) {
       if (newVal != oldVal) this.updateLogin(newVal);
     },
-    showRegistro: function(newVal) {
+    showRegistro: function (newVal) {
       if (newVal) {
         this.dialog = false;
         this.updateLogin(false);
       }
     },
-    showLogin: function(newVal) {
+    showLogin: function (newVal) {
       this.dialog = newVal;
-    }
+    },
   },
 };
 </script>
