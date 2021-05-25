@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Header -->
-    <header-custom name="Listado de cabezales"></header-custom>
+    <header-custom name="Listado de programas"></header-custom>
 
     <div class="menu">
       <v-btn color="primary" elevation="5" outlined rounded class="ma-5"

@@ -22,10 +22,7 @@
           <h2 for="Activo">Programa:</h2>
           <!-- <toggle v-model="programa"></toggle>
           <label for="Activo">{{ isActive }}</label> -->
-          <v-switch
-          v-model="programa"
-          :label="isActive"
-        ></v-switch>
+          <v-switch v-model="programa" :label="isActive"></v-switch>
         </div>
       </div>
 
@@ -112,7 +109,7 @@ import SubmitButton from "@/components/SubmitButton";
 import SelectButton from "@/components/SelectButton";
 import temporizadorMenu from "@/components/TemporizadorMenu";
 import headerCustom from "@/components/Header";
-import programList from "@/components/vuetify/dialog/programDialog"
+import programList from "@/components/vuetify/dialog/programDialog";
 
 export default {
   components: {
@@ -348,7 +345,6 @@ h3 {
       align-items: center;
       max-width: 340px;
     }
-    
   }
 
   .dias {
@@ -372,7 +368,7 @@ h3 {
   }
 
   .duracion,
-  .activo div:first-child ,
+  .activo div:first-child,
   .dias,
   .hora,
   .fuente,
