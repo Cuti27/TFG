@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAnalogicalInputTable extends Migration
+class CreateHeadTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateAnalogicalInputTable extends Migration
      */
     public function up()
     {
-        Schema::create('analogical_input', function (Blueprint $table) {
+        Schema::create('head', function (Blueprint $table) {
             $table->id();
-            $table->string("input");
-            $table->foreignId('type')->constrained('type_analogical_input');
-            $table->foreignId("deviceId")->constrined("device");
+            $table->string('name');
+            $table->foreignId('userId')->constrained('users');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateAnalogicalInputTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('analogical_input');
+        Schema::dropIfExists('head');
     }
 }

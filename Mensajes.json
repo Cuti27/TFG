@@ -32,42 +32,81 @@
         ...
     ]
 }
-
-
 // Programe de riego
 {
     "id": 1234,
     "programa": 1234123,
     "activado": true,
-    "fecha1": "12/12/2021 12:12:12",
-    "fecha2": [12, 12, 2021, 12, 12, 12],
-    "dias": [true, true, true, true, true, false, false],
-    "bombas": [false, false, true, true],
-    "sectores": [false, false, true, false],
-    "emision": "aspersion/Goteo - 0/1",
+    "dias": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+    ],
+    "bombas": [
+        false,
+        false,
+        true,
+        true
+    ],
+    "sectores": [
+        false,
+        false,
+        true,
+        false
+    ],
     "temporizadores": [{
-            "HoraI": "12:12:12",
-            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
-            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
+            "HoraI": "12:12",
+            "Duracion": "12:12"
         },
         {
             "HoraI": "12:12:12",
-            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
-            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
+            "Duracion": "12:12:12"
         },
         {
-            "HoraI": "12:12:12",
-            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
-            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
+            "HoraI": "12:12",
+            "Duracion": "12:12"
         },
         {
-            "HoraI": "12:12:12",
-            "Duracion": "12:12:12 123546 min  1253417245128654 seg",
-            "TiempoPost": "12:12:12 123124 min 1235142172546 seg"
-        },
-    ]
-
-
+            "HoraI": "12:12",
+            "Duracion": "12:12"
+        }
+    ],
+    "fertirrigacion": {
+        "pH": 7,
+        "phPreRie": true,
+        "phRie": true,
+        "phPost": true,
+        "control": "secuencial",
+        "linea de abonado": [{
+                "abono": 1,
+                "tipo": "time",
+                "value": "10:10:10",
+                "tiempo": "00:15:15"
+            },
+            {
+                "abono": 2,
+                "tipo": "time",
+                "value": "10:10:10",
+                "tiempo": "00:15:15"
+            },
+            {
+                "abono": 3,
+                "tipo": "time",
+                "value": "10:10:10",
+                "tiempo": "00:15:15"
+            },
+            {
+                "abono": 4,
+                "tipo": "time",
+                "value": "10:10:10",
+                "tiempo": "00:15:15"
+            }
+        ]
+    }
 }
 
 Programador riego - > mosquitto mqtt - > node - red - > mysql

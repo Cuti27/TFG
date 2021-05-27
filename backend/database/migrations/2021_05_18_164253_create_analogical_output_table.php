@@ -15,7 +15,9 @@ class CreateAnalogicalOutputTable extends Migration
     {
         Schema::create('analogical_output', function (Blueprint $table) {
             $table->id();
+            $table->string("output");
             $table->foreignId('type')->constrained('type_analogical_output');
+            $table->foreignId("deviceId")->constrined("device");
             $table->timestamps();
         });
     }

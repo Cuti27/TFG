@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAnalogicalInputTable extends Migration
+class CreateWaittingIdsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateAnalogicalInputTable extends Migration
      */
     public function up()
     {
-        Schema::create('analogical_input', function (Blueprint $table) {
-            $table->id();
-            $table->string("input");
-            $table->foreignId('type')->constrained('type_analogical_input');
-            $table->foreignId("deviceId")->constrined("device");
+        Schema::create('waitting_ids', function (Blueprint $table) {
+            $table->uuid('id')->toString()->primary();
+            $table->foreignId('userId')->constrained('users');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ class CreateAnalogicalInputTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('analogical_input');
+        Schema::dropIfExists('waitting_ids');
     }
 }

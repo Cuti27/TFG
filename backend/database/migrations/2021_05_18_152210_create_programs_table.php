@@ -24,6 +24,7 @@ class CreateProgramsTable extends Migration
             $table->boolean('fri');
             $table->boolean('sat');
             $table->boolean('sun');
+            $table->foreignId('headId')->constrained('head');
             $table->timestamps();
         });
     }

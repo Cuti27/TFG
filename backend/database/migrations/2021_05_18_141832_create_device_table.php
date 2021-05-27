@@ -14,9 +14,11 @@ class CreateDeviceTable extends Migration
     public function up()
     {
         Schema::create('device', function (Blueprint $table) {
-            $table->id();
+            $table->string('id')->primary();
             $table->foreignId('userId')->constrained('users');
             $table->foreignId('type')->constrained('type_device');
+            $table->foreignId('headId')->constrained('head');
+            $table->foreignId('agronicId')->nullable()->unsigned()->on('agronic_info');
             $table->timestamps();
         });
     }

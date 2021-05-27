@@ -15,7 +15,9 @@ class CreateDigitalInputTable extends Migration
     {
         Schema::create('digital_input', function (Blueprint $table) {
             $table->id();
+            $table->string("input");
             $table->foreignId('type')->constrained('type_digital_input');
+            $table->foreignId("deviceId")->constrined("device");
             $table->timestamps();
         });
     }

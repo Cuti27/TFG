@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\DeviceController;
+use App\Http\Controllers\API\HeadController;
 use App\Http\Controllers\API\OutputInputController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,4 +40,20 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // Logout sesion
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Create and get head
+
+    Route::post('/head', [HeadController::class, 'createHead']);
+
+    Route::get('/head/{id}', [HeadController::class, 'getHead']);
+
+    Route::post('/head/{id}', [HeadController::class, 'updateHead']);
+
+    Route::get('/head', [HeadController::class, 'getHeadByUser']);
+
+    // Create and add device
+
+    Route::post("/head/{id}/device", [DeviceController::class, 'createDevice']);
+
+    Route::get("/newDeviceId", [DeviceController::class, 'createIdDevice']);
 });

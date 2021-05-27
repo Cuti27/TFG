@@ -17,7 +17,6 @@ class CreateAgronicInfoTable extends Migration
             $table->id();
             $table->string('email');
             $table->string('password');
-            $table->foreignId('deviceId')->constrained('device');
             $table->timestamps();
         });
     }

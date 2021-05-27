@@ -15,7 +15,10 @@ class CreateDigitalOutputTable extends Migration
     {
         Schema::create('digital_output', function (Blueprint $table) {
             $table->id();
+            $table->string("output");
             $table->foreignId('type')->constrained('type_analogical_output');
+            $table->foreignId("deviceId")->constrined("device");
+            $table->foreignId("programId")->nullable()->unsigned()->on('programs');
             $table->timestamps();
         });
     }
