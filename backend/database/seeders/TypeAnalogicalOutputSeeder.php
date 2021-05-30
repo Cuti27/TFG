@@ -19,6 +19,7 @@ class TypeAnalogicalOutputSeeder extends Seeder
         //     'type' => 'Variador de frecuencia',
         // ]);
 
+        TypeAnalogicalOutput::create(['type' => 'No configurado']);
         TypeAnalogicalOutput::create(['type' => 'Variador de frecuencia']);
     }
 }

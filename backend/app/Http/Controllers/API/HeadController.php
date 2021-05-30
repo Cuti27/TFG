@@ -72,8 +72,8 @@ class HeadController extends Controller
     public function getHeadByUser(Request $request)
     {
 
-        // Creamos el nuevo usuario
-        $head = Head::where('userId', $request->user()->id)->get();
+        // CRecuperamos el cabezal
+        $head = Head::where('userId', $request->user()->id)->paginate(15);
 
         if (!$head) {
             return response([
@@ -83,6 +83,7 @@ class HeadController extends Controller
 
         // Creamos la respuesta
         $response = [
+            'count' => count($head),
             'headList' => $head,
         ];
 
@@ -128,5 +129,41 @@ class HeadController extends Controller
         ];
 
         return response($response, 200);
+    }
+
+
+    /**
+     * Delete a Head
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteHead(Request $request, $id)
+    {
+        if (!is_string($id) || $id == '') {
+            return response([
+                'message' => 'Need a valid id'
+            ], 401);
+        }
+
+        // Creamos el nuevo usuario
+        $head = Head::where('id', $id)->where('userId', $request->user()->id)->first();
+
+        if (!$head) {
+            return response([
+                'message' => 'Bad creds',
+                'id' => $id,
+                'userId' => $request->user()->id
+            ], 401);
+        }
+
+
+        $head->delete();
+
+        // Creamos la respuesta
+        $response = [
+            'head' => $head,
+        ];
+
+        return response($response, 204);
     }
 }

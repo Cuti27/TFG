@@ -6,30 +6,20 @@
         <label for="phPre">CONTROL DE pH EN PRERIEGO: </label>
         <!-- <toggle v-model="phPre"></toggle> -->
 
-       <v-switch
-          v-model="phPre"
-          :label="isActive(phPre)"
-        ></v-switch>
-          
+        <v-switch v-model="phPre" :label="isActive(phPre)"></v-switch>
       </div>
       <div class="phRie">
         <label for="phRie">CONTROL DE pH EN RIEGO: </label>
         <!-- <toggle v-model="phRie"></toggle>
         <label for="phRie">{{ isActive(phRie) }}</label> -->
-        <v-switch
-          v-model="phRie"
-          :label="isActive(phRie)"
-        ></v-switch>
+        <v-switch v-model="phRie" :label="isActive(phRie)"></v-switch>
       </div>
 
       <div class="phPost">
         <label for="phPost">CONTROL DE pH EN POSTRIEGO: </label>
         <!-- <toggle v-model="phPost"></toggle>
         <label for="phPost">{{ isActive(phPost) }}</label> -->
-        <v-switch
-          v-model="phPost"
-          :label="isActive(phPost)"
-        ></v-switch>
+        <v-switch v-model="phPost" :label="isActive(phPost)"></v-switch>
       </div>
     </div>
 
@@ -47,10 +37,7 @@
       <label for="control">CONTROL DE ABONADO: </label>
       <!-- <toggle v-model="control"></toggle>
       <label for="control">{{ isSecuencial }}</label> -->
-      <v-switch
-          v-model="control"
-          :label="isSecuencial"
-        ></v-switch>
+      <v-switch v-model="control" :label="isSecuencial"></v-switch>
     </div>
 
     <div class="lineaAbono">
@@ -159,7 +146,10 @@ export default {
     "selectorAbono selector"
     "consigna tiempo";
 
-  .phPre, .phRie, .phPost, .controlAbono {
+  .phPre,
+  .phRie,
+  .phPost,
+  .controlAbono {
     display: flex;
     align-items: center;
     justify-content: space-around;

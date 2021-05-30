@@ -15,6 +15,7 @@ class TypeDigitalInputSeeder extends Seeder
      */
     public function run()
     {
+        TypeDigitalInput::create(['type' => 'No configurado']);
         TypeDigitalInput::create(['type' => 'Pulsador']);
         TypeDigitalInput::create(['type' => 'Sonda de nivel']);
         TypeDigitalInput::create(['type' => 'Presostato']);

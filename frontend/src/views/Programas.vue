@@ -1,75 +1,31 @@
 <template>
   <div>
     <!-- Header -->
-    <header-custom name="Listado de programas"></header-custom>
+    <header-custom
+      :name="`Listado de programas del cabezal: ${selectedHead.name}`"
+    ></header-custom>
 
-    <div class="menu">
-      <v-btn color="primary" elevation="5" outlined rounded class="ma-5"
-        >Añadir nuevo programa</v-btn
-      >
-      <v-btn
-        color="primary"
-        elevation="5"
-        outlined
-        rounded
-        class="ma-5"
-        v-show="!remove"
-        @click="remove = true"
-        >Eliminar programa</v-btn
-      >
-      <v-btn
-        color="primary"
-        elevation="5"
-        outlined
-        rounded
-        class="ma-5"
-        v-show="remove"
-        @click="remove = false"
-        >Completar borrado</v-btn
-      >
-      <v-btn
-        color="primary"
-        elevation="5"
-        outlined
-        rounded
-        class="ma-5"
-        v-show="remove"
-        @click="remove = false"
-        >Cancelar</v-btn
-      >
-    </div>
-    <div class="listado">
-      <custom-table
-        :remove="remove"
-        :label="{
-          Id: 'id',
-          Nombre: 'nombre',
-          Sectores: 'sectores',
-          Inicio: 'horaInicio',
-          Dias: 'dias',
-        }"
-        :pageSize="5"
-        countVuex="numProgramas"
-        infoVuex="programas"
-      >
-      </custom-table>
-    </div>
+    <table-program></table-program>
   </div>
 </template>
 
 <script>
 import headerCustom from "@/components/Header";
-import customTable from "@/components/CustomTable";
+import tableProgram from "@/components/vuetify/tableProgram";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     headerCustom,
-    customTable,
+    tableProgram,
   },
   data() {
     return {
       remove: false,
     };
+  },
+  computed: {
+    ...mapGetters(["selectedHead"]),
   },
 };
 </script>

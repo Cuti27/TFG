@@ -1,11 +1,10 @@
+import gettersHead from "./Head/gettersHead";
+import gettersDevice from "./Device/gettersDevice";
 export default {
-    programDays: (state) => state.program.days,
-    showLogin: (state) => state.showLogin,
-    showRegistro: (state) => state.showRegistro,
-    digitalInput: (state) => state.digitalInput,
-    digitalOutput: (state) => state.digitalOutput,
-    analogicalInput: (state) => state.analogicalInput,
-    analogicalOutput: (state) => state.analogicalOutput,
-    auth: (state) => state.auth,
-
+  ...gettersHead,
+  ...gettersDevice,
+  programDays: (state) => state.program.days,
+  showLogin: (state) => state.showLogin,
+  showRegistro: (state) => state.showRegistro,
+  auth: (state) => state.auth,
 };

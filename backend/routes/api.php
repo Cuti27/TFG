@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\DeviceController;
 use App\Http\Controllers\API\HeadController;
 use App\Http\Controllers\API\OutputInputController;
+use App\Http\Controllers\API\ProgramController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,7 @@ Route::get('/analogicalInput', [OutputInputController::class, 'getAnalogicalInpu
 Route::get('/analogicalOutput', [OutputInputController::class, 'getAnalogicalOutput']);
 Route::get('/digitalInput', [OutputInputController::class, 'getDigitalInput']);
 Route::get('/digitalOutput', [OutputInputController::class, 'getDigitalOutput']);
+Route::get('/typeDevice', [DeviceController::class, 'getTypeDevice']);
 
 
 // Auth routes
@@ -51,9 +53,32 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/head', [HeadController::class, 'getHeadByUser']);
 
+    Route::delete('/head/{id}/delete', [HeadController::class, 'deleteHead']);
+
     // Create and add device
 
     Route::post("/head/{id}/device", [DeviceController::class, 'createDevice']);
 
-    Route::get("/newDeviceId", [DeviceController::class, 'createIdDevice']);
+    Route::get("/create/deviceId", [DeviceController::class, 'createIdDevice']);
+
+    Route::get('/device', [DeviceController::class, 'listDevice']);
+
+    Route::get('/device/{id}', [DeviceController::class, 'listDeviceHead']);
+
+    Route::get('/deviceId', [DeviceController::class, 'listIdDevice']);
+
+    Route::post('/device', [DeviceController::class, 'getDevice']);
+
+    Route::post('/head/{id}/outputInput', [DeviceController::class, 'addInputOutput']);
+
+    // List emitter and sector of head
+
+    Route::post('/head/{id}/emitter', [DeviceController::class, 'getEmitterOfUser']);
+
+    Route::post('/head/{id}/sector', [DeviceController::class, 'getSectorsOfUser']);
+
+
+    // Crud program
+
+    Route::post('/program', [ProgramController::class, 'createProgram']);
 });

@@ -23,23 +23,16 @@
       </div>
       <div slot="footer">
         <div v-if="logged" class="auxiliares">
-          <login-button
-            @click="
-              showProgramador = true;
-              collapse = true;
-            "
+          <v-registro-id :show="!collapse"></v-registro-id>
+          <v-btn
+            color="primary"
+            elevation="5"
+            outlined
+            rounded
+            @click="logout()"
             v-show="!collapse"
-            >Añadir dispositivo</login-button
+            >Cerrar sesion</v-btn
           >
-          <v-btn @click="logout()" v-show="!collapse">Cerrar sesion</v-btn>
-          <login-button
-            @click="
-              showProgramador = true;
-              collapse = true;
-            "
-            v-show="collapse"
-            ><font-awesome-icon icon="plus-square"
-          /></login-button>
         </div>
         <div v-else class="login">
           <v-registro :show="!collapse"></v-registro>
@@ -67,26 +60,24 @@
 import { mapActions, mapGetters } from "vuex";
 
 import { SidebarMenu } from "vue-sidebar-menu";
-import loginButton from "@/components/LoginButton";
-// import addProgramador from "@/components/Modals/AddProgramador";
 import customFooter from "@/components/vuetify/footer";
 import vLogin from "@/components/vuetify/dialog/newLogin";
 import vRegistro from "@/components/vuetify/dialog/newRegistro";
+import vRegistroId from "@/components/vuetify/dialog/generateId";
 
 // import StickyHeader from "@/components/StickyHeader";
 export default {
   components: {
     customFooter,
     SidebarMenu,
-    loginButton,
-    // addProgramador,
     vLogin,
     vRegistro,
+    vRegistroId,
   },
   computed: {
     ...mapGetters(["showLogin", "showRegistro", "auth"]),
     logged() {
-      return this.auth != "";
+      return this.auth != null;
     },
   },
   data() {
@@ -186,6 +177,7 @@ export default {
       "getAnalogicalOutput",
       "getDigitalInput",
       "getDigitalOutput",
+      "getTypeDevice",
       "logout",
     ]),
     touchOut() {
@@ -218,6 +210,7 @@ export default {
     this.getAnalogicalOutput();
     this.getDigitalInput();
     this.getDigitalOutput();
+    this.getTypeDevice();
   },
 };
 </script>

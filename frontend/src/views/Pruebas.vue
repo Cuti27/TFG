@@ -41,6 +41,7 @@
       :pageSize="5"
     >
     </custom-table>
+    <cabezales-table></cabezales-table>
   </div>
 </template>
 
@@ -55,6 +56,7 @@ import SelectButton from "@/components/SelectButton";
 import temporizadorMenu from "@/components/TemporizadorMenu";
 import loginButton from "@/components/LoginButton";
 import customTable from "@/components/CustomTable";
+import cabezalesTable from "@/components/vuetify/tableCabezal";
 
 export default {
   components: {
@@ -68,6 +70,7 @@ export default {
     temporizadorMenu,
     loginButton,
     customTable,
+    cabezalesTable,
   },
   data() {
     return {

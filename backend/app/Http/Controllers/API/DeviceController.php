@@ -12,13 +12,27 @@ use App\Models\DigitalOutput;
 use App\Models\waittingId;
 use App\Models\Head;
 use App\Models\TypeAnalogicalInput;
+use App\Models\TypeAnalogicalOutput;
 use App\Models\TypeDevice;
+use App\Models\TypeDigitalInput;
+use App\Models\TypeDigitalOutput;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class DeviceController extends Controller
 {
+
+    /**
+     * Display all analogicalInput
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function getTypeDevice()
+    {
+        return TypeDevice::all();
+    }
     /**
      * Validate and create a new Device
      * 
@@ -29,14 +43,17 @@ class DeviceController extends Controller
         if (!is_string($id) || $id == '') {
             return response([
                 'message' => 'Need a valid id'
-            ], 401);
+            ], 400);
         }
+
+        error_log($request);
 
         // Recuperamos y validamos el formulario
         $fields = $request->validate([
             'id' => 'required|string',
-            'type' => 'required|string',
+            'type' => 'required',
             'agronicId' => 'string',
+            'name' => 'required|string',
         ]);
 
         error_log($fields['id']);
@@ -48,7 +65,7 @@ class DeviceController extends Controller
             return response([
                 'message' => 'Bad id',
                 'id' => $fields['id']
-            ], 401);
+            ], 400);
         }
 
         error_log($waittingId);
@@ -59,7 +76,7 @@ class DeviceController extends Controller
         if (!$head) {
             return response([
                 'message' => 'Bad id of the head'
-            ], 401);
+            ], 400);
         }
 
         $type = TypeDevice::where("id", $fields['type'])->first();
@@ -67,10 +84,10 @@ class DeviceController extends Controller
         if (!$type) {
             return response([
                 'message' => 'Bad type of device'
-            ], 401);
+            ], 400);
         }
 
-        error_log("llega");
+        error_log($fields['name']);
 
         if ($fields['type'] && $fields['type'] == 3) {
             $agronicAccount = AgronicAccount::where('id', $fields['agronicId']);
@@ -78,7 +95,7 @@ class DeviceController extends Controller
             if (!$agronicAccount) {
                 return response([
                     'message' => 'Agronic type need a previus Agronic Account'
-                ], 401);
+                ], 400);
             }
 
             $device = Device::create([
@@ -86,7 +103,8 @@ class DeviceController extends Controller
                 'id' => $waittingId->id,
                 'userId' =>  $request->user()->id,
                 'headId' => $head->id,
-                'agronicId' => $agronicAccount->id
+                'agronicId' => $agronicAccount->id,
+                'name' => $fields['name']
             ]);
         } else {
             // Creamos el nuevo usuario
@@ -95,7 +113,8 @@ class DeviceController extends Controller
                 'type' => $type->id,
                 'userId' =>  $request->user()->id,
                 'headId' => $head->id,
-                'agronicId' => null
+                'agronicId' => null,
+                'name' => $fields['name']
             ]);
         }
 
@@ -114,7 +133,7 @@ class DeviceController extends Controller
         return response($response, 201);
     }
 
-    /**
+    /**listDeviceHead
      * List all device for an user
      * 
      * @return \Illuminate\Http\Response
@@ -122,6 +141,29 @@ class DeviceController extends Controller
     public function listDevice(Request $request)
     {
         $listDevice = Device::where('userId', $request->user()->id)->get();
+
+        // Creamos la respuesta
+        $response = [
+            'count' => count($listDevice),
+            'listId' => $listDevice
+        ];
+
+        return response($response, 200);
+    }
+
+    /**
+     * List all device for an user and a Head
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function listDeviceHead(Request $request, $id)
+    {
+        if (!is_string($id) || $id == '') {
+            return response([
+                'message' => 'Need a valid id'
+            ], 400);
+        }
+        $listDevice = Device::where('userId', $request->user()->id)->where('headId', $id)->get();
 
         // Creamos la respuesta
         $response = [
@@ -148,8 +190,10 @@ class DeviceController extends Controller
             return response([
                 'message' => 'Too much id wait to be asigned',
                 'list' => $listDevice
-            ], 401);
+            ], 400);
         }
+
+        error_log($generatedId);
 
         // Creamos el nuevo usuario
         $waittingId = waittingId::create([
@@ -160,7 +204,7 @@ class DeviceController extends Controller
         // Creamos la respuesta
         $response = [
             'waittingId' => $waittingId,
-            'count' => count($listDevice),
+            'count' => count($listDevice) + 1,
             'listId' => $listDevice
         ];
 
@@ -176,14 +220,11 @@ class DeviceController extends Controller
     {
 
         $listDevice = waittingId::where('userId', $request->user()->id)->get();
-        // Creamos el nuevo usuario
-        $waittingId = waittingId::create([
-            'list' => $listDevice,
-        ]);
+
 
         // Creamos la respuesta
         $response = [
-            'waittingId' => $waittingId
+            'waittingId' => $listDevice
         ];
 
         return response($response, 200);
@@ -194,45 +235,71 @@ class DeviceController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function addInputOutput(Request $request)
+    public function getDevice(Request $request)
+    {
+        // Recuperamos y validamos el formulario
+        $fields = $request->validate([
+            'id' => 'required|string',
+        ]);
+
+        $device = Device::where('userId', $request->user()->id)->where('id', $fields["id"])->first();
+
+        if (!$device) {
+            return response([
+                'message' => 'The id of the device is not valid'
+            ], 400);
+        }
+
+        // TODO: cargar InputOutput
+        // Creamos la respuesta
+        $response = [
+            'device' => $device
+        ];
+
+        return response($response, 200);
+    }
+
+    /**
+     * List Id for device
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function addInputOutput(Request $request, $id)
     {
         // Recuperamos y validamos el formulario
 
         $fields = Validator::make($request->all(), [
             'idDevice' => 'required|string',
             'listAnalogicalOutput' => 'required',
-            'listAnalogicalOutput.type' => 'required',
-            'listAnalogicalOutput.deviceId' => 'required',
-            'listAnalogicalOutput.output' => 'required',
+            'listAnalogicalOutput.*.type' => ['required', Rule::in(TypeAnalogicalOutput::pluck('id')->all())],
+            'listAnalogicalOutput.*.deviceId' => 'required',
+            'listAnalogicalOutput.*.output' => 'required',
             'listAnalogicalInput' => 'required',
-            'listAnalogicalInput.type' => 'required',
-            'listAnalogicalInput.deviceId' => 'required',
-            'listAnalogicalInput.input' => 'required',
+            'listAnalogicalInput.*.type' => ['required', Rule::in(TypeAnalogicalInput::pluck('id')->all())],
+            'listAnalogicalInput.*.deviceId' => 'required',
+            'listAnalogicalInput.*.input' => 'required',
             'listDigitalOutput' => 'required',
-            'listDigitalOutput.type' => 'required',
-            'listDigitalOutput.deviceId' => 'required',
-            'listDigitalOutput.output' => 'required',
-            'listDigitalOutput.programId' => 'string',
+            'listDigitalOutput.*.type' => ['required', Rule::in(TypeDigitalOutput::pluck('id')->all())],
+            'listDigitalOutput.*.deviceId' => 'required',
+            'listDigitalOutput.*.output' => 'required',
+            'listDigitalOutput.*.programId' => 'string',
             'listDigitalInput' => 'required',
-            'listDigitalInput.type' => 'required',
-            'listDigitalInput.deviceId' => 'required',
-            'listDigitalInput.input' => 'required',
+            'listDigitalInput.*.type' => ['required', Rule::in(TypeDigitalInput::pluck('id')->all())],
+            'listDigitalInput.*.deviceId' => 'required',
+            'listDigitalInput.*.input' => 'required',
         ]);
 
-        $device = Device::where("id", $fields['idDevice'])->where('userId', $request->user()->id)->first();
+        $device = Device::where("id", $fields['idDevice'])->where('userId', $request->user()->id)->where('headId', $id)->first();
 
         if (!$device) {
             return response([
                 'message' => 'The id of the device is not valid'
-            ], 401);
+            ], 400);
         }
 
         // TODO: mirar bien como hacer esta comprobación
 
         $listAnalogicalInput = AnalogicalInput::createMany(collect($fields['listAnalogicalOutput'])->map(function ($value) {
-
-            $type = TypeAnalogicalInput::where('id', $value->type)->first();
-
             return [
                 'type' => $value->type,
                 'deviceId' => $value->deviceId,
@@ -247,6 +314,8 @@ class DeviceController extends Controller
                 'input' => $value->input
             ];
         }));
+
+        // TODO: Eliminar el programa ya que debe ir enlazado al head, y el porgrama tiene que tener otra cosa que una sector/bomba y programa
 
         $listDigitalOutput =  DigitalOutput::createMany(collect($fields['listDigitalOutput'])->map(function ($value) {
             return [
@@ -272,6 +341,92 @@ class DeviceController extends Controller
             'listAnalogicalOutput' => $listAnalogicalOutput,
             'listDigitalOutput' => $listDigitalOutput,
             'listDigitalInput' => $listDigitalInput
+        ];
+
+        return response($response, 200);
+    }
+
+    /**
+     * List Emitter of user to a Head
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function getEmitterOfUser(Request $request, $id)
+    {
+        // Creamos el nuevo usuario
+        $head = Head::where('userId', $request->user()->id)->where('id', $id)->first();
+
+        if (!$head) {
+            return response([
+                'message' => 'Bad creds'
+            ], 400);
+        }
+
+        $listDevice = Device::where('userId', $request->user()->id)->where('headId', $id)->pluck('id');
+
+        if (!$listDevice) {
+            return response([
+                'message' => 'Bad creds'
+            ], 400);
+        }
+
+        // Recuperamos emitter
+        $emitterType = TypeDigitalOutput::where('type', 'Bomba')->first();
+
+        if (!$emitterType) {
+            return response([
+                'message' => 'Error in BD'
+            ], 500);
+        }
+
+        $listEmitter = DigitalOutput::where('type', $emitterType->id)->whereIn('deviceId', $listDevice)->get();
+
+        // Creamos la respuesta
+        $response = [
+            'emitterList' => $listEmitter,
+        ];
+
+        return response($response, 200);
+    }
+
+    /**
+     * List Sectors of user to a Head
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function getSectorsOfUser(Request $request, $id)
+    {
+        // Creamos el nuevo usuario
+        $head = Head::where('userId', $request->user()->id)->where('id', $id)->first();
+
+        if (!$head) {
+            return response([
+                'message' => 'Bad creds'
+            ], 400);
+        }
+
+        $listDevice = Device::where('userId', $request->user()->id)->where('headId', $id)->pluck('id');
+
+        if (!$listDevice) {
+            return response([
+                'message' => 'Bad creds'
+            ], 400);
+        }
+
+        // Recuperamos emitter
+        $sectorType = TypeDigitalOutput::where('type', 'Sector')->first();
+
+        if (!$sectorType) {
+            return response([
+                'message' => 'Error in BD'
+            ], 500);
+        }
+
+        $sectorlist = DigitalOutput::where('type', $sectorType->id)->whereIn('deviceId', $listDevice)->get();
+
+        // Creamos la respuesta
+        $response = [
+            'sectorlist' => $sectorlist,
         ];
 
         return response($response, 200);

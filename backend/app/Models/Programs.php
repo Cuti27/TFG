@@ -5,13 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Device extends Model
+class Programs extends Model
 {
     use HasFactory;
+    protected $table = 'programs';
 
-    public $incrementing = false;
-
-    protected $table = 'device';
 
     /**
      * The attributes that are mass assignable.
@@ -19,12 +17,16 @@ class Device extends Model
      * @var array
      */
     protected $fillable = [
-        'id',
-        'name',
-        'headId',
-        'agronicId',
+        'fertigationId',
         'userId',
-        'type'
+        'headId',
+        'mon',
+        'tue',
+        'wed',
+        'thu',
+        'fri',
+        'sat',
+        'sun',
     ];
 
     /**
@@ -35,14 +37,5 @@ class Device extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'id' => 'string',
     ];
 }

@@ -6,7 +6,7 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn
-      class="mt-5"
+        class="mt-5"
         color="primary"
         elevation="5"
         outlined
@@ -15,7 +15,9 @@
         :small="!show"
         v-bind="attrs"
         v-on="on"
-        ><div v-if="show">Escoger programa <font-awesome-icon icon="plus-circle" /></div>
+        ><div v-if="show">
+          Escoger programa <font-awesome-icon icon="plus-circle" />
+        </div>
         <font-awesome-icon v-else icon="plus-circle" />
       </v-btn>
     </template>
@@ -24,7 +26,9 @@
         <!-- <v-toolbar color="primary" dark
           ><h2>Escoge el programa</h2></v-toolbar
         > -->
-        <v-card-title class="headline primary lighten-1">Escoge el programa</v-card-title>
+        <v-card-title class="headline primary lighten-1"
+          >Escoge el programa</v-card-title
+        >
         <v-divider></v-divider>
         <v-container class="pa-4">
           <custom-table
@@ -53,7 +57,8 @@
             text
             @click="
               dialog.value = false;
-              submit();"
+              submit();
+            "
           >
             Aceptar
           </v-btn>
@@ -75,10 +80,9 @@ export default {
     };
   },
   props: {
-      show: Boolean,
-  }
+    show: Boolean,
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

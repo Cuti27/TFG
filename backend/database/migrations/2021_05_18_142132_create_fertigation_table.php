@@ -19,7 +19,6 @@ class CreateFertigationTable extends Migration
             $table->boolean('phIrrigation');
             $table->boolean('phPostIrrigation');
             $table->integer('ph');
-            $table->foreignId('lineFertilizerId')->constrained('line_fertilizer');
             $table->timestamps();
         });
     }

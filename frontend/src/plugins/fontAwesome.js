@@ -20,8 +20,14 @@ import {
     faEye,
     faEyeSlash,
     faUserPlus,
+    faEdit,
+    faCaretDown,
+    faChevronRight,
+    faChevronLeft,
+    faSortUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faCircle, faCheckCircle } from '@fortawesome/fontawesome-free-regular'
 
 library.add(
     faClock,
@@ -45,6 +51,13 @@ library.add(
     faEye,
     faEyeSlash,
     faUserPlus,
+    faEdit,
+    faCaretDown,
+    faChevronRight,
+    faChevronLeft,
+    faSortUp,
+    faCircle,
+    faCheckCircle
 );
 
-export default FontAwesomeIcon
+export default FontAwesomeIcon;

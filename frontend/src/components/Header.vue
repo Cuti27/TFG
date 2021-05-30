@@ -17,7 +17,7 @@ export default {
 @import "@/css/colorSchema.scss";
 .header {
   border-radius: 50px;
-  background: linear-gradient(160deg, $primary, $secondaryDark);
+  background: linear-gradient(160deg, $primary, $primaryDark);
   box-shadow: 20px 20px 60px $primary, -20px -20px 60px #ffffff;
   padding: 20px;
   margin: 20px;
@@ -30,7 +30,7 @@ export default {
   // background-size: cover;
   // background-position-y: -150px;
   color: $white;
-  height: 150px;
+  min-height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;

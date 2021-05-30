@@ -16,6 +16,7 @@ class TypeAnalogicalInputSeeder extends Seeder
     public function run()
     {
         //type_analogical_input
+        TypeAnalogicalInput::create(['type' => 'No configurado']);
         TypeAnalogicalInput::create(['type' => 'Humedad']);
         TypeAnalogicalInput::create(['type' => 'pH']);
         TypeAnalogicalInput::create(['type' => 'Conductividad electrica del agua',]);

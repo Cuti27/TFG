@@ -15,6 +15,7 @@ class TypeDigitalOutputSeeder extends Seeder
      */
     public function run()
     {
+        TypeDigitalOutput::create(['type' => 'No configurado']);
         TypeDigitalOutput::create(['type' => 'Sector']);
         TypeDigitalOutput::create(['type' => 'Bomba']);
         TypeDigitalOutput::create(['type' => 'Abono']);
