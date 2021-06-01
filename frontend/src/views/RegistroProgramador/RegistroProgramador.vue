@@ -77,6 +77,11 @@
     <div v-else class="device">
       <img :key="image.key" :src="image.src" :alt="image.alt" />
       <div class="infoDevice mx-5">
+        <v-text-field
+          disabled
+          v-model="listaTipos[tipoProgramador]"
+          label="Tipo de programador"
+        ></v-text-field>
         <v-text-field disabled v-model="nombre" label="Nombre"></v-text-field>
         <v-text-field
           disabled
@@ -108,6 +113,8 @@
           title="Salidas Digitales"
           type="Salida Digital"
           :options="digitalOutput"
+          vuexSelect="digitalOutput"
+          @update="createDigitalOutput"
         ></output-input>
       </div>
       <div class="entradasDigitales">
@@ -115,6 +122,8 @@
           title="Entradas Digitales"
           type="Entradas Digital"
           :options="digitalInput"
+          vuexSelect="digitalInput"
+          @update="createDigitalInput"
         ></output-input>
       </div>
       <div class="salidasAnalogicas">
@@ -122,6 +131,8 @@
           title="Salidas Analógicas"
           type="Salida Analógicas"
           :options="analogicalOutput"
+          vuexSelect="analogicalOutput"
+          @update="createAnalogicalOutput"
         ></output-input>
       </div>
       <div class="entradasAnalogicas">
@@ -129,6 +140,8 @@
           title="Entradas Analógicas"
           type="Entradas Analógicas"
           :options="analogicalInput"
+          vuexSelect="analogicalInput"
+          @update="createAnalogicalInput"
         ></output-input>
       </div>
     </div>
@@ -198,6 +211,7 @@ export default {
       "configureDevice",
       "allDevice",
       "selectedHead",
+      "configureDeviceOutputInput",
     ]),
     listaTipos() {
       return this.typeDevice.map((element) => element.type);
@@ -211,7 +225,15 @@ export default {
     this.getAllDevice();
   },
   methods: {
-    ...mapActions(["actionCreateDevice", "getAllDevice", "getAllInfoDevice"]),
+    ...mapActions([
+      "actionCreateDevice",
+      "getAllDevice",
+      "getAllInfoDevice",
+      "createDigitalOutput",
+      "createDigitalInput",
+      "createAnalogicalOutput",
+      "createAnalogicalInput",
+    ]),
     update(event) {
       this.tipoProgramador = event;
       this.image = this.imagenes[this.tipoProgramador];
@@ -233,7 +255,11 @@ export default {
         this.nombre = this.configureDevice.name;
         this.id = this.configureDevice.id;
         this.tipoProgramador = this.configureDevice.type - 1;
+        this.image = this.imagenes[this.tipoProgramador];
       }
+    },
+    updateOutputInput(data) {
+      console.log(data);
     },
   },
 };

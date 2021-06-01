@@ -52,7 +52,7 @@ export default {
     },
     async logout({ commit, state }) {
         const request = "http://127.0.0.1:8000/api/logout";
-        let response = await axios
+        await axios
             .post(request, {}, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
@@ -63,16 +63,14 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    return null;
                 }
             });
 
         console.log("Logout");
 
-        // Actualizamos el estado
-        if (response) {
-            commit("loadLogout");
-        }
+
+        commit("loadLogout");
+
     },
     async register({ commit }, data) {
         const request = "http://127.0.0.1:8000/api/register";

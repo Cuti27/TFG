@@ -19,8 +19,7 @@ class DigitalOutput extends Model
     protected $fillable = [
         'type',
         'deviceId',
-        'output',
-        'programId'
+        'output'
     ];
 
     /**

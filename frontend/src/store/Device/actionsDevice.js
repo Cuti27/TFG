@@ -57,7 +57,7 @@ export default {
             let datosRecuperados = response.data;
             console.log("prueba");
             console.log(response.data);
-            commit("loadAnalogicalInput", datosRecuperados);
+            commit("loadTypeAnalogicalInput", datosRecuperados);
         }
     },
     async getDigitalInput({ commit }) {
@@ -68,7 +68,7 @@ export default {
         // Actualizamos el estado
         if (response && response.data) {
             let datosRecuperados = response.data;
-            commit("loadDigitalInput", datosRecuperados);
+            commit("loadTypeDigitalInput", datosRecuperados);
         }
     },
     async getAnalogicalOutput({ commit }) {
@@ -79,7 +79,7 @@ export default {
         // Actualizamos el estado
         if (response && response.data) {
             let datosRecuperados = response.data;
-            commit("loadAnalogicalOutput", datosRecuperados);
+            commit("loadTypeAnalogicalOutput", datosRecuperados);
         }
     },
     async getDigitalOutput({ commit }) {
@@ -90,7 +90,7 @@ export default {
         // Actualizamos el estado
         if (response && response.data) {
             let datosRecuperados = response.data;
-            commit("loadDigitalOutput", datosRecuperados);
+            commit("loadTypeDigitalOutput", datosRecuperados);
         }
     },
     async getTypeDevice({ commit }) {
@@ -230,4 +230,183 @@ export default {
             commit("loadConfigureDevice", datosRecuperados);
         }
     },
+    async createDigitalOutput({ commit, state }, data) {
+        const idDevice = state.configureDevice.id;
+        const head = state.selectedHead.id;
+
+        console.log("what is")
+        console.log(data)
+
+        let listDigitalOutput = [];
+        data.forEach((element, index) => {
+            let value = {...element }
+            value.deviceId = idDevice;
+
+            if (!element.output)
+                value.output = index + 1;
+            else
+                value.output = parseInt(element.output);
+            listDigitalOutput.push(value);
+        })
+        console.log(listDigitalOutput)
+        let dataSend = { idDevice, listDigitalOutput };
+
+        const request = "http://127.0.0.1:8000/api/head/" + head + "/digitalOutput";
+
+        let response = await axios
+            .post(request, dataSend, await addAuthHeader(state.auth))
+            .catch((err) => {
+                if (err.response) {
+                    console.log("Error en la llamda a: " + request);
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    if (err.response.status == 401) {
+                        commit("loadLogout");
+                    }
+                    console.log(err.response.headers);
+                    return null;
+                }
+            });
+
+        console.log(response.data)
+            // Actualizamos el estado
+        if (response && response.data) {
+            let datosRecuperados = response.data;
+            commit("loadDigitalOutput", datosRecuperados);
+        }
+    },
+    async createDigitalInput({ commit, state }, data) {
+        const idDevice = state.configureDevice.id;
+        const head = state.selectedHead.id;
+
+        let listDigitalInput = [];
+        data.forEach((element, index) => {
+            let value = {...element }
+            value.deviceId = idDevice;
+
+            if (!element.input)
+                value.input = index + 1;
+            else
+                value.input = parseInt(element.input);
+
+            listDigitalInput.push(value);
+        })
+
+
+
+        let dataSend = { idDevice, listDigitalInput };
+
+        const request = "http://127.0.0.1:8000/api/head/" + head + "/digitalInput";
+
+        let response = await axios
+            .post(request, dataSend, await addAuthHeader(state.auth))
+            .catch((err) => {
+                if (err.response) {
+                    console.log("Error en la llamda a: " + request);
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    if (err.response.status == 401) {
+                        commit("loadLogout");
+                    }
+                    console.log(err.response.headers);
+                    return null;
+                }
+            });
+
+        console.log(response.data)
+            // Actualizamos el estado
+        if (response && response.data) {
+            let datosRecuperados = response.data;
+            commit("loadDigitalInput", datosRecuperados);
+        }
+    },
+    async createAnalogicalOutput({ commit, state }, data) {
+        const idDevice = state.configureDevice.id;
+        const head = state.selectedHead.id;
+
+        let listAnalogicalOutput = [];
+        data.forEach((element, index) => {
+            let value = {...element }
+            value.deviceId = idDevice;
+
+            if (!element.output)
+                value.output = index + 1;
+            else
+                value.output = parseInt(element.output);
+
+            listAnalogicalOutput.push(value);
+        })
+
+
+
+        let dataSend = { idDevice, listAnalogicalOutput };
+
+        const request = "http://127.0.0.1:8000/api/head/" + head + "/analogicalOutput";
+
+        let response = await axios
+            .post(request, dataSend, await addAuthHeader(state.auth))
+            .catch((err) => {
+                if (err.response) {
+                    console.log("Error en la llamda a: " + request);
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    if (err.response.status == 401) {
+                        commit("loadLogout");
+                    }
+                    console.log(err.response.headers);
+                    return null;
+                }
+            });
+
+        console.log(response.data)
+            // Actualizamos el estado
+        if (response && response.data) {
+            let datosRecuperados = response.data;
+            commit("loadAnalogicalOutput", datosRecuperados);
+        }
+    },
+    async createAnalogicalInput({ commit, state }, data) {
+        const idDevice = state.configureDevice.id;
+        const head = state.selectedHead.id;
+
+        let listAnalogicalInput = [];
+        data.forEach((element, index) => {
+            let value = {...element }
+            value.deviceId = idDevice;
+
+            if (!element.input)
+                value.input = index + 1;
+            else
+                value.input = parseInt(element.input);
+
+            listAnalogicalInput.push(value);
+        })
+
+
+        let dataSend = { idDevice, listAnalogicalInput };
+
+        const request = "http://127.0.0.1:8000/api/head/" + head + "/analogicalInput";
+
+        let response = await axios
+            .post(request, dataSend, await addAuthHeader(state.auth))
+            .catch((err) => {
+                if (err.response) {
+                    console.log("Error en la llamda a: " + request);
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    if (err.response.status == 401) {
+                        commit("loadLogout");
+                    }
+                    console.log(err.response.headers);
+                    return null;
+                }
+            });
+
+        console.log(response.data)
+            // Actualizamos el estado
+        if (response && response.data) {
+            let datosRecuperados = response.data;
+            commit("loadAnalogicalInput", datosRecuperados);
+        }
+    }
 };

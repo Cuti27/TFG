@@ -77,7 +77,7 @@ export default {
   computed: {
     ...mapGetters(["showLogin", "showRegistro", "auth"]),
     logged() {
-      return this.auth != null;
+      return this.auth != null && this.auth != "";
     },
   },
   data() {

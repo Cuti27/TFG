@@ -69,7 +69,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/device', [DeviceController::class, 'getDevice']);
 
-    Route::post('/head/{id}/outputInput', [DeviceController::class, 'addInputOutput']);
+    // Add and update OutputInput
+
+    Route::post('/head/{id}/digitalOutput', [DeviceController::class, 'addDigitalOutput']);
+
+    Route::post('/head/{id}/digitalInput', [DeviceController::class, 'addDigitalInput']);
+
+    Route::post('/head/{id}/analogicalOutput', [DeviceController::class, 'addAnalogicalOutput']);
+
+    Route::post('/head/{id}/analogicalInput', [DeviceController::class, 'addAnalogicalInput']);
 
     // List emitter and sector of head
 

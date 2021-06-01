@@ -1,5 +1,6 @@
 export default {
     configureDevice: null,
+    configureDeviceOutputInput: {},
     digitalInput: [],
     digitalOutput: [],
     analogicalInput: [],

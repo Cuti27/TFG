@@ -6,16 +6,13 @@
           title
         }}
         <div class="botonera center">
-          <span
-            class="input-number-decrement"
-            @click="numValues - 1 < 0 ? 0 : numValues--"
-            >–</span
+          <span class="input-number-decrement" @click="disminuir()">–</span
           ><input
             class="input-number"
             type="text"
-            :value="numValues"
+            v-model="copy"
             min="0"
-          /><span class="input-number-increment" @click="numValues++">+</span>
+          /><span class="input-number-increment" @click="aumentar()">+</span>
         </div>
       </caption>
       <!-- TODO: Boton con el guardado -->
@@ -26,8 +23,11 @@
           <th scope="col">Descripcion</th>
         </tr>
       </thead>
-      <tbody v-for="n in parseInt(numValues)" :key="`${title}_column_${n}`">
-        <tr>
+      <tbody>
+        <tr
+          v-for="(n, index) in parseInt(numValues)"
+          :key="`${title}_column_${n}`"
+        >
           <td :data-label="type">{{ n }}</td>
           <td data-label="Selecciona uno">
             <br />
@@ -35,14 +35,19 @@
             <custom-select
               class="select"
               button
-              @change="selected = $event"
-              :selected="selected"
+              @change="updateSelect($event, index)"
+              :selected="selected[index].type - 1"
               :values="optionsName"
             ></custom-select>
           </td>
           <td data-label="Descripcion">
             <textarea placeholder="Descripción opcional" />
           </td>
+        </tr>
+        <tr v-if="showSave">
+          <td></td>
+          <td><v-btn @click="actualizar()">Guardar</v-btn></td>
+          <td></td>
         </tr>
       </tbody>
     </table>
@@ -51,6 +56,7 @@
 
 <script>
 import customSelect from "@/components/Select";
+import { mapGetters } from "vuex";
 
 export default {
   components: { customSelect },
@@ -58,13 +64,29 @@ export default {
     options: Array,
     type: String,
     title: String,
+    vuexSelect: String,
   },
   data() {
     return {
-      selected: 0,
+      selected: [],
       width: -1,
-      numValues: 0,
+      copy: 0,
     };
+  },
+  watch: {
+    copy() {
+      if (this.numValues < this.copy)
+        while (this.numValues != this.copy) this.aumentar();
+      else if (this.numValues > this.copy)
+        while (this.numValues != this.copy) this.disminuir();
+    },
+    numValues() {
+      this.copy = this.numValues;
+    },
+    configureDeviceOutputInput: {
+      deep: true,
+      handler: "startComponent",
+    },
   },
   methods: {
     checkStyle() {
@@ -75,11 +97,54 @@ export default {
       }
       return false;
     },
+    aumentar() {
+      this.selected.push({ type: 1 });
+    },
+    disminuir() {
+      if (this.numValues >= 1) {
+        this.selected.pop();
+      }
+    },
+    actualizar() {
+      this.$emit("update", this.selected);
+    },
+    inputNumber(value) {
+      console.log(value);
+    },
+    updateSelect(registro, index) {
+      this.selected[index].type = registro + 1;
+    },
+    startComponent(newVal) {
+      console.log(newVal);
+      this.selected = JSON.parse(JSON.stringify(this.startSelect));
+      this.copy = this.numValues;
+    },
   },
   computed: {
+    ...mapGetters({
+      outputInput: "configureDeviceOutputInput",
+    }),
+
+    startSelect() {
+      return this.outputInput[this.vuexSelect];
+    },
+
     optionsName() {
       return this.options.map((a) => a.type);
     },
+    numValues() {
+      return this.selected.length;
+    },
+    showSave() {
+      return (
+        JSON.stringify(this.selected) !==
+        JSON.stringify(this.outputInput[this.vuexSelect])
+      );
+    },
+  },
+
+  created() {
+    this.startComponent();
   },
   mounted() {
     this.$nextTick(function () {

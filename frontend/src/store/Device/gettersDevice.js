@@ -7,4 +7,5 @@ export default {
     typeDevice: (state) => state.typeDevice,
     listDeviceId: (state) => state.listDeviceId,
     allDevice: (state) => state.allDevice,
+    configureDeviceOutputInput: (state) => state.configureDeviceOutputInput,
 };
