@@ -136,10 +136,20 @@ export default {
       return this.selected.length;
     },
     showSave() {
-      return (
-        JSON.stringify(this.selected) !==
-        JSON.stringify(this.outputInput[this.vuexSelect])
-      );
+      let array = [];
+      this.startSelect.forEach((element) => {
+        console.log(element.type);
+        array.push(element.type);
+      });
+      console.log("check");
+      console.log(array);
+      console.log(this.selected);
+      console.log(this.startSelect);
+      let array2 = [];
+      this.selected.forEach((element) => {
+        array2.push(element.type);
+      });
+      return JSON.stringify(array2) !== JSON.stringify(array);
     },
   },
 

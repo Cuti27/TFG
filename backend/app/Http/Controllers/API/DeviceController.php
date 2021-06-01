@@ -544,17 +544,19 @@ class DeviceController extends Controller
         $output = [];
         foreach ($fields['listAnalogicalOutput'] as $valor) {
             $inputOutput = AnalogicalOutput::where('output', $valor["output"])->where('deviceId', $device->id)->first();
-            if (array_key_exists('id', $valor)) {
+            if ($inputOutput) {
                 $inputOutput->type = $valor["type"];
                 $inputOutput->output = $valor["output"];
 
                 $inputOutput->save();
+                array_push($output, $inputOutput->output);
             } else {
-                AnalogicalOutput::create([
+                $dev = AnalogicalOutput::create([
                     'type' => $valor["type"],
                     'deviceId' => $device->id,
                     'output' => $valor["output"],
                 ]);
+                array_push($output, $dev->output);
             }
         }
 
