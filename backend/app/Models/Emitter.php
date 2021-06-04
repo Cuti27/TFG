@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AnalogicalInput extends Model
+class Emitter extends Model
 {
     use HasFactory;
 
-    protected $table = 'analogical_input';
+    protected $table = 'emitter';
 
     /**
      * The attributes that are mass assignable.
@@ -17,10 +17,8 @@ class AnalogicalInput extends Model
      * @var array
      */
     protected $fillable = [
-        'type',
-        'deviceId',
-        'input',
-        'description',
+        'programId',
+        'digitalOutputId',
     ];
 
     /**

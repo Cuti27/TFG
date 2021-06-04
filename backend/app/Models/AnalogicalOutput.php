@@ -19,7 +19,8 @@ class AnalogicalOutput extends Model
     protected $fillable = [
         'type',
         'deviceId',
-        'output'
+        'output',
+        'description',
     ];
 
     /**

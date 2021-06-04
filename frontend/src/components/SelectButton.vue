@@ -42,14 +42,15 @@ $green: linear-gradient($secondary, $secondaryDark);
     display: none;
     &:checked {
       + .box {
+        opacity: 1;
         background: $green;
         box-shadow: $primaryDark 0px 20px 30px -18px;
         transition: box-shadow 0.5s ease-in-out;
         span {
           color: white;
-          transform: translateY(70px);
+          // transform: translateY(70px);
           &:before {
-            transform: translateY(0px);
+            // transform: translateY(0px);
             opacity: 1;
           }
         }
@@ -60,6 +61,7 @@ $green: linear-gradient($secondary, $secondaryDark);
     width: 130px;
     height: 50px;
     background-color: $white;
+    opacity: 0.7;
     transition: all 250ms ease;
     will-change: transition;
     display: inline-block;
@@ -72,14 +74,14 @@ $green: linear-gradient($secondary, $secondaryDark);
     margin-left: 5px;
     &:active {
       border: 0px;
-      transform: translateY(10px);
+      // transform: translateY(10px);
     }
     span {
       position: absolute;
-      transform: translate(0, 60px);
+      transform: translate(0, 67px);
       left: 0;
       right: 0;
-      top: -60px;
+      // top: -66px;
       transition: all 300ms ease;
       font-size: 0.9em;
       user-select: none;

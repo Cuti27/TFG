@@ -19,7 +19,8 @@ class DigitalInput extends Model
     protected $fillable = [
         'type',
         'deviceId',
-        'input'
+        'input',
+        'description',
     ];
 
     /**

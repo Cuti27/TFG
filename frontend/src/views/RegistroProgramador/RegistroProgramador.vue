@@ -115,6 +115,7 @@
           :options="digitalOutput"
           vuexSelect="digitalOutput"
           @update="createDigitalOutput"
+          nombre
         ></output-input>
       </div>
       <div class="entradasDigitales">

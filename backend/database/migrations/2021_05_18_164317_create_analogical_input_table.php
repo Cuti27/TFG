@@ -22,6 +22,7 @@ class CreateAnalogicalInputTable extends Migration
             $table->string('deviceId');
             $table->foreign('deviceId')->references('id')->on('device');
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+            $table->string("description")->nullable();
             $table->timestamps();
         });
     }

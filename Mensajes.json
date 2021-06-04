@@ -110,3 +110,64 @@
 }
 
 Programador riego - > mosquitto mqtt - > node - red - > mysql
+
+
+
+{
+    "active": true,
+    "automaticDays": false,
+    "programDays": [
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false
+    ],
+    "emitter": [{
+            "id": 7,
+            "output": "3",
+            "type": 3,
+            "deviceId": "b98f62e2-bd67-44a6-836e-c7ccba757470",
+            "description": null,
+            "name": "Bomba 1"
+        },
+        {
+            "id": 11,
+            "output": "4",
+            "type": 3,
+            "deviceId": "af281279-6136-4789-820f-a199691cea04",
+            "description": null,
+            "name": "Bomba 2"
+        }
+    ],
+    "sector": [{
+            "id": 5,
+            "output": "1",
+            "type": 2,
+            "deviceId": "b98f62e2-bd67-44a6-836e-c7ccba757470",
+            "description": null,
+            "name": "Este"
+        },
+        {
+            "id": 8,
+            "output": "1",
+            "type": 2,
+            "deviceId": "af281279-6136-4789-820f-a199691cea04",
+            "description": null,
+            "name": "Antonio"
+        },
+        {
+            "id": 12,
+            "output": "5",
+            "type": 2,
+            "deviceId": "af281279-6136-4789-820f-a199691cea04",
+            "description": null,
+            "name": "Mio"
+        }
+    ],
+    "drip": false,
+    "timer": [],
+    "headId": 1
+}

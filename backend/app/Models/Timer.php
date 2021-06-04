@@ -5,22 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AnalogicalInput extends Model
+class Timer extends Model
 {
     use HasFactory;
 
-    protected $table = 'analogical_input';
-
+    protected $table = 'timer';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'type',
-        'deviceId',
-        'input',
-        'description',
+        'timeStart',
+        'duration',
+        'postIrrigation',
+        'programId',
     ];
 
     /**
@@ -32,4 +31,10 @@ class AnalogicalInput extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function getEndTimeAttribute()
+    {
+        return date('H:i:s', strtotime($this->timeStart) + strtotime($this->duration)
+            + strtotime($this->postIrrigation) - strtotime('00:00:00'));
+    }
 }

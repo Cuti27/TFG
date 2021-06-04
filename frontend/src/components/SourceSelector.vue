@@ -4,11 +4,17 @@
       <slot></slot>
     </div>
     <div class="sources">
-      <div v-for="(item, index) in options" :key="item + index">
+      <div
+        v-for="(item, index) in options"
+        :key="item + index"
+        @click.prevent="toggle(index)"
+      >
         <input :id="item + '-' + index" type="radio" />
-        <label :class="{ blanco: false }" :for="item + '-' + index">{{
-          item
-        }}</label>
+        <label
+          :class="{ blanco: !selected[index] }"
+          :for="item + '-' + index"
+          >{{ item }}</label
+        >
       </div>
     </div>
   </div>
@@ -16,6 +22,7 @@
 
 <script>
 //TODO: Definir si debemos poder poner muchas fuentes o únicamente 4
+import Vue from "vue";
 export default {
   props: {
     options: {
@@ -26,7 +33,21 @@ export default {
   data() {
     return {
       check: true,
+      selected: [],
     };
+  },
+  beforeMount() {
+    this.options.forEach(() => {
+      this.selected.push(false);
+    });
+  },
+  methods: {
+    toggle(index) {
+      console.log(this.selected[index]);
+      Vue.set(this.selected, index, !this.selected[index]);
+      console.log(this.selected[index]);
+      this.$emit("toggle", this.selected);
+    },
   },
 };
 </script>

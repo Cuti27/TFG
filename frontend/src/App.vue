@@ -219,8 +219,13 @@ export default {
 @import "src/css/colorSchema.scss";
 $primary-color: $primary;
 $icon-color: darken($primaryDark, 10%);
+$input-text-align: center;
 
 @import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
+
+h3 {
+  font-size: 1.25rem !important;
+}
 
 .slide-enter-active,
 .slide-leave-active {

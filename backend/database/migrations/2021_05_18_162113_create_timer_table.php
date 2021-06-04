@@ -15,9 +15,9 @@ class CreateTimerTable extends Migration
     {
         Schema::create('timer', function (Blueprint $table) {
             $table->id();
-            $table->time('timeStart');
-            $table->integer('duration');
-            $table->integer('postIrrigation');
+            $table->string('timeStart');
+            $table->string('duration');
+            $table->string('postIrrigation');
             $table->foreignId('programId')->constrained('programs');
             $table->timestamps();
         });

@@ -15,8 +15,13 @@ class CreateProgramsTable extends Migration
     {
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
+            $table->boolean('active');
+            $table->boolean('automaticDays');
+            $table->boolean('drip');
             $table->foreignId('userId')->constrained('users');
-            $table->foreignId('fertigationId')->constrained('fertigation');
+            $table->foreignId('fertigationId')->nullable()->constrained('fertigation');
+            $table->boolean('afterProgram');
+            $table->boolean('autoTimer');
             $table->boolean('mon');
             $table->boolean('tue');
             $table->boolean('wed');

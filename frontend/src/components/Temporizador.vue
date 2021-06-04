@@ -7,116 +7,116 @@
     </h3>
     <div class="inicio">
       <h3 v-if="title || windowWidth < 1030">Hora de inicio</h3>
-      <div>
-        <number-selector
-          :value="inicioHora"
-          :min="0"
-          :max="99"
-          placeholder="Horas"
-          :disabled="disabled"
-          @input="
-            inicioHora = parseInt($event);
-            update();
-          "
-        ></number-selector>
-        <number-selector
-          :value="inicioMinutos"
-          :min="0"
-          :max="59"
-          placeholder="Min"
-          :disabled="disabled"
-          @input="
-            inicioMinutos = parseInt($event);
-            update();
-          "
-        ></number-selector>
-        <number-selector
-          :value="inicioSegundos"
-          :min="0"
-          :max="59"
-          placeholder="Seg"
-          :disabled="disabled"
-          @input="
-            inicioSegundos = parseInt($event);
-            update();
-          "
-        ></number-selector>
+      <div class="mx-2 mb-2">
+        <v-dialog
+          ref="dialog"
+          v-model="modal"
+          :return-value.sync="time"
+          persistent
+          width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              class="centered-input"
+              hide-details
+              v-model="time"
+              label="Seleccione una hora"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-time-picker
+            @input="update"
+            format="24hr"
+            use-seconds
+            v-if="modal"
+            v-model="time"
+            full-width
+          >
+            <v-spacer></v-spacer>
+            <v-btn text color="primary" @click="modal = false"> Cancel </v-btn>
+            <v-btn text color="primary" @click="$refs.dialog.save(time)">
+              OK
+            </v-btn>
+          </v-time-picker>
+        </v-dialog>
       </div>
     </div>
     <div class="duracion">
       <h3 v-if="title || windowWidth < 1030">Duración</h3>
-      <div>
-        <number-selector
-          :value="duracionHora"
-          :min="0"
-          :max="99"
-          placeholder="Horas"
-          :disabled="disabled"
-          @input="
-            duracionHora = parseInt($event);
-            update();
-          "
-        ></number-selector>
-        <number-selector
-          :value="duracionMinutos"
-          :min="0"
-          :max="59"
-          placeholder="Min"
-          :disabled="disabled"
-          @input="
-            duracionMinutos = parseInt($event);
-            update();
-          "
-        ></number-selector>
-        <number-selector
-          :value="duracionSegundos"
-          :min="0"
-          :max="59"
-          placeholder="Seg"
-          :disabled="disabled"
-          @input="
-            duracionSegundos = parseInt($event);
-            update();
-          "
-        ></number-selector>
+      <div class="mx-2 mb-2">
+        <v-dialog
+          ref="dialog1"
+          v-model="modal1"
+          :return-value.sync="time1"
+          persistent
+          width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              class="centered-input"
+              hide-details
+              v-model="time1"
+              label="Seleccione una hora"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-time-picker
+            @input="update"
+            format="24hr"
+            use-seconds
+            v-if="modal1"
+            v-model="time1"
+            full-width
+          >
+            <v-spacer></v-spacer>
+            <v-btn text color="primary" @click="modal1 = false"> Cancel </v-btn>
+            <v-btn text color="primary" @click="$refs.dialog1.save(time1)">
+              OK
+            </v-btn>
+          </v-time-picker>
+        </v-dialog>
       </div>
     </div>
     <div class="postriego">
       <h3 v-if="title || windowWidth < 1030">Tiempo de postriego</h3>
-      <div>
-        <number-selector
-          :value="postHora"
-          :min="0"
-          :max="99"
-          placeholder="Horas"
-          :disabled="disabled"
-          @input="
-            postHora = parseInt($event);
-            update();
-          "
-        ></number-selector>
-        <number-selector
-          :value="postMinutos"
-          :min="0"
-          :max="59"
-          placeholder="Min"
-          :disabled="disabled"
-          @input="
-            postMinutos = parseInt($event);
-            update();
-          "
-        ></number-selector>
-        <number-selector
-          :value="postSegundos"
-          :min="0"
-          :max="59"
-          placeholder="Seg"
-          :disabled="disabled"
-          @input="
-            postSegundos = parseInt($event);
-            update();
-          "
-        ></number-selector>
+      <div class="mx-2 mb-2">
+        <v-dialog
+          ref="dialog2"
+          v-model="modal2"
+          :return-value.sync="time2"
+          persistent
+          width="290px"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              class="centered-input"
+              hide-details
+              v-model="time2"
+              label="Seleccione una hora"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-time-picker
+            @input="update"
+            format="24hr"
+            use-seconds
+            v-if="modal2"
+            v-model="time2"
+            full-width
+          >
+            <v-spacer></v-spacer>
+            <v-btn text color="primary" @click="modal2 = false"> Cancel </v-btn>
+            <v-btn text color="primary" @click="$refs.dialog2.save(time2)">
+              OK
+            </v-btn>
+          </v-time-picker>
+        </v-dialog>
       </div>
     </div>
     <font-awesome-icon
@@ -129,12 +129,7 @@
 </template>
 
 <script>
-import NumberSelector from "@/components/NumberSelector";
-
 export default {
-  components: {
-    NumberSelector,
-  },
   props: {
     title: Boolean,
     id: Number,
@@ -143,6 +138,12 @@ export default {
   },
   data() {
     return {
+      time: null,
+      modal: false,
+      time1: null,
+      modal1: false,
+      time2: null,
+      modal2: false,
       inicioHora: this.value.inicio[0],
       inicioMinutos: this.value.inicio[1],
       inicioSegundos: this.value.inicio[2],
@@ -159,13 +160,9 @@ export default {
   computed: {
     temporizador() {
       return {
-        inicio: [this.inicioHora, this.inicioMinutos, this.inicioSegundos],
-        duracion: [
-          this.duracionHora,
-          this.duracionMinutos,
-          this.duracionSegundos,
-        ],
-        post: [this.postHora, this.postMinutos, this.postSegundos],
+        inicio: this.time,
+        duracion: this.time1,
+        post: this.time2,
       };
     },
   },
@@ -202,6 +199,16 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
+.temporizador label {
+  left: 30px !important;
+  right: auto;
+  position: absolute;
+}
+
+.centered-input input {
+  text-align: center;
+}
+
 .temporizador {
   display: flex;
   align-items: center;
@@ -223,6 +230,7 @@ export default {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    max-width: 185px;
 
     div {
       display: flex;

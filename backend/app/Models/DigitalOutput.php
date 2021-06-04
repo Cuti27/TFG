@@ -19,7 +19,9 @@ class DigitalOutput extends Model
     protected $fillable = [
         'type',
         'deviceId',
-        'output'
+        'output',
+        'description',
+        'name'
     ];
 
     /**
@@ -31,4 +33,9 @@ class DigitalOutput extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function deviceId()
+    {
+        return $this->belongsTo(Device::class, 'foreign_key');
+    }
 }

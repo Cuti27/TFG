@@ -20,7 +20,8 @@
         <tr>
           <th scope="col">{{ type }}</th>
           <th scope="col">Selecciona uno</th>
-          <th scope="col">Descripcion</th>
+          <th scope="col">Nombre</th>
+          <th v-if="nombre" scope="col">Descripcion</th>
         </tr>
       </thead>
       <tbody>
@@ -40,8 +41,19 @@
               :values="optionsName"
             ></custom-select>
           </td>
+          <td v-if="nombre" data-label="Nombre">
+            <v-text-field
+              class="name"
+              v-model="selected[index].name"
+              label="Nombre"
+              hide-details="auto"
+            ></v-text-field>
+          </td>
           <td data-label="Descripcion">
-            <textarea placeholder="Descripción opcional" />
+            <textarea
+              v-model="selected[index].description"
+              placeholder="Descripción opcional"
+            />
           </td>
         </tr>
         <tr v-if="showSave">
@@ -65,12 +77,14 @@ export default {
     type: String,
     title: String,
     vuexSelect: String,
+    nombre: Boolean,
   },
   data() {
     return {
       selected: [],
       width: -1,
       copy: 0,
+      name: "",
     };
   },
   watch: {
@@ -98,7 +112,7 @@ export default {
       return false;
     },
     aumentar() {
-      this.selected.push({ type: 1 });
+      this.selected.push({ type: 1, description: "" });
     },
     disminuir() {
       if (this.numValues >= 1) {
@@ -106,6 +120,7 @@ export default {
       }
     },
     actualizar() {
+      if (this.nombre) this.selected.name = this.name;
       this.$emit("update", this.selected);
     },
     inputNumber(value) {
@@ -136,20 +151,57 @@ export default {
       return this.selected.length;
     },
     showSave() {
-      let array = [];
-      this.startSelect.forEach((element) => {
-        console.log(element.type);
-        array.push(element.type);
-      });
-      console.log("check");
-      console.log(array);
+      console.log("Comprobacion");
+      if (this.nombre) console.log("yo");
       console.log(this.selected);
       console.log(this.startSelect);
-      let array2 = [];
-      this.selected.forEach((element) => {
-        array2.push(element.type);
-      });
-      return JSON.stringify(array2) !== JSON.stringify(array);
+      console.log(this.selected.length);
+      console.log(this.startSelect.length);
+      console.log(this.selected.length != this.startSelect.length);
+
+      if (this.selected.length != this.startSelect.length) return true;
+      console.log("Esto si");
+      if (this.selected.length == 0 && this.startSelect.lenght == 0)
+        return false;
+      console.log("what");
+      for (let element of this.selected) {
+        let check = false;
+        for (let element2 of this.startSelect) {
+          let firstIsNullOrEmpty =
+            element.description == null || element.description == "";
+          let secondIsNullOrEmpty =
+            element2.description == null || element2.description == "";
+          if (
+            element.type == element2.type &&
+            element.description == element.description &&
+            (firstIsNullOrEmpty == secondIsNullOrEmpty ||
+              element.description == element2.description)
+          ) {
+            if (this.nombre) {
+              if (element.name == element2.name) {
+                console.log("Iguales");
+                console.log(element);
+                console.log(element2);
+                check = true;
+                break;
+              }
+            } else {
+              console.log("Iguales");
+              console.log(element);
+              console.log(element2);
+              check = true;
+              break;
+            }
+          }
+        }
+
+        if (!check && this.startSelect.length > 0) {
+          console.log("No iguales");
+          console.log(element);
+          return true;
+        }
+      }
+      return false;
     },
   },
 
@@ -171,6 +223,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.name {
+  width: 70%;
+}
+
 table {
   border: 1px solid #ccc;
   border-collapse: collapse;

@@ -13,7 +13,14 @@
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
 
-          <v-btn color="primary" dark class="mb-2 mr-2"> Nuevo programa </v-btn>
+          <v-btn
+            @click="loadEmitterSector()"
+            color="primary"
+            dark
+            class="mb-2 mr-2"
+          >
+            Nuevo programa
+          </v-btn>
 
           <v-btn color="primary" dark class="mb-2 mr-2">
             Nuevo dispositivo
@@ -79,8 +86,9 @@ export default {
         value: "id",
       },
       { text: "Nombre", sortable: false, value: "name" },
-      { text: "Última actualización", sortable: false, value: "updated_at" },
-      { text: "Acceder", value: "acceder", sortable: false },
+      { text: "Hora inicio", sortable: false, value: "time" },
+      { text: "Sectores", value: "sector", sortable: false },
+      { text: "Dias", value: "week", sortable: false },
       { text: "Acciones", value: "actions", sortable: false },
     ],
     editedIndex: -1,
@@ -93,7 +101,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(["cabezales", "numCabezales"]),
+    ...mapGetters(["programas", "numProgramas"]),
     ...mapGetters({
       page: "current_page",
       pageCount: "last_page",
@@ -118,65 +126,71 @@ export default {
 
   methods: {
     ...mapActions([
-      "getCabezales",
+      "listProgram",
       "newCabezales",
       "updateHead",
       "deleteHead",
       "setSelectedHead",
+      "getEmitterHead",
+      "getSectorHead",
     ]),
     initialize() {
-      this.getCabezales();
+      this.listProgram();
     },
 
-    editItem(item) {
-      this.editedIndex = this.cabezales.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+    editItem(/**item */) {
+      // this.editedIndex = this.cabezales.indexOf(item);
+      // this.editedItem = Object.assign({}, item);
+      // this.dialog = true;
     },
 
-    deleteItem(item) {
-      this.editedIndex = this.cabezales.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialogDelete = true;
+    deleteItem(/**item */) {
+      // this.editedIndex = this.cabezales.indexOf(item);
+      // this.editedItem = Object.assign({}, item);
+      // this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      this.deleteHead(this.cabezales[this.editedIndex]);
-      this.closeDelete();
+      // this.deleteHead(this.cabezales[this.editedIndex]);
+      // this.closeDelete();
     },
 
     close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+      // this.dialog = false;
+      // this.$nextTick(() => {
+      //   this.editedItem = Object.assign({}, this.defaultItem);
+      //   this.editedIndex = -1;
+      // });
     },
 
     closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+      // this.dialogDelete = false;
+      // this.$nextTick(() => {
+      //   this.editedItem = Object.assign({}, this.defaultItem);
+      //   this.editedIndex = -1;
+      // });
     },
     nextPage() {
-      if (this.page < this.pageCount) this.getCabezales(this.page + 1);
+      if (this.page < this.pageCount) this.listProgram(this.page + 1);
     },
     previousPage() {
-      if (this.page > 1) this.getCabezales(this.page - 1);
+      if (this.page > 1) this.listProgram(this.page - 1);
     },
     save() {
-      if (this.editedIndex > -1) {
-        this.updateHead(this.editedItem);
-      } else {
-        // this.cabezales.push(this.editedItem);
-        this.newCabezales(this.editedItem);
-      }
-      this.close();
+      // if (this.editedIndex > -1) {
+      //   this.updateHead(this.editedItem);
+      // } else {
+      //   // this.cabezales.push(this.editedItem);
+      //   this.newCabezales(this.editedItem);
+      // }
+      // this.close();
     },
     programList(item) {
       this.setSelectedHead(item);
+    },
+    loadEmitterSector() {
+      this.getSectorHead();
+      this.getEmitterHead();
     },
   },
 };

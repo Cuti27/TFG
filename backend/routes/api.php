@@ -81,12 +81,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     // List emitter and sector of head
 
-    Route::post('/head/{id}/emitter', [DeviceController::class, 'getEmitterOfUser']);
+    Route::get('/head/{id}/emitter', [DeviceController::class, 'getEmitterOfUser']);
 
-    Route::post('/head/{id}/sector', [DeviceController::class, 'getSectorsOfUser']);
+    Route::get('/head/{id}/sector', [DeviceController::class, 'getSectorsOfUser']);
 
 
     // Crud program
 
     Route::post('/program', [ProgramController::class, 'createProgram']);
+
+    Route::get('/head/{id}/program', [ProgramController::class, 'listProgram']);
 });

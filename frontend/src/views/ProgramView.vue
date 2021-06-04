@@ -1,5 +1,16 @@
 <template>
   <div class="root">
+    <v-alert
+      class="onTop"
+      v-if="error"
+      dismissible
+      border="left"
+      color="red"
+      type="error"
+      transition="scale-transition"
+      @input="error = ''"
+      >{{ error }}</v-alert
+    >
     <!-- Header con el nombre del programa -->
     <header-custom :name="name">
       <div class="ayuda">
@@ -11,7 +22,7 @@
 
     <!-- Botón flotante con el que se puede guardar -->
     <div class="guardar">
-      <submit-button>Guardar</submit-button>
+      <submit-button @click="saveProgram">Guardar</submit-button>
     </div>
 
     <!-- Cuerpo donde se va a mostrar todo el contenido de la página -->
@@ -19,17 +30,16 @@
       <!-- Toggle encargado de activar el programa -->
       <div class="activo">
         <div>
-          <h2 for="Activo">Programa:</h2>
-          <!-- <toggle v-model="programa"></toggle>
-          <label for="Activo">{{ isActive }}</label> -->
+          <h3 for="Activo">Programa:</h3>
           <v-switch v-model="programa" :label="isActive"></v-switch>
         </div>
       </div>
 
       <!-- Selector de días -->
       <div class="dias">
-        <label for="Dias">Seleccione los dias:</label>
+        <h3 for="Dias">Seleccione los dias:</h3>
         <select-button
+          @input="updateAutomatico"
           name="Dias"
           :options="['Manual', 'Automático']"
         ></select-button>
@@ -38,15 +48,31 @@
 
       <!-- Selector de fuentes -->
       <div class="fuente">
-        <source-selector :options="fuentes">
+        <source-selector @toggle="updateEmitter" :options="computedEmitter">
           <h3>Selecciona una fuente</h3>
         </source-selector>
       </div>
 
       <!-- Selector de sectores -->
       <div class="secciones">
-        <h3 for="">Selecciona los sectores</h3>
-        <section-selector></section-selector>
+        <h3 for="">Selecciona entre las opciones</h3>
+        <!-- <section-selector></section-selector> -->
+        <select-button
+          v-model="map"
+          name="seccion"
+          :options="['Mapa', 'Sectores']"
+        ></select-button>
+
+        <div class="map" v-if="!map" key="map">
+          <img src="../assets/map-placeholder.jpg" alt="Mapa de prueba" />
+        </div>
+        <source-selector
+          v-else
+          @toggle="updateSector"
+          :options="computedSector"
+        >
+          <h3>Selecciona Los sectores</h3>
+        </source-selector>
       </div>
 
       <!-- Seleccion de tipo de emisior -->
@@ -54,6 +80,7 @@
         <div>
           <h3 for="Emisor">Seleccionar tipo de emisor:</h3>
           <select-button
+            v-model="goteo"
             name="Emisor"
             :options="['Aspersion', 'Goteo']"
           ></select-button>
@@ -85,7 +112,10 @@
             name="temporizacion"
             :options="['Manual', 'Automático']"
           ></select-button>
-          <temporizador-menu :disabled="temporizador == 1"></temporizador-menu>
+          <temporizador-menu
+            @update="updateTemporizadores"
+            :disabled="temporizador == 1"
+          ></temporizador-menu>
         </div>
       </div>
 
@@ -104,18 +134,20 @@
 <script>
 import daySelector from "@/components/DaySelector";
 import sourceSelector from "@/components/SourceSelector";
-import sectionSelector from "@/components/SectionSelector";
+// import sectionSelector from "@/components/SectionSelector";
 import SubmitButton from "@/components/SubmitButton";
 import SelectButton from "@/components/SelectButton";
 import temporizadorMenu from "@/components/TemporizadorMenu";
 import headerCustom from "@/components/Header";
 import programList from "@/components/vuetify/dialog/programDialog";
 
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   components: {
     daySelector,
     sourceSelector,
-    sectionSelector,
+    // sectionSelector,
     programList,
     SubmitButton,
     SelectButton,
@@ -124,15 +156,21 @@ export default {
   },
   data() {
     return {
-      programas: this.$root.programas, // TODO: eliminar esto en la version final
+      error: "",
+      temporizadores: [],
+      selectedEmitter: [],
+      selectedSector: [],
+      selectedTimer: [],
+      diasAutomatico: false,
+      goteo: 0,
       showModal: false, // Variable que indica si mostrar o no el modal
       name: "Programa de riego 1", // Nombre del programa
-      fuentes: ["Bombas 1", "Bombas 2", "Bombas 3", "Bombas 4"], // Nombre de las bombas, se pueden especificar los que quieran
       programa: false,
       dias: false,
       horaInicio: false,
       emisor: false,
       temporizador: 0,
+      map: true,
       myOptions: {
         useKeyboardNavigation: true,
         labels: {
@@ -201,6 +239,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["emitter", "sectors", "programDays"]),
     isActive() {
       return this.programa ? "Activado" : "Desactivado";
     },
@@ -215,10 +254,102 @@ export default {
     isEmisor() {
       return this.emisor ? "Goteo" : "Aspersion";
     },
+    computedEmitter() {
+      let array = [];
+      this.emitter.forEach((element) => {
+        array.push(`${element.device.name}: ${element.output.name}`);
+      });
+      return array;
+    },
+    computedSector() {
+      let array = [];
+      this.sectors.forEach((element) => {
+        array.push(`${element.device.name}: ${element.output.name}`);
+      });
+      return array;
+    },
   },
   methods: {
+    ...mapActions(["createProgram"]),
     goFertirrigacion() {
       this.$router.push("Fertirrigacion");
+    },
+    updateEmitter($event) {
+      console.log("Emitter");
+      console.log($event);
+      this.selectedEmitter = $event;
+    },
+    updateSector($event) {
+      console.log("Sector");
+      console.log($event);
+      this.selectedSector = $event;
+    },
+    updateTemporizadores($event) {
+      console.log("Temporizadores");
+      console.log($event);
+      this.selectedTimer = $event;
+    },
+    updateAutomatico($event) {
+      console.log("Dias automaticos o manuales");
+      this.diasAutomatico = $event == 1;
+      console.log(this.diasAutomatico);
+    },
+    saveProgram() {
+      const selectedDay = this.programDays.find((element) => element);
+
+      const atLeatSelectedEmitter =
+        this.selectedEmitter.find((element) => element) &&
+        this.selectedEmitter.length != 0;
+
+      const atLeatSelectedSector =
+        this.selectedSector.find((element) => element) &&
+        this.selectedSector.length != 0;
+      // temporizador
+
+      const aNullInManualTimer =
+        (this.selectedTimer.find(
+          (element) =>
+            element.duracion == null ||
+            element.inicio == null ||
+            element.post == null ||
+            element.duracion == "" ||
+            element.inicio == "" ||
+            element.post == ""
+        ) &&
+          this.temporizador == 0) ||
+        this.selectedTimer == 0;
+      if (!selectedDay) {
+        this.error = "Debe seleccionar al menos un día de la semana";
+      } else if (!atLeatSelectedEmitter) {
+        this.error =
+          "Debe seleccionar al menos una bomba (o emisor) para poder programarlo";
+      } else if (!atLeatSelectedSector) {
+        this.error = "Debe seleccionar al menos una seccion";
+      } else if (aNullInManualTimer && this.horaInicio) {
+        this.error =
+          "Si selecciona un temporizador manual debe rellenar correctamente todos los campos de todos los temporizadores";
+      }
+
+      let listTimer = this.selectedTimer.map((element) => {
+        return {
+          timeStart: element.inicio,
+          duration: element.duracion,
+          postIrrigation: element.post,
+        };
+      });
+      let programa = {
+        autoTimer: this.temporizador,
+        afterProgram: !this.horaInicio,
+        active: this.programa == 1,
+        automaticDays: this.diasAutomatico,
+        programDays: this.programDays,
+        emitter: this.selectedEmitter,
+        sector: this.selectedSector,
+        drip: this.goteo == 1,
+        timer: listTimer,
+      };
+      console.log(programa);
+      this.createProgram(programa);
     },
   },
 };
@@ -226,6 +357,13 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
+
+.map {
+  img {
+    width: 100%;
+    max-width: 600px;
+  }
+}
 
 .ayuda {
   display: inline-block;
@@ -287,6 +425,12 @@ h3 {
   margin-bottom: 5px;
 }
 
+.onTop {
+  position: fixed;
+  z-index: 9950;
+  top: 10px;
+}
+
 .guardar {
   position: fixed;
   bottom: 50px;
@@ -309,7 +453,8 @@ h3 {
   grid-template-rows: auto;
   grid-template-areas:
     "activo activo"
-    "dias fuentes"
+    "dias dias"
+    "fuentes fuentes"
     "secciones secciones"
     "emisor emisor"
     "hora hora"
@@ -329,6 +474,9 @@ h3 {
 
   .emisor {
     grid-area: emisor;
+    div {
+      width: 100%;
+    }
   }
 
   .duracion {
@@ -376,7 +524,7 @@ h3 {
   .postriego,
   .fertirrigacion,
   .emisor div:first-child {
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    box-shadow: 5px 5px 15px $primaryDark, -5px -5px 15px #ffffff;
     border-radius: 5px;
     margin: 10px;
     padding: 10px 15px;

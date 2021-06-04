@@ -25,6 +25,8 @@ import {
     faChevronRight,
     faChevronLeft,
     faSortUp,
+    faTimesCircle,
+    faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faCircle, faCheckCircle } from '@fortawesome/fontawesome-free-regular'
@@ -57,7 +59,9 @@ library.add(
     faChevronLeft,
     faSortUp,
     faCircle,
-    faCheckCircle
+    faCheckCircle,
+    faTimesCircle,
+    faExclamationTriangle,
 );
 
 export default FontAwesomeIcon;

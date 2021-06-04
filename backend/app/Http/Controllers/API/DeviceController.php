@@ -286,6 +286,8 @@ class DeviceController extends Controller
             'listDigitalOutput.*.deviceId' => 'required',
             'listDigitalOutput.*.output' => 'required',
             'listDigitalOutput.*.id' => 'numeric',
+            'listDigitalOutput.*.description' => 'string|nullable',
+            'listDigitalOutput.*.name' => 'string|required',
         ]);
 
 
@@ -306,6 +308,8 @@ class DeviceController extends Controller
                 error_log($valor["type"]);
                 $inputOutput->type = $valor["type"];
                 $inputOutput->output = $valor["output"];
+                $inputOutput->description = array_key_exists("description", $valor) ? $valor["description"] : null;
+                $inputOutput->name = $valor["name"];
 
                 $inputOutput->save();
 
@@ -315,6 +319,8 @@ class DeviceController extends Controller
                     'type' => $valor["type"],
                     'deviceId' => $device->id,
                     'output' => $valor["output"],
+                    'description' => array_key_exists("description", $valor) ? $valor["description"] : null,
+                    'name' => $valor["name"],
                 ]);
                 array_push($output, $dev->output);
             }
@@ -365,6 +371,7 @@ class DeviceController extends Controller
             'listDigitalInput.*.deviceId' => 'required',
             'listDigitalInput.*.input' => 'required',
             'listDigitalInput.*.id' => 'numeric',
+            'listDigitalInput.*.description' => 'string|nullable',
         ]);
 
         $device = Device::where("id", $fields['idDevice'])->where('userId', $request->user()->id)->where('headId', $id)->first();
@@ -390,6 +397,7 @@ class DeviceController extends Controller
 
                 $inputOutput->type = $valor["type"];
                 $inputOutput->input = $valor["input"];
+                $inputOutput->description = array_key_exists("description", $valor) ? $valor["description"] : null;
 
                 $inputOutput->save();
                 array_push($input, $inputOutput->input);
@@ -398,6 +406,8 @@ class DeviceController extends Controller
                     'type' => $valor["type"],
                     'deviceId' => $device->id,
                     'input' => $valor["input"],
+                    'description' => array_key_exists("description", $valor) ? $valor["description"] : null,
+
                 ]);
                 array_push($input, $dev->input);
             }
@@ -438,6 +448,7 @@ class DeviceController extends Controller
             'listAnalogicalInput.*.deviceId' => 'required',
             'listAnalogicalInput.*.input' => 'required',
             'listAnalogicalInput.*.id' => 'numeric',
+            'listAnalogicalInput.*.description' => 'string|nullable',
         ]);
 
         $device = Device::where("id", $fields['idDevice'])->where('userId', $request->user()->id)->where('headId', $id)->first();
@@ -463,6 +474,7 @@ class DeviceController extends Controller
 
                 $inputOutput->type = $valor["type"];
                 $inputOutput->input = $valor["input"];
+                $inputOutput->description = array_key_exists("description", $valor) ? $valor["description"] : null;
 
                 $inputOutput->save();
                 array_push($input, $inputOutput->input);
@@ -471,6 +483,7 @@ class DeviceController extends Controller
                     'type' => $valor["type"],
                     'deviceId' => $device->id,
                     'input' => $valor["input"],
+                    'description' => array_key_exists("description", $valor) ? $valor["description"] : null,
                 ]);
                 array_push($input, $dev->input);
             }
@@ -519,6 +532,7 @@ class DeviceController extends Controller
             'listAnalogicalOutput.*.deviceId' => 'required',
             'listAnalogicalOutput.*.output' => 'required',
             'listAnalogicalOutput.*.id' => 'numeric',
+            'listAnalogicalOutput.*.description' => 'string|nullable',
         ]);
 
         $device = Device::where("id", $fields['idDevice'])->where('userId', $request->user()->id)->where('headId', $id)->first();
@@ -547,6 +561,7 @@ class DeviceController extends Controller
             if ($inputOutput) {
                 $inputOutput->type = $valor["type"];
                 $inputOutput->output = $valor["output"];
+                $inputOutput->description = array_key_exists("description", $valor) ? $valor["description"] : null;
 
                 $inputOutput->save();
                 array_push($output, $inputOutput->output);
@@ -555,6 +570,7 @@ class DeviceController extends Controller
                     'type' => $valor["type"],
                     'deviceId' => $device->id,
                     'output' => $valor["output"],
+                    'description' => array_key_exists("description", $valor) ? $valor["description"] : null,
                 ]);
                 array_push($output, $dev->output);
             }
@@ -617,9 +633,18 @@ class DeviceController extends Controller
 
         $listEmitter = DigitalOutput::where('type', $emitterType->id)->whereIn('deviceId', $listDevice)->get();
 
+        $toRespond = [];
+        foreach ($listEmitter as $valor) {
+            $device = Device::where('id', $valor->deviceId)->first();
+            array_push($toRespond, [
+                'device' => $device,
+                'output' => $valor,
+            ]);
+        }
+
         // Creamos la respuesta
         $response = [
-            'emitterList' => $listEmitter,
+            'emitterList' => $toRespond,
         ];
 
         return response($response, 200);
@@ -654,15 +679,24 @@ class DeviceController extends Controller
 
         if (!$sectorType) {
             return response([
-                'message' => 'Error in BD'
+                'message' => 'Error in DB'
             ], 500);
         }
 
         $sectorlist = DigitalOutput::where('type', $sectorType->id)->whereIn('deviceId', $listDevice)->get();
 
+        $toRespond = [];
+        foreach ($sectorlist as $valor) {
+            $device = Device::where('id', $valor->deviceId)->first();
+            array_push($toRespond, [
+                'device' => $device,
+                'output' => $valor,
+            ]);
+        }
+
         // Creamos la respuesta
         $response = [
-            'sectorlist' => $sectorlist,
+            'sectorList' => $toRespond,
         ];
 
         return response($response, 200);

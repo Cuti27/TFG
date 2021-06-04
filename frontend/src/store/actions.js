@@ -96,4 +96,64 @@ export default {
             commit("loadLogin", datosRecuperados);
         }
     },
+
+    async createProgram({ commit, state }, data) {
+        const request = "http://127.0.0.1:8000/api/program";
+
+        let list = [];
+        data.emitter.forEach((element, index) => {
+            if (element) list.push(state.emitter[index].output)
+        })
+
+        data.emitter = list;
+        list = [];
+
+        data.sector.forEach((element, index) => {
+            if (element) list.push(state.sectors[index].output);
+        })
+
+        data.sector = list;
+
+        data.headId = state.selectedHead.id;
+        await axios.post(request, data, await addAuthHeader(state.auth)).catch((err) => {
+            if (err.response) {
+                console.log("Error en la llamda a: " + request);
+                console.log(err.response.data);
+                console.log(err.response.status);
+                if (err.response.status == 401) {
+                    commit("loadLogout");
+                }
+                console.log(err.response.headers);
+                return null;
+            }
+        });
+
+        // TODO: guardar programa
+    },
+
+    async listProgram({ commit, state }, page = 1) {
+        const request = "http://127.0.0.1:8000/api/head/" + state.selectedHead.id + "/program?page=" + page;
+
+        let response = await axios.get(request, await addAuthHeader(state.auth)).catch((err) => {
+            if (err.response) {
+                console.log("Error en la llamda a: " + request);
+                console.log(err.response.data);
+                console.log(err.response.status);
+                if (err.response.status == 401) {
+                    commit("loadLogout");
+                }
+                console.log(err.response.headers);
+                return null;
+            }
+        });
+
+        console.log("List programs");
+        console.log(response.data);
+
+        // Actualizamos el estado
+        if (response && response.data) {
+            let datosRecuperados = response.data;
+            commit("loadListProgram", datosRecuperados);
+        }
+    },
 };

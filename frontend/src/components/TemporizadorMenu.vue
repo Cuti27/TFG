@@ -7,7 +7,7 @@
         creando: success && temporizadores.length == index + 1,
       }"
       v-for="(temp, index) in temporizadores"
-      :key="'Temporizador' + getHash(index)"
+      :key="'Temporizador' + index"
       v-model="temporizadores[index]"
       :title="index == 0"
       @delete="remove($event)"
@@ -49,22 +49,27 @@ export default {
     return {
       temporizadores: [
         {
-          inicio: [0, 0, 0],
-          duracion: [0, 0, 0],
-          post: [0, 0, 0],
+          inicio: "",
+          duracion: "",
+          post: "",
         },
       ],
       success: false,
       removing: -100,
     };
   },
+  watch: {
+    temporizadores() {
+      this.$emit("update", this.temporizadores);
+    },
+  },
   methods: {
     add() {
       this.success = true;
       this.temporizadores.push({
-        inicio: [0, 0, 0],
-        duracion: [0, 0, 0],
-        post: [0, 0, 0],
+        inicio: "",
+        duracion: "",
+        post: "",
       });
       setTimeout(() => (this.success = false), 600);
     },
@@ -76,9 +81,6 @@ export default {
           this.removing = -100;
         }, 600);
       }
-    },
-    getHash() {
-      return Math.floor(Math.random() * 10000);
     },
   },
 };

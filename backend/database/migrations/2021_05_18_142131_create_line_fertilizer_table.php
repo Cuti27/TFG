@@ -13,12 +13,13 @@ class CreateLineFertilizerTable extends Migration
      */
     public function up()
     {
+        // Todo: hacer migrate
         Schema::create('line_fertilizer', function (Blueprint $table) {
             $table->id();
             $table->string('fertilizer');
             $table->string('controlType');
             $table->string('consigna');
-            $table->integer('time');
+            $table->string('time');
             $table->timestamps();
         });
     }

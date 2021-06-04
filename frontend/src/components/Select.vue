@@ -86,6 +86,8 @@ export default {
     box-shadow: $primaryShadow 0px 2px 8px 0px;
     width: 100%;
     max-width: 300px;
+
+    text-align: center;
   }
 
   select.button {
