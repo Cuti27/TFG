@@ -1,5 +1,16 @@
 <template>
   <v-app>
+    <v-alert
+      class="onTop"
+      v-if="comunicationError"
+      dismissible
+      border="left"
+      color="red"
+      type="error"
+      transition="scale-transition"
+      @input="closeError"
+      >{{ comunicationError }}</v-alert
+    >
     <div v-if="windowWidth < 500" id="nav" :class="{ change: !collapse }">
       <div
         :class="{ container: true, change: !collapse, menuHamburguesa: true }"
@@ -75,7 +86,7 @@ export default {
     vRegistroId,
   },
   computed: {
-    ...mapGetters(["showLogin", "showRegistro", "auth"]),
+    ...mapGetters(["showLogin", "showRegistro", "auth", "comunicationError"]),
     logged() {
       return this.auth != null && this.auth != "";
     },
@@ -179,6 +190,7 @@ export default {
       "getDigitalOutput",
       "getTypeDevice",
       "logout",
+      "closeError",
     ]),
     touchOut() {
       if (!this.collapse) this.collapse = true;
@@ -424,6 +436,12 @@ body {
 
 .menuHamburguesa {
   display: none;
+}
+
+.onTop {
+  position: fixed !important;
+  z-index: 9950;
+  top: 10px;
 }
 
 @media (max-width: "480px") {

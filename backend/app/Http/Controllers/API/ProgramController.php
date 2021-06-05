@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Device;
+use App\Models\DigitalOutput;
 use App\Models\Emitter;
 use App\Models\Head;
 use App\Models\Programs;
@@ -23,6 +24,7 @@ class ProgramController extends Controller
         // Recuperamos y validamos el formulario
         $fields = $request->validate([
             'programId' => 'string',
+            'name' => 'required|string',
             'headId' => 'required',
             'programDays' => 'required | array',
             'emitter' => 'required | array',
@@ -57,7 +59,7 @@ class ProgramController extends Controller
         $end = array();
         $start = array();
         foreach ($fields['timer'] as $timer) {
-            error_log(print_r($timer, TRUE));
+            // error_log(print_r($timer, TRUE));
             $start[] = $timer["timeStart"];
 
             $end[] = date('H:i:s', strtotime($timer["timeStart"]) + strtotime($timer["duration"])
@@ -65,12 +67,56 @@ class ProgramController extends Controller
         }
 
         error_log("Fecha de inicio");
-        error_log(print_r($start, TRUE));
+        // error_log(print_r($start, TRUE));
         error_log("Fecha de fin");
         error_log(print_r($end, TRUE));
 
-        // Recuperamos la lista de programas asociados
-        $listPrograms = Programs::where('headId', $head->id)->pluck('id');
+        // Recuperamos la lista de programas asociados, en los que algún día de la semana coincide con el de nuestro programa
+        $listPrograms = Programs::where('headId', $head->id)->where(function ($query) use ($fields) {
+            $first = true;
+            if ($fields['programDays'][0]) {
+                if ($first) {
+                    $query->where('mon', true);
+                    $first = false;
+                }
+            }
+            if ($fields['programDays'][1]) {
+                if ($first) {
+                    $query->where('tue', true);
+                    $first = false;
+                } else $query->orWhere('tue', true);
+            }
+            if ($fields['programDays'][2]) {
+                if ($first) {
+                    $query->where('wed', true);
+                    $first = false;
+                } else $query->orWhere('wed', true);
+            }
+            if ($fields['programDays'][3]) {
+                if ($first) {
+                    $query->where('thu', true);
+                    $first = false;
+                } else $query->orWhere('thu', true);
+            }
+            if ($fields['programDays'][4]) {
+                if ($first) {
+                    $query->where('fri', true);
+                    $first = false;
+                } else $query->orWhere('fri', true);
+            }
+            if ($fields['programDays'][5]) {
+                if ($first) {
+                    $query->where('sat', true);
+                    $first = false;
+                } else $query->orWhere('sat', true);
+            }
+            if ($fields['programDays'][6]) {
+                if ($first) {
+                    $query->where('sun', true);
+                    $first = false;
+                } else $query->orWhere('sun', true);
+            }
+        })->pluck('id');
 
         $creation = false;
 
@@ -91,7 +137,7 @@ class ProgramController extends Controller
             $listProgramsEmitter = Emitter::whereIn('digitalOutputId', $listEmitterMsg)->whereIn('programId', $listPrograms)->pluck('programId');
 
             error_log("Listado de emisores");
-            error_log(print_r($listProgramsEmitter, TRUE));
+            // error_log(print_r($listProgramsEmitter, TRUE));
 
             if ($listProgramsEmitter) {
 
@@ -100,7 +146,7 @@ class ProgramController extends Controller
                 $listTimer = Timer::whereIn('programId', $listProgramsEmitter)->get();
 
                 error_log("Listado de temporizadores");
-                error_log(print_r($listTimer, TRUE));
+                // error_log(print_r($listTimer, TRUE));
 
                 if ($listTimer) {
                     // Recorremos todos los timer encontrados, y todos los timer enviados, para ver si existe alguna incompatibilidad
@@ -110,11 +156,16 @@ class ProgramController extends Controller
                         foreach (range(0, count($start) - 1) as $index) {
                             $startBetween = $timer->timeStart >= $start[$index] && $timer->timeStart <= $end[$index];
                             $endBetween = $timer->end_time >= $start[$index] && $timer->end_time <= $end[$index];
-                            // En caso de que empiece o termina a la misma vez
-                            if ($startBetween || $endBetween) {
 
+                            $startBeforeButEndLater = $timer->timeStart < $start &&
+                                $timer->end_time > $end[$index];
+                            // En caso de que empiece o termina a la misma vez
+                            if ($startBetween || $endBetween || $startBeforeButEndLater) {
+                                $programId = $timer->programId;
+                                $error = "El programa con id $programId, tiene el mismo emisor,y el temporizador que empieza $start[$index], coincide con el temporizador del otro programa que comienza $timer->timeStart. Por favor, seleccione uno distinto.";
                                 return response([
-                                    'message' => ''
+                                    'customError' => true,
+                                    'message' => $error
                                 ], 400);
                             }
                         }
@@ -144,11 +195,16 @@ class ProgramController extends Controller
                         foreach (range(0, count($start) - 1) as $index) {
                             $startBetween = $timer->timeStart > $start[$index] && $timer->timeStart < $end[$index];
                             $endBetween = $timer->end_time > $start[$index] && $timer->end_time < $end[$index];
-                            // En caso de que empiece o termina a la misma vez
-                            if ($startBetween || $endBetween) {
 
+                            $startBeforeButEndLater = $timer->timeStart < $start &&
+                                $timer->end_time > $end[$index];
+                            // En caso de que empiece o termina a la misma vez
+                            if ($startBetween || $endBetween || $startBeforeButEndLater) {
+                                $programId = $timer->programId;
+                                $error = "El programa con id $programId, programId, tiene el mismo sector,y el temporizador que empieza a las $start[$index] coincide con el temporizador del otro programa que comienza $timer->timeStart. Por favor, seleccione uno distinto.";
                                 return response([
-                                    'message' => ''
+                                    'customError' => true,
+                                    'message' => $error
                                 ], 400);
                             }
                         }
@@ -164,7 +220,6 @@ class ProgramController extends Controller
 
         if ($creation) {
 
-            //TODO: creacion
 
             if (array_key_exists('id', $fields)) {
                 //TODO: Update
@@ -172,6 +227,7 @@ class ProgramController extends Controller
                 // Creamos el programa
                 $createdProgram = Programs::create([
                     'fertigationId' => null,
+                    'name' => $fields['name'],
                     'userId' =>  $request->user()->id,
                     'headId' => $fields['headId'],
                     'active' => $fields['active'],
@@ -256,12 +312,65 @@ class ProgramController extends Controller
             ], 401);
         }
 
-        // // Creamos la respuesta
+        error_log("Listado de programas");
+        $timer = array();
+        $sector = array();
+        foreach ($listPrograms as $value) {
+            // error_log(print_r($value, TRUE));
+            $result = Timer::where('programId', $value->id)->get();
+
+            if ($result) $timer[] = $result;
+
+            $result = Sector::where('programId', $value->id)->pluck("digitalOutputId");
+
+
+            $result = DigitalOutput::whereIn('id', $result)->get();
+            if ($result) $sector[] = $result;
+        }
+
+        // Creamos la respuesta
         $response = [
             'count' => count($listPrograms),
             'listPrograms' => $listPrograms,
+            'timer' => $timer,
+            'sector' => $sector
         ];
 
         return response($response, 200);
+    }
+
+    /**
+     * Delete a program
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteProgram(Request $request)
+    {
+
+        // Recuperamos y validamos el formulario
+        $fields = $request->validate([
+            'programId' => 'required',
+            'headId' => 'required',
+        ]);
+
+        // Recuperamos la lista de programas asociados
+        $program = Programs::where('headId', $fields['headId'])->where('userId', $request->user()->id)->where('id', $fields['programId'])->first();
+
+        if (!$program) {
+            return response([
+                'message' => 'Bad params'
+            ], 400);
+        }
+
+        Sector::where('programId', $program->id)->delete();
+
+        Emitter::where('programId', $program->id)->delete();
+
+        Timer::where('programId', $program->id)->delete();
+
+
+        $program->delete();
+
+        return response("", 204);
     }
 }

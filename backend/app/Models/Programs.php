@@ -17,6 +17,7 @@ class Programs extends Model
      * @var array
      */
     protected $fillable = [
+        'name',
         'fertigationId',
         'userId',
         'headId',
@@ -42,5 +43,25 @@ class Programs extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'mon' => 'boolean',
+        'tue' => 'boolean',
+        'wed' => 'boolean',
+        'thu' => 'boolean',
+        'fri' => 'boolean',
+        'sat' => 'boolean',
+        'sun' => 'boolean',
+        'active' => 'boolean',
+        'autoTimer' => 'boolean',
+        'afterProgram' => 'boolean',
+        'automaticDays' => 'boolean',
+        'drip' => 'boolean',
     ];
 }

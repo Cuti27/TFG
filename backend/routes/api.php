@@ -90,5 +90,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/program', [ProgramController::class, 'createProgram']);
 
+    Route::post('/program/delete', [ProgramController::class, 'deleteProgram']);
+
     Route::get('/head/{id}/program', [ProgramController::class, 'listProgram']);
 });

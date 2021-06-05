@@ -15,6 +15,7 @@ class CreateProgramsTable extends Migration
     {
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->boolean('active');
             $table->boolean('automaticDays');
             $table->boolean('drip');

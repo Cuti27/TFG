@@ -459,14 +459,6 @@ class DeviceController extends Controller
             ], 400);
         }
 
-        // $listAnalogicalInput = AnalogicalInput::createMany(collect($fields['listAnalogicalOutput'])->map(function ($value) {
-        //     return [
-        //         'type' => $value->type,
-        //         'deviceId' => $value->deviceId,
-        //         'output' => $value->output
-        //     ];
-        // }));
-
         $input = [];
         foreach ($fields['listAnalogicalInput'] as $valor) {
             $inputOutput = AnalogicalInput::where('input', $valor["input"])->where('deviceId', $device->id)->first();

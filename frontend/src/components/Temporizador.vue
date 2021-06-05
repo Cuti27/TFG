@@ -17,7 +17,7 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              class="centered-input"
+              :class="{ 'centered-input': true, 'mt-8': windowWidth > 1030 }"
               hide-details
               v-model="time"
               label="Seleccione una hora"
@@ -55,7 +55,7 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              class="centered-input"
+              :class="{ 'centered-input': true, 'mt-8': windowWidth > 1030 }"
               hide-details
               v-model="time1"
               label="Seleccione una hora"

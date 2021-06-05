@@ -13,4 +13,6 @@ export default {
     },
     numProgramas: 5,
     programas: [],
+    programName: "",
+    comunicationError: "",
 };

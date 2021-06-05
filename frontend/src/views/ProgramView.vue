@@ -164,7 +164,6 @@ export default {
       diasAutomatico: false,
       goteo: 0,
       showModal: false, // Variable que indica si mostrar o no el modal
-      name: "Programa de riego 1", // Nombre del programa
       programa: false,
       dias: false,
       horaInicio: false,
@@ -240,6 +239,9 @@ export default {
   },
   computed: {
     ...mapGetters(["emitter", "sectors", "programDays"]),
+    ...mapGetters({
+      name: "programName", // Nombre del programa
+    }),
     isActive() {
       return this.programa ? "Activado" : "Desactivado";
     },

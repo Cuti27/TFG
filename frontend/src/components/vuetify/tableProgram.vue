@@ -1,30 +1,73 @@
 <template>
   <div>
+    <v-alert
+      class="onTop"
+      v-if="error"
+      dismissible
+      border="left"
+      color="red"
+      type="error"
+      transition="scale-transition"
+      @input="error = ''"
+      >{{ error }}</v-alert
+    >
+    <div class="header">
+      <v-dialog v-model="dialog" max-width="500px">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            @click="loadEmitterSector()"
+            color="primary"
+            dark
+            class="m-2"
+            v-bind="attrs"
+            v-on="on"
+          >
+            Nuevo programa
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title>
+            <span class="headline">{{ formTitle }}</span>
+          </v-card-title>
+
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    v-model="nameProgram"
+                    label="Nombre"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="close"> Cancelar </v-btn>
+            <v-btn color="blue darken-1" text @click="save"> Acceder </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-btn color="primary" dark class="ml-5" @click="nuevoDispositivo">
+        Nuevo dispositivo
+      </v-btn>
+    </div>
+
     <v-data-table
       :headers="headers"
-      :items="cabezales"
+      :items="programas"
       sort-by="calories"
       class="elevation-1"
       hide-default-footer
+      :items-per-page="15"
     >
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Listado de programas</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-
-          <v-btn
-            @click="loadEmitterSector()"
-            color="primary"
-            dark
-            class="mb-2 mr-2"
-          >
-            Nuevo programa
-          </v-btn>
-
-          <v-btn color="primary" dark class="mb-2 mr-2">
-            Nuevo dispositivo
-          </v-btn>
 
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
@@ -45,12 +88,30 @@
           </v-dialog>
         </v-toolbar>
       </template>
-      <template v-slot:item.acceder="{ item }">
-        <v-btn @click="programList(item)">Acceder</v-btn>
+      <template v-slot:item.programDay="{ item }">
+        <day-selector disable xs :dias="item.programDay"></day-selector>
+      </template>
+      <template v-slot:item.time="{ item }">
+        <span v-for="time in item.timer" :key="'timer' + time.id"
+          >{{ time.timeStart }}<br
+        /></span>
+      </template>
+      <template v-slot:item.sector="{ item }">
+        <span v-for="sector in item.sector" :key="'sector' + sector.id"
+          >- {{ sector.name }}<br
+        /></span>
       </template>
       <template v-slot:item.actions="{ item }">
-        <font-awesome-icon class="mr-2" @click="editItem(item)" icon="edit" />
-        <font-awesome-icon @click="deleteItem(item)" icon="trash-alt" />
+        <font-awesome-icon
+          class="btn mr-2"
+          @click="editItem(item)"
+          icon="edit"
+        />
+        <font-awesome-icon
+          class="btn"
+          @click="deleteItem(item)"
+          icon="trash-alt"
+        />
       </template>
       <template v-slot:no-data>
         <v-btn color="primary" @click="initialize"> Recargar </v-btn>
@@ -69,11 +130,15 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import daySelector from "@/components/DaySelector";
 
 export default {
+  components: { daySelector },
   data: () => ({
     // page: 1,
     // pageCount: 1,
+    nameProgram: "",
+    formTitle: "Nuevo programa",
     dialog: false,
     dialogDelete: false,
     pagination: {
@@ -88,7 +153,7 @@ export default {
       { text: "Nombre", sortable: false, value: "name" },
       { text: "Hora inicio", sortable: false, value: "time" },
       { text: "Sectores", value: "sector", sortable: false },
-      { text: "Dias", value: "week", sortable: false },
+      { text: "Dias", value: "programDay", align: "center", sortable: false },
       { text: "Acciones", value: "actions", sortable: false },
     ],
     editedIndex: -1,
@@ -98,6 +163,7 @@ export default {
     defaultItem: {
       name: "",
     },
+    error: "",
   }),
 
   computed: {
@@ -106,9 +172,6 @@ export default {
       page: "current_page",
       pageCount: "last_page",
     }),
-    formTitle() {
-      return this.editedIndex === -1 ? "Nuevo cabezal" : "Editar el cabezal";
-    },
   },
 
   watch: {
@@ -127,12 +190,11 @@ export default {
   methods: {
     ...mapActions([
       "listProgram",
-      "newCabezales",
-      "updateHead",
-      "deleteHead",
+      "deleteProgram",
       "setSelectedHead",
       "getEmitterHead",
       "getSectorHead",
+      "loadProgramName",
     ]),
     initialize() {
       this.listProgram();
@@ -144,31 +206,27 @@ export default {
       // this.dialog = true;
     },
 
-    deleteItem(/**item */) {
-      // this.editedIndex = this.cabezales.indexOf(item);
-      // this.editedItem = Object.assign({}, item);
-      // this.dialogDelete = true;
+    deleteItem(item) {
+      this.editedIndex = this.programas.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialogDelete = true;
     },
 
     deleteItemConfirm() {
-      // this.deleteHead(this.cabezales[this.editedIndex]);
-      // this.closeDelete();
+      this.deleteProgram(this.programas[this.editedIndex]);
+      this.closeDelete();
     },
 
     close() {
-      // this.dialog = false;
-      // this.$nextTick(() => {
-      //   this.editedItem = Object.assign({}, this.defaultItem);
-      //   this.editedIndex = -1;
-      // });
+      this.dialog = false;
     },
 
     closeDelete() {
-      // this.dialogDelete = false;
-      // this.$nextTick(() => {
-      //   this.editedItem = Object.assign({}, this.defaultItem);
-      //   this.editedIndex = -1;
-      // });
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
     },
     nextPage() {
       if (this.page < this.pageCount) this.listProgram(this.page + 1);
@@ -177,13 +235,14 @@ export default {
       if (this.page > 1) this.listProgram(this.page - 1);
     },
     save() {
-      // if (this.editedIndex > -1) {
-      //   this.updateHead(this.editedItem);
-      // } else {
-      //   // this.cabezales.push(this.editedItem);
-      //   this.newCabezales(this.editedItem);
-      // }
-      // this.close();
+      if (this.nameProgram != "") {
+        this.loadProgramName(this.nameProgram);
+        this.nameProgram = "";
+      } else {
+        this.error = "Debe especificar un nombre";
+      }
+      this.close();
+      this.$router.push("programs");
     },
     programList(item) {
       this.setSelectedHead(item);
@@ -192,7 +251,29 @@ export default {
       this.getSectorHead();
       this.getEmitterHead();
     },
+    nuevoDispositivo() {
+      this.$router.push("registrarProgramador");
+    },
   },
 };
 </script>
-<style></style>
+<style lang="scss" scoped>
+@import "src/css/colorSchema.scss";
+.onTop {
+  position: fixed;
+  z-index: 9950;
+  top: 10px;
+}
+
+.header {
+  box-shadow: 5px 5px 15px $primaryDark, -5px -5px 15px #ffffff;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 10px 15px;
+  background: $white;
+}
+
+.btn {
+  cursor: pointer;
+}
+</style>

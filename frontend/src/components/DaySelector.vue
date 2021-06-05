@@ -8,7 +8,7 @@
     >
       <input :id="day + '-' + index" type="radio" :checked="daysValue[index]" />
       <label
-        :class="{ blanco: !daysValue[index], size: true }"
+        :class="{ blanco: !daysValue[index], xs }"
         :for="day + '-' + index"
         >{{ day }}</label
       >
@@ -21,6 +21,9 @@ export default {
   props: {
     disabled: Boolean,
     dias: Array,
+    xs: {
+      type: Boolean,
+    },
   },
   data() {
     // Creamos un array para comprobar el día
@@ -73,6 +76,13 @@ label {
   margin: 5px;
   line-height: 50px;
   cursor: pointer;
+}
+
+.xs {
+  width: 25px;
+  border-radius: 50%;
+  height: 25px;
+  line-height: 25px;
 }
 
 label.blanco {

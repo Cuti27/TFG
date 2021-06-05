@@ -6,6 +6,7 @@
       sort-by="calories"
       class="elevation-1"
       hide-default-footer
+      :items-per-page="15"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -205,6 +206,7 @@ export default {
     },
     programList(item) {
       this.setSelectedHead(item);
+      this.$router.push("Programas");
     },
   },
 };

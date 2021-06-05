@@ -114,16 +114,23 @@ export default {
 
         data.sector = list;
 
+        data.name = state.programName;
+
         data.headId = state.selectedHead.id;
         await axios.post(request, data, await addAuthHeader(state.auth)).catch((err) => {
             if (err.response) {
-                console.log("Error en la llamda a: " + request);
-                console.log(err.response.data);
-                console.log(err.response.status);
-                if (err.response.status == 401) {
-                    commit("loadLogout");
+                if (err.response.data.customError) {
+                    commit("addGlobalError", err.response.data.message);
+                } else {
+                    console.log("Error en la llamda a: " + request);
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    if (err.response.status == 401) {
+                        commit("loadLogout");
+                    }
+                    console.log(err.response.headers);
                 }
-                console.log(err.response.headers);
+
                 return null;
             }
         });
@@ -156,4 +163,43 @@ export default {
             commit("loadListProgram", datosRecuperados);
         }
     },
+
+    async loadProgramName({ commit }, data) {
+        commit('updateProgramName', data);
+    },
+    async closeError({ commit }) {
+        commit('closeErrorMutation');
+    },
+
+    async deleteProgram({ commit, dispatch, state }, data) {
+        let msg = {
+            'programId': data.id,
+            'headId': state.selectedHead.id
+        }
+
+        const request = "http://127.0.0.1:8000/api/program/delete";
+        let response = await axios.post(request, msg, await addAuthHeader(state.auth)).catch((err) => {
+            if (err.response) {
+                if (err.response.data.customError) {
+                    commit("addGlobalError", err.response.data.message);
+                } else {
+                    console.log("Error en la llamda a: " + request);
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    if (err.response.status == 401) {
+                        commit("loadLogout");
+                    }
+                    console.log(err.response.headers);
+                }
+
+                return null;
+            }
+        });
+
+        console.log("Delete program");
+        console.log(response.data);
+
+        // Actualizamos el estado
+        dispatch("listProgram");
+    }
 };
