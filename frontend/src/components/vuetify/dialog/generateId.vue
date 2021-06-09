@@ -27,11 +27,14 @@
         >
         <v-container class="pa-4">
           <form action="" class="login-form px-10">
-            <ul>
-              <li v-for="item in listDeviceId.waittingId" :key="item.id">
-                {{ item.id }}
-              </li>
-            </ul>
+            <span v-for="item in listDeviceId.waittingId" :key="item.id">
+              {{ item.id }}
+              <v-btn v-if="canCopy"
+                ><font-awesome-icon
+                  @click="copy(item.id)"
+                  :icon="['far', 'copy']"
+              /></v-btn>
+            </span>
             <v-spacer></v-spacer>
             <v-btn class="mt-5" @click="generar()" id="registro"
               >Generar id</v-btn
@@ -56,6 +59,7 @@ export default {
     return {
       dialog: false,
       show1: false,
+      canCopy: false,
     };
   },
   props: {
@@ -67,11 +71,17 @@ export default {
   computed: {
     ...mapGetters(["listDeviceId"]),
   },
+  created() {
+    this.canCopy = !!navigator.clipboard;
+  },
 
   methods: {
     ...mapActions(["createDeviceId", "getDeviceId"]),
     generar() {
       this.createDeviceId();
+    },
+    async copy(s) {
+      navigator.clipboard.writeText(s);
     },
   },
   beforeMount() {

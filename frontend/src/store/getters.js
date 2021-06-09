@@ -10,4 +10,8 @@ export default {
     programas: state => state.programas,
     programName: state => state.programName,
     comunicationError: state => state.comunicationError,
+    comunicationSuccess: state => state.comunicationSuccess,
+    isLoading: state => state.isLoading,
+    numProgramas: state => state.numProgramas,
+    updateName: state => state.updateName,
 };

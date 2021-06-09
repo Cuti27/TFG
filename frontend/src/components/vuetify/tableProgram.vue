@@ -138,7 +138,6 @@ export default {
     // page: 1,
     // pageCount: 1,
     nameProgram: "",
-    formTitle: "Nuevo programa",
     dialog: false,
     dialogDelete: false,
     pagination: {
@@ -172,6 +171,9 @@ export default {
       page: "current_page",
       pageCount: "last_page",
     }),
+    formTitle() {
+      return this.editedIndex === -1 ? "Nuevo programa" : "Editar el programa";
+    },
   },
 
   watch: {
@@ -200,10 +202,12 @@ export default {
       this.listProgram();
     },
 
-    editItem(/**item */) {
-      // this.editedIndex = this.cabezales.indexOf(item);
-      // this.editedItem = Object.assign({}, item);
-      // this.dialog = true;
+    editItem(item) {
+      console.log(item);
+      this.editedIndex = this.programas.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.nameProgram = this.editedItem.name;
+      this.dialog = true;
     },
 
     deleteItem(item) {
@@ -236,6 +240,9 @@ export default {
     },
     save() {
       if (this.nameProgram != "") {
+        if (this.editedIndex !== -1) {
+          if (this.nameProgram != this.editedItem.name) loadUpdatedName(true);
+        }
         this.loadProgramName(this.nameProgram);
         this.nameProgram = "";
       } else {

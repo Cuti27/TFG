@@ -11,8 +11,11 @@ export default {
     program: {
         days: [false, false, false, false, false, false, false],
     },
-    numProgramas: 5,
+    numProgramas: 0,
     programas: [],
     programName: "",
     comunicationError: "",
+    comunicationSuccess: "",
+    isLoading: 0,
+    updateName: false,
 };

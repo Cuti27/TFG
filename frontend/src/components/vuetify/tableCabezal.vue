@@ -71,11 +71,17 @@
         <v-btn @click="programList(item)">Acceder</v-btn>
       </template>
       <template v-slot:item.actions="{ item }">
-        <font-awesome-icon class="mr-2" @click="editItem(item)" icon="edit" />
+        <font-awesome-icon
+          class="mr-2 btn"
+          @click="editItem(item)"
+          icon="edit"
+        />
         <font-awesome-icon @click="deleteItem(item)" icon="trash-alt" />
       </template>
       <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize"> Recargar </v-btn>
+        <v-btn class="btn" color="primary" @click="initialize">
+          Recargar
+        </v-btn>
       </template>
     </v-data-table>
     <div class="text-center pt-2">
@@ -211,4 +217,8 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+.btn {
+  cursor: pointer;
+}
+</style>

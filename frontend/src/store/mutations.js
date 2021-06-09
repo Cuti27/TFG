@@ -31,7 +31,15 @@ export default {
     loadListProgram(state, value) {
         value.listPrograms.data.forEach((element, index) => {
             element.timer = value.timer[index];
-            element.programDay = [element.mon, element.tue, element.wed, element.thu, element.fri, element.sat, element.sun];
+            element.programDay = [
+                element.mon,
+                element.tue,
+                element.wed,
+                element.thu,
+                element.fri,
+                element.sat,
+                element.sun,
+            ];
             delete element.mon;
             delete element.tue;
             delete element.wed;
@@ -40,7 +48,7 @@ export default {
             delete element.sat;
             delete element.sun;
             element.sector = value.sector[index];
-        })
+        });
         state.programas = value.listPrograms.data;
         state.numProgramas = value.count;
     },
@@ -53,5 +61,17 @@ export default {
     },
     addGlobalError(state, value) {
         state.comunicationError = value;
-    }
+    },
+    updateComunicationSuccess(state, value) {
+        state.comunicationSuccess = value;
+    },
+    addIsLoading(state) {
+        state.isLoading++;
+    },
+    removeIsLoading(state) {
+        state.isLoading > 0 ? state.isLoading-- : state.isLoading = 0;
+    },
+    updateUpdatedName(state, value) {
+        state.updatedName = value;
+    },
 };

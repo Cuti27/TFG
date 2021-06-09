@@ -1,16 +1,5 @@
 <template>
   <v-app>
-    <v-alert
-      class="onTop"
-      v-if="comunicationError"
-      dismissible
-      border="left"
-      color="red"
-      type="error"
-      transition="scale-transition"
-      @input="closeError"
-      >{{ comunicationError }}</v-alert
-    >
     <div v-if="windowWidth < 500" id="nav" :class="{ change: !collapse }">
       <div
         :class="{ container: true, change: !collapse, menuHamburguesa: true }"
@@ -58,7 +47,49 @@
       <v-container fluid>
         <!-- If using vue-router -->
         <transition name="slide" mode="out-in">
-          <router-view />
+          <div>
+            <v-dialog :value="isLoading" persistent width="300">
+              <v-card color="primary" dark>
+                <v-card-text>
+                  Procesando
+                  <v-progress-linear
+                    indeterminate
+                    color="white"
+                    class="mb-0"
+                  ></v-progress-linear>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
+            <v-alert
+              class="onTop"
+              v-if="comunicationError"
+              dismissible
+              border="left"
+              color="red"
+              type="error"
+              transition="scale-transition"
+              @input="closeError"
+              >{{ comunicationError }}</v-alert
+            >
+
+            <div class="text-center">
+              <v-snackbar :value="snackbar" :timeout="timeout">
+                {{ text }}
+
+                <template v-slot:action="{ attrs }">
+                  <v-btn
+                    color="blue"
+                    text
+                    v-bind="attrs"
+                    @click="snackbar = false"
+                  >
+                    Cerrar
+                  </v-btn>
+                </template>
+              </v-snackbar>
+            </div>
+            <router-view />
+          </div>
         </transition>
       </v-container>
     </v-main>
@@ -86,7 +117,17 @@ export default {
     vRegistroId,
   },
   computed: {
-    ...mapGetters(["showLogin", "showRegistro", "auth", "comunicationError"]),
+    ...mapGetters([
+      "showLogin",
+      "showRegistro",
+      "auth",
+      "comunicationError",
+      "isLoading",
+    ]),
+    ...mapGetters({
+      snackbar: "comunicationSuccess",
+      text: "comunicationSuccess",
+    }),
     logged() {
       return this.auth != null && this.auth != "";
     },
@@ -101,6 +142,8 @@ export default {
       dias: [false, false, false, false, false, true, true],
       checked: false,
       collapse: false,
+
+      timeout: 5000,
       menu: [
         {
           header: true,
