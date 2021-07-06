@@ -23,7 +23,7 @@
         </p>
       </div>
       <div class="image">
-        <img class="logo" src="../assets/Logo.png" alt="" />
+        <img class="logo" src="@/assets/Logo.png" alt="" />
         <img src="../assets/Home1.jpg" alt="" />
       </div>
     </section>
