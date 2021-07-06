@@ -197,6 +197,7 @@ export default {
       "getEmitterHead",
       "getSectorHead",
       "loadProgramName",
+      "loadUpdateName",
     ]),
     initialize() {
       this.listProgram();
@@ -241,7 +242,8 @@ export default {
     save() {
       if (this.nameProgram != "") {
         if (this.editedIndex !== -1) {
-          if (this.nameProgram != this.editedItem.name) loadUpdatedName(true);
+          if (this.nameProgram != this.editedItem.name)
+            this.loadUpdateName(true);
         }
         this.loadProgramName(this.nameProgram);
         this.nameProgram = "";
