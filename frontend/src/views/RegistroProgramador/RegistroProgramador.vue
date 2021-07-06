@@ -158,7 +158,7 @@ import outputInput from "@/views/RegistroProgramador/components/outputInput";
 
 // Imagenes necesarias
 import imageEsp32 from "@/assets/esp32.png";
-import imageReleLogo from "@/assets/rele";
+import imageReleLogo from "@/assets/releLogo.png";
 import imageAgronic from "@/assets/Agronic.png";
 
 export default {

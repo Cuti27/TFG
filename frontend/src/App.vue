@@ -19,7 +19,7 @@
       @item-click="collapse = true"
     >
       <div slot="header" v-if="!collapse">
-        <img src="@/assets/Logo.png" width="200px" alt="" />
+        <img src="src/assets/Logo.png" width="200px" alt="" />
       </div>
       <div slot="footer">
         <div v-if="logged" class="auxiliares">
