@@ -134,6 +134,7 @@ export default {
                     console.log(err.response.status);
                     console.log(err.response.headers);
                     commit('removeIsLoading');
+                    commit('addGlobalError', "Error, demasiados id");
                     return null;
                 }
             });

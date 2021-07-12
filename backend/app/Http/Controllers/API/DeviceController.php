@@ -192,7 +192,7 @@ class DeviceController extends Controller
 
         if (count($listDevice) >= 10) {
             return response([
-                'message' => 'Too much id wait to be asigned',
+                'message' => 'Too much id waitting to be asigned',
                 'list' => $listDevice
             ], 400);
         }
@@ -213,6 +213,38 @@ class DeviceController extends Controller
         ];
 
         return response($response, 201);
+    }
+
+    /**
+     * Delete a Id for device
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteIdDevice(Request $request)
+    {
+
+        // Recuperamos y validamos el formulario
+        $fields = $request->validate([
+            'id' => 'required|string',
+        ]);
+
+        $idDevice = waittingId::where('userId', $request->user()->id)->where("id", $fields["id"])->get();
+
+        if (!$idDevice) {
+            return response([
+                'message' => 'Error in Id'
+            ], 400);
+        }
+
+        $response = [
+            'waittingId' => $idDevice,
+        ];
+
+        $idDevice->delete();
+
+        // TODO: terminar el envio desde generatedId.vue
+
+        return response($response, 200);
     }
 
     /**
