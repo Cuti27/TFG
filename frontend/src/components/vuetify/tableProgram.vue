@@ -72,8 +72,9 @@
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
               <v-card-title class="headline"
-                >Estas seguro que quieres eliminar este programa?</v-card-title
+                >Estas seguro?</v-card-title
               >
+              <v-card-text><b>Estas seguro que quieres eliminar este programa?</b></v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete"
@@ -198,6 +199,7 @@ export default {
       "getSectorHead",
       "loadProgramName",
       "loadUpdateName",
+      'resetConfigureDevice'
     ]),
     initialize() {
       this.listProgram();
@@ -261,6 +263,7 @@ export default {
       this.getEmitterHead();
     },
     nuevoDispositivo() {
+      this.resetConfigureDevice();
       this.$router.push("registrarProgramador");
     },
   },

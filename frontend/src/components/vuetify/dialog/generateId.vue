@@ -35,14 +35,13 @@
               <span>
                 {{ item.id }}
               </span>
-              <v-btn v-if="canCopy" class="btn"
+              <v-btn @click="doCopy(item.id)" v-if="canCopy" class="btn"
                 ><font-awesome-icon
-                  @click="copy(item.id)"
                   :icon="['far', 'copy']"
               /></v-btn>
               <v-btn class="btn"
+               @click="deleteDeviceId(item.id)"
                 ><font-awesome-icon
-                  @click="delete item.id"
                   :icon="['fa', 'trash-alt']"
               /></v-btn>
             </div>
@@ -88,15 +87,17 @@ export default {
   },
 
   methods: {
-    ...mapActions(["createDeviceId", "getDeviceId"]),
+    ...mapActions(["createDeviceId", "getDeviceId", "deleteDeviceId"]),
     generar() {
       this.createDeviceId();
     },
-    async copy(s) {
-      navigator.clipboard.writeText(s);
-    },
-    delete(value) {
-      console.log(value);
+    async doCopy(s) {
+      console.log(`Value ${s}`); 
+      navigator.clipboard.writeText(s).then(() => {
+        console.log('Copied');
+      }, () => {
+        console.log("Not copied")
+      })
     },
   },
   beforeMount() {

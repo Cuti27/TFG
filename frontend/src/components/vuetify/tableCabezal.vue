@@ -51,8 +51,9 @@
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
               <v-card-title class="headline"
-                >Estas seguro que quieres eliminar este cabezal?</v-card-title
+                >Estas seguro?</v-card-title
               >
+              <v-card-text><b>Estas seguro que quieres eliminar este cabezal?</b></v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete"

@@ -7,7 +7,6 @@ use App\Models\TypeAnalogicalInput;
 use App\Models\TypeAnalogicalOutput;
 use App\Models\TypeDigitalInput;
 use App\Models\TypeDigitalOutput;
-use Illuminate\Http\Request;
 
 class OutputInputController extends Controller
 {
@@ -18,6 +17,7 @@ class OutputInputController extends Controller
      */
     public function getAnalogicalInput()
     {
+    
         return TypeAnalogicalInput::all();
     }
 

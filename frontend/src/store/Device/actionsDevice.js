@@ -178,6 +178,31 @@ export default {
         }
     },
 
+    async deleteDeviceId({ commit, state, dispatch }, id) {
+        commit('addIsLoading');
+        // Realizamos la petición
+        const request = "http://127.0.0.1:8000/api/deviceId";
+        let toDelete = await addAuthHeader(state.auth);
+        toDelete.data = { id };
+        await axios
+            .delete(request, toDelete)
+            .catch((err) => {
+                if (err.response) {
+                    console.log("Error en la llamda a: " + request);
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    if (err.response.status == 401) {
+                        commit("loadLogout");
+                    }
+                    console.log(err.response.headers);
+                    commit('removeIsLoading');
+                    return null;
+                }
+            });
+
+        dispatch("getDeviceId");
+        commit('removeIsLoading');
+    },
     async actionCreateDevice({ commit, state }, data) {
         commit('addIsLoading');
         // Realizamos la petición
@@ -268,6 +293,12 @@ export default {
             commit("loadConfigureDevice", datosRecuperados);
             commit('removeIsLoading');
         }
+    },
+    async resetConfigureDevice({ commit }) {
+        commit('addIsLoading');
+        commit("loadConfigureDevice", {});
+        commit('removeIsLoading');
+
     },
     async createDigitalOutput({ commit, state }, data) {
         commit('addIsLoading');

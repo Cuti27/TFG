@@ -228,7 +228,7 @@ class DeviceController extends Controller
             'id' => 'required|string',
         ]);
 
-        $idDevice = waittingId::where('userId', $request->user()->id)->where("id", $fields["id"])->get();
+        $idDevice = waittingId::where('userId', $request->user()->id)->where("id", $fields["id"])->first();
 
         if (!$idDevice) {
             return response([

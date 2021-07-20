@@ -20,7 +20,7 @@ class CreateDigitalOutputTable extends Migration
             DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             $table->foreignId('type')->constrained('type_digital_output');
             $table->string('deviceId');
-            $table->foreign('deviceId')->references('id')->on('device');
+            $table->foreign('deviceId')->references('id')->on('device')->onDelete('cascade');
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
             $table->string("description")->nullable();
             $table->string("name");

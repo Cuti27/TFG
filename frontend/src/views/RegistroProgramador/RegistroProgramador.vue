@@ -40,7 +40,7 @@
               <v-dialog v-model="dialog" scrollable max-width="500px">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn class="mt-5" v-bind="attrs" v-on="on">
-                    Cargar dispositivo
+                    Listado de dispositivos
                   </v-btn>
                 </template>
                 <v-card>
@@ -58,6 +58,13 @@
                   </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
+                    
+                    <v-btn color="red darken-1" text @click="selected()">
+                      Borrar
+                    </v-btn>
+
+                    <!-- TODO: Hacer el borrado con una ventana nueva -->
+                    <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="dialog = false">
                       Cancelar
                     </v-btn>

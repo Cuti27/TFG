@@ -69,6 +69,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/device', [DeviceController::class, 'getDevice']);
 
+    Route::delete('/deviceId', [DeviceController::class, 'deleteIdDevice']);
+
     // Add and update OutputInput
 
     Route::post('/head/{id}/digitalOutput', [DeviceController::class, 'addDigitalOutput']);
