@@ -5,9 +5,15 @@ import actionsDevice from "./Device/actionsDevice.js";
 // Función para añadir la cabecera de autenticación
 const addAuthHeader = async(auth) => {
     return {
-        headers: { Authorization: "Bearer " + auth },
+        headers: { Authorization: "Bearer " + auth, withCredentials: true, 'X-XSRF-TOKEN': getCookie('XSRF-TOKEN') },
     };
 };
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 export default {
     ...actionsHead,
@@ -25,10 +31,15 @@ export default {
     updateRegistro({ commit }, data) {
         commit("updateRegistro", data);
     },
-    async login({ commit }, data) {
+    async login({ commit, state }, data) {
         commit('addIsLoading');
+        await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie').then(csrf => {
+            console.log(csrf);
+
+        });
+        console.log(await addAuthHeader(state.auth));
         const request = "http://127.0.0.1:8000/api/login";
-        let response = await axios.post(request, data).catch((err) => {
+        let response = await axios.post(request, data, await addAuthHeader(state.auth)).catch((err) => {
             if (err.response) {
                 console.log("Error en la llamda a: " + request);
                 console.log(err.response.data);

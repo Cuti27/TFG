@@ -2,5 +2,8 @@
  * @type {import('@vue/cli-service').ProjectOptions}
  */
 module.exports = {
-  publicPath: process.env.NODE_ENV === "production" ? "/Muestra-TFG/" : "/",
+    publicPath: process.env.NODE_ENV === "production" ? "/Muestra-TFG/" : "/",
+    devServer: {
+        port: 8080,
+    }
 };

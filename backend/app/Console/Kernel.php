@@ -26,10 +26,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function () {
-            error_log('Vamos a intentar borrar');
-            waittingId::where('created_at', '<', Carbon::parse('-1 hours'));
-        })->hourly();
+        // TODO: mirar bien esto
+        $schedule->command('check:waittingId')->hourly();
     }
 
     /**
