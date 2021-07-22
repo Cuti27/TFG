@@ -112,6 +112,7 @@
           <v-row justify="center">
             <v-col class="input" cols="auto" md="6" sm="12">
               <v-dialog
+                transition="dialog-bottom-transition"
                 v-if="typeConsigna"
                 ref="dialog"
                 v-model="modal"
@@ -171,6 +172,7 @@
 
             <v-col class="input" cols="auto" md="6" sm="12">
               <v-dialog
+                transition="dialog-bottom-transition"
                 ref="dialog2"
                 v-model="modal2"
                 :return-value.sync="lineFertirrigation[toggle_exclusive].time"

@@ -53,9 +53,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/head', [HeadController::class, 'getHeadByUser']);
 
-    Route::delete('/head/{id}/delete', [HeadController::class, 'deleteHead']);
+    Route::delete('/head/{id}', [HeadController::class, 'deleteHead']);
 
-    // Create and add device
+    // Create and update device
 
     Route::post("/head/{id}/device", [DeviceController::class, 'createDevice']);
 
@@ -70,6 +70,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/device', [DeviceController::class, 'getDevice']);
 
     Route::delete('/deviceId', [DeviceController::class, 'deleteIdDevice']);
+
+    Route::delete('/device/{id}', [DeviceController::class, 'deleteDevice']);
 
     // Add and update OutputInput
 
@@ -92,7 +94,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/program', [ProgramController::class, 'createProgram']);
 
-    Route::post('/program/delete', [ProgramController::class, 'deleteProgram']);
+    Route::delete('/program', [ProgramController::class, 'deleteProgram']);
 
     Route::get('/head/{id}/program', [ProgramController::class, 'listProgram']);
 });

@@ -37,7 +37,12 @@
             >
 
             <v-row justify="center">
-              <v-dialog v-model="dialog" scrollable max-width="500px">
+              <v-dialog
+                transition="dialog-bottom-transition"
+                v-model="dialog"
+                scrollable
+                max-width="500px"
+              >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn class="mt-5" v-bind="attrs" v-on="on">
                     Listado de dispositivos
@@ -58,8 +63,12 @@
                   </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
-                    
-                    <v-btn color="red darken-1" text @click="selected()">
+                    <v-btn
+                      color="red darken-1"
+                      text
+                      @click="changeDialog"
+                      :disabled="radioGroupCheck"
+                    >
                       Borrar
                     </v-btn>
 
@@ -70,6 +79,29 @@
                     </v-btn>
                     <v-btn color="blue darken-1" text @click="selected()">
                       Seleccionar
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              <v-dialog
+                transition="dialog-bottom-transition"
+                :value="dialogCheck"
+                max-width="500px"
+              >
+                <v-card>
+                  <v-card-title>
+                    <span>Seguro que quiere borrar el dispositivo?</span>
+                    <v-spacer></v-spacer>
+                  </v-card-title>
+                  <v-card-text>
+                    Esto borrará todos los programas de riego a los que esta enlazado este dispositivo
+                  </v-card-text>
+                  <v-card-actions class="justify-end">
+                    <v-btn color="secondary" text @click="changeDialog">
+                      Cancelar
+                    </v-btn>
+                    <v-btn color="primary" outlined depressed text @click="remove">
+                      Aceptar
                     </v-btn>
                   </v-card-actions>
                 </v-card>
@@ -177,7 +209,8 @@ export default {
   data() {
     return {
       dialog: false,
-      radioGroup: 1,
+      dialogDelete: false,
+      radioGroup: "",
       nombre: "",
       id: "",
       tipoProgramador: 0,
@@ -227,6 +260,12 @@ export default {
     showInputOutput() {
       return this.configureDevice;
     },
+    dialogCheck(){
+      return this.dialogDelete && this.radioGroup
+    },
+    radioGroupCheck(){
+      return this.radioGroup == "";
+    },
   },
   beforeMount() {
     this.image = this.imagenes[this.tipoProgramador];
@@ -241,7 +280,17 @@ export default {
       "createDigitalInput",
       "createAnalogicalOutput",
       "createAnalogicalInput",
+       "deleteDevice",
     ]),
+    remove(){
+      this.deleteDevice(this.radioGroup);
+      this.changeDialog();
+    },
+    changeDialog(){
+      if(this.radioGroup){
+        this.dialogDelete = !this.dialogDelete;
+      }
+    },
     update(event) {
       this.tipoProgramador = event;
       this.image = this.imagenes[this.tipoProgramador];
@@ -258,7 +307,7 @@ export default {
     },
     async selected() {
       this.dialog = false;
-      if (this.radioGroup != 1) {
+      if (this.radioGroup != "") {
         await this.getAllInfoDevice({ id: this.radioGroup });
         this.nombre = this.configureDevice.name;
         this.id = this.configureDevice.id;

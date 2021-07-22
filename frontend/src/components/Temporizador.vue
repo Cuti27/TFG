@@ -9,6 +9,7 @@
       <h3 v-if="title || windowWidth < 1030">Hora de inicio</h3>
       <div class="mx-2 mb-2">
         <v-dialog
+          transition="dialog-bottom-transition"
           ref="dialog"
           v-model="modal"
           :return-value.sync="time"
@@ -47,6 +48,7 @@
       <h3 v-if="title || windowWidth < 1030">Duración</h3>
       <div class="mx-2 mb-2">
         <v-dialog
+          transition="dialog-bottom-transition"
           ref="dialog1"
           v-model="modal1"
           :return-value.sync="time1"
@@ -85,6 +87,7 @@
       <h3 v-if="title || windowWidth < 1030">Tiempo de postriego</h3>
       <div class="mx-2 mb-2">
         <v-dialog
+          transition="dialog-bottom-transition"
           ref="dialog2"
           v-model="modal2"
           :return-value.sync="time2"

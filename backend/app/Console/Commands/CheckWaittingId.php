@@ -39,7 +39,6 @@ class CheckWaittingId extends Command
      */
     public function handle()
     {
-        error_log('Vamos a intentar borrar');
         waittingId::where('created_at', '<', Carbon::parse('-1 hours'))->delete();
     }
 }

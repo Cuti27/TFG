@@ -1,18 +1,22 @@
 import axios from "axios";
+import router from '@/router/index';
 // Función para añadir la cabecera de autenticación
 // Función para añadir la cabecera de autenticación
 const addAuthHeader = async(auth) => {
     return {
-        headers: { Authorization: "Bearer " + auth, withCredentials: true, 'X-XSRF-TOKEN': getCookie('XSRF-TOKEN') },
+        headers: {
+            Authorization: "Bearer " + auth,
+            withCredentials: true,
+            "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+        },
     };
 };
 
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    if (parts.length === 2) return parts.pop().split(";").shift();
 }
-
 
 // Funcion para realizar la llamada mediante axios y realizar el tratamiento de errores
 const doCall = async(request, auth = null) => {
@@ -28,7 +32,7 @@ const doCall = async(request, auth = null) => {
 };
 export default {
     async crearBasicDevice({ commit, state }, data) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         const request =
             "http://127.0.0.1:8000/api/head/" + state.selectedHead.id + "/device";
         console.log(state.auth);
@@ -43,7 +47,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -58,12 +62,12 @@ export default {
                 "updateComunicationSuccess",
                 "Dispositivo registrado correctamente"
             );
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     // Funciones para obtener los tipos de salidas y entradas
     async getAnalogicalInput({ commit }) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         // Realizamos la petición
         const request = "http://127.0.0.1:8000/api/analogicalInput";
         let response = await doCall(request, null);
@@ -74,11 +78,11 @@ export default {
             console.log("prueba");
             console.log(response.data);
             commit("loadTypeAnalogicalInput", datosRecuperados);
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async getDigitalInput({ commit }) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         // Realizamos la petición
         const request = "http://127.0.0.1:8000/api/digitalInput";
         let response = await doCall(request, null);
@@ -87,11 +91,11 @@ export default {
         if (response && response.data) {
             let datosRecuperados = response.data;
             commit("loadTypeDigitalInput", datosRecuperados);
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async getAnalogicalOutput({ commit }) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         // Realizamos la petición
         const request = "http://127.0.0.1:8000/api/analogicalOutput";
         let response = await doCall(request, null);
@@ -100,11 +104,11 @@ export default {
         if (response && response.data) {
             let datosRecuperados = response.data;
             commit("loadTypeAnalogicalOutput", datosRecuperados);
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async getDigitalOutput({ commit }) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         // Realizamos la petición
         const request = "http://127.0.0.1:8000/api/digitalOutput";
         let response = await doCall(request, null);
@@ -113,11 +117,11 @@ export default {
         if (response && response.data) {
             let datosRecuperados = response.data;
             commit("loadTypeDigitalOutput", datosRecuperados);
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async getTypeDevice({ commit }) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         // Realizamos la petición
         const request = "http://127.0.0.1:8000/api/typeDevice";
         let response = await doCall(request, null);
@@ -126,11 +130,11 @@ export default {
         if (response && response.data) {
             let datosRecuperados = response.data;
             commit("loadTypeDevice", datosRecuperados);
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async createDeviceId({ commit, dispatch, state }) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         // Realizamos la petición
         const request = "http://127.0.0.1:8000/api/create/deviceId";
         let response = await axios
@@ -141,8 +145,8 @@ export default {
                     console.log(err.response.data);
                     console.log(err.response.status);
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
-                    commit('addGlobalError', "Error, demasiados id");
+                    commit("removeIsLoading");
+                    commit("addGlobalError", "Error, demasiados id");
                     return null;
                 }
             });
@@ -155,11 +159,11 @@ export default {
                 "updateComunicationSuccess",
                 "Identificador genenerado, y valido durante 24 horas"
             );
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async getDeviceId({ commit, state }) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         // Realizamos la petición
         const request = "http://127.0.0.1:8000/api/deviceId";
 
@@ -174,7 +178,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -182,37 +186,35 @@ export default {
         if (response && response.data) {
             let datosRecuperados = response.data;
             commit("loadListDeviceId", datosRecuperados);
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
 
     async deleteDeviceId({ commit, state, dispatch }, id) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         // Realizamos la petición
         const request = "http://127.0.0.1:8000/api/deviceId";
         let toDelete = await addAuthHeader(state.auth);
         toDelete.data = { id };
-        await axios
-            .delete(request, toDelete)
-            .catch((err) => {
-                if (err.response) {
-                    console.log("Error en la llamda a: " + request);
-                    console.log(err.response.data);
-                    console.log(err.response.status);
-                    if (err.response.status == 401) {
-                        commit("loadLogout");
-                    }
-                    console.log(err.response.headers);
-                    commit('removeIsLoading');
-                    return null;
+        await axios.delete(request, toDelete).catch((err) => {
+            if (err.response) {
+                console.log("Error en la llamda a: " + request);
+                console.log(err.response.data);
+                console.log(err.response.status);
+                if (err.response.status == 401) {
+                    commit("loadLogout");
                 }
-            });
+                console.log(err.response.headers);
+                commit("removeIsLoading");
+                return null;
+            }
+        });
 
         dispatch("getDeviceId");
-        commit('removeIsLoading');
+        commit("removeIsLoading");
     },
     async actionCreateDevice({ commit, state }, data) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         // Realizamos la petición
         const request =
             "http://127.0.0.1:8000/api/head/" + state.selectedHead.id + "/device";
@@ -228,7 +230,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -240,12 +242,12 @@ export default {
                 "updateComunicationSuccess",
                 "Dispositivo registrado correctamente"
             );
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
 
     async getAllDevice({ commit, state }) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         // Realizamos la petición
         const request = "http://127.0.0.1:8000/api/device/" + state.selectedHead.id;
 
@@ -260,7 +262,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -270,11 +272,11 @@ export default {
         if (response && response.data) {
             let datosRecuperados = response.data;
             commit("loadAllDevice", datosRecuperados);
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async getAllInfoDevice({ commit, state }, data) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         // Realizamos la petición
         const request = "http://127.0.0.1:8000/api/device/";
 
@@ -289,7 +291,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -299,17 +301,16 @@ export default {
         if (response && response.data) {
             let datosRecuperados = response.data;
             commit("loadConfigureDevice", datosRecuperados);
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async resetConfigureDevice({ commit }) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         commit("loadConfigureDevice", {});
-        commit('removeIsLoading');
-
+        commit("removeIsLoading");
     },
     async createDigitalOutput({ commit, state }, data) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         const idDevice = state.configureDevice.id;
         const head = state.selectedHead.id;
 
@@ -341,7 +342,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -355,11 +356,11 @@ export default {
                 "updateComunicationSuccess",
                 "Actualizadas las salidas digitales del dispositivo"
             );
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async createDigitalInput({ commit, state }, data) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         const idDevice = state.configureDevice.id;
         const head = state.selectedHead.id;
 
@@ -389,7 +390,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -403,11 +404,11 @@ export default {
                 "updateComunicationSuccess",
                 "Actualizadas las entradas digitales del dispositivo"
             );
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async createAnalogicalOutput({ commit, state }, data) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         const idDevice = state.configureDevice.id;
         const head = state.selectedHead.id;
 
@@ -438,7 +439,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -452,11 +453,11 @@ export default {
                 "updateComunicationSuccess",
                 "Actualizadas las salidas analógicas del dispositivo"
             );
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async createAnalogicalInput({ commit, state }, data) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         const idDevice = state.configureDevice.id;
         const head = state.selectedHead.id;
 
@@ -487,7 +488,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -501,7 +502,29 @@ export default {
                 "updateComunicationSuccess",
                 "Actualizadas las entradas analógicas del dispositivo"
             );
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
+    },
+    async deleteDevice({ commit, state }, id) {
+        commit("addIsLoading");
+        // Realizamos la petición
+        const request = "http://127.0.0.1:8000/api/device/" + id;
+        await axios.delete(request, await addAuthHeader(state.auth)).catch((err) => {
+            if (err.response) {
+                console.log("Error en la llamda a: " + request);
+                console.log(err.response.data);
+                console.log(err.response.status);
+                if (err.response.status == 401) {
+                    commit("loadLogout");
+                }
+                console.log(err.response.headers);
+                commit("removeIsLoading");
+                return null;
+            }
+        });
+
+
+        commit("removeIsLoading");
+        router.push("cabezales");
     },
 };

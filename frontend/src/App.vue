@@ -48,7 +48,12 @@
         <!-- If using vue-router -->
         <transition name="slide" mode="out-in">
           <div>
-            <v-dialog :value="isLoading" persistent width="300">
+            <v-dialog
+              transition="dialog-bottom-transition"
+              :value="isLoading"
+              persistent
+              width="300"
+            >
               <v-card color="primary" dark>
                 <v-card-text>
                   Procesando

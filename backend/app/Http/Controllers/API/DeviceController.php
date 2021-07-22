@@ -725,4 +725,31 @@ class DeviceController extends Controller
 
         return response($response, 200);
     }
+
+    /**
+     * Delete a device
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteDevice(Request $request, $id)
+    {
+        $device = Device::where('userId', $request->user()->id)->where('id', $id)->first();
+
+        if (!$device) {
+            return response([
+                'message' => 'Bad id'
+            ], 400);
+        }
+
+        // AnalogicalInput::where()
+
+        $device->delete();
+
+        // Creamos la respuesta
+        $response = [
+            'device' => $device,
+        ];
+
+        return response($response, 204);
+    }
 }

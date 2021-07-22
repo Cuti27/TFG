@@ -4,19 +4,23 @@ import axios from "axios";
 // Función para añadir la cabecera de autenticación
 const addAuthHeader = async(auth) => {
     return {
-        headers: { Authorization: "Bearer " + auth, withCredentials: true, 'X-XSRF-TOKEN': getCookie('XSRF-TOKEN') },
+        headers: {
+            Authorization: "Bearer " + auth,
+            withCredentials: true,
+            "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+        },
     };
 };
 
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
 export default {
     async getCabezales({ commit, state }, page = 1) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         const request = "http://127.0.0.1:8000/api/head?page=" + page;
         console.log(state.auth);
         let response = await axios
@@ -27,7 +31,7 @@ export default {
                     console.log(err.response.data);
                     console.log(err.response.status);
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -35,17 +39,16 @@ export default {
         console.log("Lista de cabezales");
         console.log(response.data);
 
-
         // Actualizamos el estado
         if (response && response.data) {
             let datosRecuperados = response.data;
             commit("updateListCabezales", datosRecuperados);
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
 
     async newCabezales({ commit, dispatch, state }, data) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         const request = "http://127.0.0.1:8000/api/head";
         console.log(state.auth);
         let response = await axios
@@ -59,7 +62,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -71,12 +74,12 @@ export default {
         if (response && response.data) {
             dispatch("getCabezales");
             commit("updateComunicationSuccess", "Creado el cabezal correctamente");
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
 
     async updateHead({ commit, dispatch, state }, data) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         const request = "http://127.0.0.1:8000/api/head/" + data.id;
         console.log(state.auth);
         await axios
@@ -87,7 +90,7 @@ export default {
                     console.log(err.response.data);
                     console.log(err.response.status);
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -97,12 +100,12 @@ export default {
         // Actualizamos el estado
         dispatch("getCabezales");
         commit("updateComunicationSuccess", "Actualizado el cabezal correctamente");
-        commit('removeIsLoading');
+        commit("removeIsLoading");
     },
 
     async deleteHead({ commit, dispatch, state }, data) {
-        commit('addIsLoading');
-        const request = "http://127.0.0.1:8000/api/head/" + data.id + "/delete";
+        commit("addIsLoading");
+        const request = "http://127.0.0.1:8000/api/head/" + data.id;
         console.log(state.auth);
         let response = await axios
             .delete(request, await addAuthHeader(state.auth))
@@ -112,7 +115,7 @@ export default {
                     console.log(err.response.data);
                     console.log(err.response.status);
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -123,7 +126,7 @@ export default {
         // Actualizamos el estado
         dispatch("getCabezales");
         commit("updateComunicationSuccess", "Cabezal borrado correctamente");
-        commit('removeIsLoading');
+        commit("removeIsLoading");
     },
 
     async setSelectedHead({ commit }, data) {
@@ -131,7 +134,7 @@ export default {
     },
 
     async getEmitterHead({ commit, state }) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         const request =
             "http://127.0.0.1:8000/api/head/" + state.selectedHead.id + "/emitter";
         let response = await axios
@@ -145,7 +148,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -157,11 +160,11 @@ export default {
         if (response && response.data) {
             let datosRecuperados = response.data;
             commit("loadEmmiter", datosRecuperados);
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
     async getSectorHead({ commit, state }) {
-        commit('addIsLoading');
+        commit("addIsLoading");
         const request =
             "http://127.0.0.1:8000/api/head/" + state.selectedHead.id + "/sector";
         let response = await axios
@@ -175,7 +178,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
-                    commit('removeIsLoading');
+                    commit("removeIsLoading");
                     return null;
                 }
             });
@@ -187,7 +190,7 @@ export default {
         if (response && response.data) {
             let datosRecuperados = response.data;
             commit("loadSectors", datosRecuperados);
-            commit('removeIsLoading');
+            commit("removeIsLoading");
         }
     },
 };

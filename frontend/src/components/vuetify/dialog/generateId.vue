@@ -36,13 +36,10 @@
                 {{ item.id }}
               </span>
               <v-btn @click="doCopy(item.id)" v-if="canCopy" class="btn"
-                ><font-awesome-icon
-                  :icon="['far', 'copy']"
+                ><font-awesome-icon :icon="['far', 'copy']"
               /></v-btn>
-              <v-btn class="btn"
-               @click="deleteDeviceId(item.id)"
-                ><font-awesome-icon
-                  :icon="['fa', 'trash-alt']"
+              <v-btn class="btn" @click="deleteDeviceId(item.id)"
+                ><font-awesome-icon :icon="['fa', 'trash-alt']"
               /></v-btn>
             </div>
 
@@ -92,12 +89,15 @@ export default {
       this.createDeviceId();
     },
     async doCopy(s) {
-      console.log(`Value ${s}`); 
-      navigator.clipboard.writeText(s).then(() => {
-        console.log('Copied');
-      }, () => {
-        console.log("Not copied")
-      })
+      console.log(`Value ${s}`);
+      navigator.clipboard.writeText(s).then(
+        () => {
+          console.log("Copied");
+        },
+        () => {
+          console.log("Not copied");
+        }
+      );
     },
   },
   beforeMount() {

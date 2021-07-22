@@ -13,7 +13,11 @@
           <v-toolbar-title>Listado de cabezales</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="500px">
+          <v-dialog
+            transition="dialog-bottom-transition"
+            v-model="dialog"
+            max-width="500px"
+          >
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
                 Nuevo cabezal
@@ -48,12 +52,18 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-dialog
+            transition="dialog-bottom-transition"
+            v-model="dialogDelete"
+            max-width="500px"
+          >
             <v-card>
-              <v-card-title class="headline"
-                >Estas seguro?</v-card-title
+              <v-card-title class="headline">Estas seguro?</v-card-title>
+              <v-card-text
+                ><b
+                  >Estas seguro que quieres eliminar este cabezal?</b
+                ></v-card-text
               >
-              <v-card-text><b>Estas seguro que quieres eliminar este cabezal?</b></v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete"

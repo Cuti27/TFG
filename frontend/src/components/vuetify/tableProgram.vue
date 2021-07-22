@@ -12,7 +12,11 @@
       >{{ error }}</v-alert
     >
     <div class="header">
-      <v-dialog v-model="dialog" max-width="500px">
+      <v-dialog
+        transition="dialog-bottom-transition"
+        v-model="dialog"
+        max-width="500px"
+      >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             @click="loadEmitterSector()"
@@ -51,7 +55,7 @@
         </v-card>
       </v-dialog>
       <v-btn color="primary" dark class="ml-5" @click="nuevoDispositivo">
-        Nuevo dispositivo
+        Listados de dispositivos
       </v-btn>
     </div>
 
@@ -69,12 +73,18 @@
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
 
-          <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-dialog
+            transition="dialog-bottom-transition"
+            v-model="dialogDelete"
+            max-width="500px"
+          >
             <v-card>
-              <v-card-title class="headline"
-                >Estas seguro?</v-card-title
+              <v-card-title class="headline">Estas seguro?</v-card-title>
+              <v-card-text
+                ><b
+                  >Estas seguro que quieres eliminar este programa?</b
+                ></v-card-text
               >
-              <v-card-text><b>Estas seguro que quieres eliminar este programa?</b></v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete"
@@ -199,7 +209,7 @@ export default {
       "getSectorHead",
       "loadProgramName",
       "loadUpdateName",
-      'resetConfigureDevice'
+      "resetConfigureDevice",
     ]),
     initialize() {
       this.listProgram();
