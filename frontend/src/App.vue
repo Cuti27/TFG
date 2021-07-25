@@ -1,105 +1,107 @@
 <template>
-  <v-app>
-    <div v-if="windowWidth < 500" id="nav" :class="{ change: !collapse }">
-      <div
-        :class="{ container: true, change: !collapse, menuHamburguesa: true }"
-        @click="collapse = !collapse"
+  <v-app class="bgImg">
+    <div id="mainContent" :class="{ center: true, move: !collapse }">
+      <div v-if="windowWidth < 500" id="nav" :class="{ change: !collapse }">
+        <div
+          :class="{ container: true, change: !collapse, menuHamburguesa: true }"
+          @click="collapse = !collapse"
+        >
+          <div class="bar1"></div>
+          <div class="bar2"></div>
+          <div class="bar3"></div>
+        </div>
+      </div>
+      <sidebar-menu
+        width="200px"
+        :menu="menu"
+        :collapsed="collapse"
+        theme="white-theme"
+        @toggle-collapse="collapse = !collapse"
+        @item-click="collapse = true"
       >
-        <div class="bar1"></div>
-        <div class="bar2"></div>
-        <div class="bar3"></div>
-      </div>
-    </div>
-    <sidebar-menu
-      width="200px"
-      :menu="menu"
-      :collapsed="collapse"
-      theme="white-theme"
-      @toggle-collapse="collapse = !collapse"
-      @item-click="collapse = true"
-    >
-      <div slot="header" v-if="!collapse">
-        <img src="src/assets/Logo.png" width="200px" alt="" />
-      </div>
-      <div slot="footer">
-        <div v-if="logged" class="auxiliares">
-          <v-registro-id :show="!collapse"></v-registro-id>
-          <v-btn
-            color="primary"
-            elevation="5"
-            outlined
-            rounded
-            @click="logout()"
-            v-show="!collapse"
-            >Cerrar sesion</v-btn
-          >
+        <div slot="header" v-if="!collapse">
+          <img src="./assets/Logo.png" width="200px" alt="" />
         </div>
-        <div v-else class="login">
-          <v-registro :show="!collapse"></v-registro>
-          <v-login :show="!collapse"></v-login>
-        </div>
-      </div>
-      <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
-    </sidebar-menu>
-
-    <v-main @click="touchOut()" :class="{ main: true, move: !collapse }">
-      <!-- Provides the application the proper gutter -->
-      <v-container fluid>
-        <!-- If using vue-router -->
-        <transition name="slide" mode="out-in">
-          <div>
-            <v-dialog
-              transition="dialog-bottom-transition"
-              :value="isLoading"
-              persistent
-              width="300"
+        <div slot="footer">
+          <div v-if="logged" class="auxiliares">
+            <v-registro-id :show="!collapse"></v-registro-id>
+            <v-btn
+              color="primary"
+              elevation="5"
+              outlined
+              rounded
+              @click="logout()"
+              v-show="!collapse"
+              >Cerrar sesion</v-btn
             >
-              <v-card color="primary" dark>
-                <v-card-text>
-                  Procesando
-                  <v-progress-linear
-                    indeterminate
-                    color="white"
-                    class="mb-0"
-                  ></v-progress-linear>
-                </v-card-text>
-              </v-card>
-            </v-dialog>
-            <v-alert
-              class="onTop"
-              v-if="comunicationError"
-              dismissible
-              border="left"
-              color="red"
-              type="error"
-              transition="scale-transition"
-              @input="closeError"
-              >{{ comunicationError }}</v-alert
-            >
-
-            <div class="text-center">
-              <v-snackbar :value="snackbar" :timeout="timeout">
-                {{ text }}
-
-                <template v-slot:action="{ attrs }">
-                  <v-btn
-                    color="blue"
-                    text
-                    v-bind="attrs"
-                    @click="snackbar = false"
-                  >
-                    Cerrar
-                  </v-btn>
-                </template>
-              </v-snackbar>
-            </div>
-            <router-view />
           </div>
-        </transition>
-      </v-container>
-    </v-main>
+          <div v-else class="login">
+            <v-registro :show="!collapse"></v-registro>
+            <v-login :show="!collapse"></v-login>
+          </div>
+        </div>
+        <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
+      </sidebar-menu>
 
-    <custom-footer></custom-footer>
+      <v-main @click="touchOut()">
+        <!-- Provides the application the proper gutter -->
+        <v-container fluid>
+          <!-- If using vue-router -->
+          <transition name="slide" mode="out-in">
+            <div>
+              <v-dialog
+                transition="dialog-bottom-transition"
+                :value="isLoading"
+                persistent
+                width="300"
+              >
+                <v-card color="primary" dark>
+                  <v-card-text>
+                    Procesando
+                    <v-progress-linear
+                      indeterminate
+                      color="white"
+                      class="mb-0"
+                    ></v-progress-linear>
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
+              <v-alert
+                class="onTop"
+                v-if="comunicationError"
+                dismissible
+                border="left"
+                color="red"
+                type="error"
+                transition="scale-transition"
+                @input="closeError"
+                >{{ comunicationError }}</v-alert
+              >
+
+              <div class="text-center">
+                <v-snackbar :value="snackbar" :timeout="timeout">
+                  {{ text }}
+
+                  <template v-slot:action="{ attrs }">
+                    <v-btn
+                      color="blue"
+                      text
+                      v-bind="attrs"
+                      @click="snackbar = false"
+                    >
+                      Cerrar
+                    </v-btn>
+                  </template>
+                </v-snackbar>
+              </div>
+              <router-view />
+            </div>
+          </transition>
+        </v-container>
+      </v-main>
+
+      <custom-footer :class="{move: !collapse}"></custom-footer>
+    </div>
   </v-app>
 </template>
 
@@ -283,6 +285,27 @@ $input-text-align: center;
 
 @import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
 
+.center {
+  margin: 0 auto;
+  margin-left: 50px;
+  max-width: 1980px;
+  height: 100%;
+  width: -webkit-calc(100% - 50px);
+  width: -moz-calc(100% - 50px);
+  width: calc(100% - 50px);
+}
+
+.bgImg {
+  background-color: $base;
+  background-image: url("./assets/leaves.png") !important;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+}
+
 h3 {
   font-size: 1.25rem !important;
 }
@@ -298,12 +321,11 @@ h3 {
   transform: translateY(90%);
 }
 
-.main {
-  margin-left: 50px;
-  flex-grow: 3;
-}
 .move {
-  width: 100vw;
+  width: -webkit-calc(100% - 270px);
+  width: -moz-calc(100% - 270px);
+  width: calc(100% - 270px);
+  margin-left: 220px;
 }
 .container {
   display: inline-block;
@@ -342,12 +364,6 @@ h3 {
   box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
 }
 
-body {
-  overflow: hidden;
-  margin: auto;
-  max-width: 1920px;
-}
-
 .v-sidebar-menu {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
@@ -370,18 +386,20 @@ body {
   min-height: 100vh;
   box-sizing: border-box;
 
-  background-color: $base;
-  background-image: url("./assets/leaves.png");
-  background-attachment: fixed;
-  background-position: center right;
-
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
   main {
     flex: 1 0 auto;
+    padding-bottom: 120px !important;
   }
 
   footer {
+    position: absolute;
+    bottom: 0;
+    width: -webkit-calc(100% - 50px);
+    width: -moz-calc(100% - 50px);
+    width: calc(100% - 50px);
+    max-width: 1980px;
     flex: 1 0 auto;
     display: flex;
     align-items: center;
@@ -391,9 +409,15 @@ body {
     background-color: $white;
     flex-shrink: 0;
     margin-top: 30px;
-    margin-left: 50px;
     color: $black;
     border-top: 1px solid $black;
+
+    &.move {
+      margin: 0px;
+      width: -webkit-calc(100% - 220px);
+      width: -moz-calc(100% - 220px);
+      width: calc(100% - 220px);
+    }
 
     a {
       text-decoration: none;
@@ -477,9 +501,9 @@ body {
     }
   }
 
-  .move {
-    width: calc(99vw - 50px);
-  }
+  // .move {
+  //   width: calc(99vw - 50px);
+  // }
 }
 
 .menuHamburguesa {
@@ -545,12 +569,18 @@ body {
   .v-sidebar-menu.vsm_collapsed {
     transform: translateX(-100%);
   }
-  .main {
+  .center {
     margin-left: 0px;
   }
 
   footer {
     margin-left: 0px !important;
+  }
+}
+
+@media (min-width: "1980px"){
+  #mainContent{
+    margin: 0 auto;
   }
 }
 </style>

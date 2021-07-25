@@ -259,6 +259,7 @@ table {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0px;
   width: 100%;
 }
 

@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      start: "getCabezales", // map `this.add()` to `this.$store.dispatch('increment')`
+      start: "getCabezales",
     }),
   },
   components: {

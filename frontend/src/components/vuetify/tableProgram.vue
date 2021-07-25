@@ -50,7 +50,8 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="close"> Cancelar </v-btn>
-            <v-btn color="blue darken-1" text @click="save"> Acceder </v-btn>
+            <v-btn v-if="nameProgram" color="blue darken-1" text @click="save"> Acceder </v-btn>
+            <v-btn v-else disabled color="blue darken-1" text > Acceder </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -146,7 +147,7 @@ import daySelector from "@/components/DaySelector";
 export default {
   components: { daySelector },
   data: () => ({
-    // page: 1,
+    page: 1,
     // pageCount: 1,
     nameProgram: "",
     dialog: false,
@@ -179,7 +180,6 @@ export default {
   computed: {
     ...mapGetters(["programas", "numProgramas"]),
     ...mapGetters({
-      page: "current_page",
       pageCount: "last_page",
     }),
     formTitle() {
@@ -194,6 +194,9 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
+    page(val, old){
+      if(val != old &&  val <= this.pageCount && val >= 1) this.getCabezales(this.page);
+    }
   },
 
   created() {

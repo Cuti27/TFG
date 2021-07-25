@@ -342,6 +342,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
+                    commit("addGlobalError", "Debes seleccionar uno en el seleccionable e indicar un nombre");
                     commit("removeIsLoading");
                     return null;
                 }
@@ -390,6 +391,7 @@ export default {
                         commit("loadLogout");
                     }
                     console.log(err.response.headers);
+                    commit("addGlobalError", "Debes seleccionar uno en el seleccionable e indicar un nombre");
                     commit("removeIsLoading");
                     return null;
                 }

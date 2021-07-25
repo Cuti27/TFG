@@ -114,38 +114,19 @@
 
     <!-- Imagen del dispositivo -->
     <div v-else class="device">
-      <img :key="image.key" :src="image.src" :alt="image.alt" />
-      <div class="infoDevice mx-5">
-        <v-text-field
-          disabled
-          v-model="listaTipos[tipoProgramador]"
-          label="Tipo de programador"
-        ></v-text-field>
-        <v-text-field disabled v-model="nombre" label="Nombre"></v-text-field>
-        <v-text-field
-          disabled
-          v-model="id"
-          label="Identificador generado"
-        ></v-text-field>
-      </div>
-      <div class="infoHead mx-5">
-        <v-text-field
-          disabled
-          v-model="selectedHead.id"
-          label="Id Cabezal"
-        ></v-text-field>
-        <v-text-field
-          disabled
-          v-model="selectedHead.name"
-          label="Nombre Cabezal"
-        ></v-text-field>
-        <v-text-field
-          disabled
-          v-model="selectedHead.updated_at"
-          label="Actualizado Cabezal"
-        ></v-text-field>
-      </div>
+      <perfil-programador
+      
+        :img="image.src"
+        :type="listaTipos[tipoProgramador]"
+        :name="nombre"
+        :id="id"
+        :headName="selectedHead.name"
+        :headId="selectedHead.id"
+        :date="selectedHead.updated_at"
+      />
     </div>
+      
+
     <div v-if="showInputOutput" class="InputOutput">
       <div class="salidasDigitales">
         <output-input
@@ -194,6 +175,7 @@ import { mapGetters, mapActions } from "vuex";
 import headerCustom from "@/components/Header";
 import customSelect from "@/components/Select";
 import outputInput from "@/views/RegistroProgramador/components/outputInput";
+import perfilProgramador from "@/views/RegistroProgramador/components/perfilProgramador";
 
 // Imagenes necesarias
 import imageEsp32 from "@/assets/esp32.png";
@@ -205,6 +187,7 @@ export default {
     headerCustom,
     customSelect,
     outputInput,
+    perfilProgramador,
   },
   data() {
     return {
@@ -329,12 +312,11 @@ export default {
   grid-template-columns: auto;
   grid-template-rows: auto;
   grid-template-areas:
-    "head head"
-    "device device"
-    "inputOutput inputOutput";
+    "head"
+    "device"
+    "inputOutput";
 
   .identificador,
-  .device,
   .salidasDigitales,
   .entradasDigitales,
   .salidasAnalogicas,
@@ -368,21 +350,11 @@ export default {
   }
 
   .device {
-    grid-area: device;
+    width: 100%;
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-items: center;
-    padding: 0px;
-    img {
-      max-width: 33vw;
-      height: 33vh;
-    }
+      justify-content: center;
+      align-items: center;
 
-    .infoDevice,
-    .infoHead {
-      min-width: 400px;
-    }
   }
 
   .InputOutput {

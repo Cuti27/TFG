@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tableCabezal">
     <v-data-table
       :headers="headers"
       :items="cabezales"
@@ -97,9 +97,8 @@
     </v-data-table>
     <div class="text-center pt-2">
       <v-pagination
-        :value="page"
-        @next="nextPage()"
-        @previous="previousPage()"
+        v-model="page"
+
         :length="pageCount"
       ></v-pagination>
     </div>
@@ -111,7 +110,7 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   data: () => ({
-    // page: 1,
+    page: 1,
     // pageCount: 1,
     dialog: false,
     dialogDelete: false,
@@ -141,7 +140,6 @@ export default {
   computed: {
     ...mapGetters(["cabezales", "numCabezales"]),
     ...mapGetters({
-      page: "current_page",
       pageCount: "last_page",
     }),
     formTitle() {
@@ -156,6 +154,9 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
+    page(val, old){
+      if(val != old &&  val <= this.pageCount && val >= 1) this.getCabezales(this.page);
+    }
   },
 
   created() {
@@ -206,12 +207,6 @@ export default {
         this.editedIndex = -1;
       });
     },
-    nextPage() {
-      if (this.page < this.pageCount) this.getCabezales(this.page + 1);
-    },
-    previousPage() {
-      if (this.page > 1) this.getCabezales(this.page - 1);
-    },
     save() {
       if (this.editedIndex > -1) {
         this.updateHead(this.editedItem);
@@ -231,5 +226,9 @@ export default {
 <style>
 .btn {
   cursor: pointer;
+}
+
+.tableCabezal{
+  width: 100%;
 }
 </style>
