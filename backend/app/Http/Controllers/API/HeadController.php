@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Head;
+use App\Models\History;
 use Illuminate\Http\Request;
 
 class HeadController extends Controller
@@ -24,6 +25,12 @@ class HeadController extends Controller
         $head = Head::create([
             'name' => $fields['name'],
             'userId' =>  $request->user()->id,
+        ]);
+
+
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Creación del cabbezal $head->name ($head->id)"
         ]);
 
         // Creamos la respuesta
@@ -111,6 +118,8 @@ class HeadController extends Controller
         // Creamos el nuevo usuario
         $head = Head::where('id', $id)->where('userId', $request->user()->id)->first();
 
+        $originalName = $head->name;
+
         if (!$head) {
             return response([
                 'message' => 'Bad creds',
@@ -122,6 +131,11 @@ class HeadController extends Controller
         $head->name = $data['name'];
 
         $head->save();
+
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Modificado el nombre del cabezal '$originalName' a $head->name ($head->id)"
+        ]);
 
         // Creamos la respuesta
         $response = [
@@ -158,6 +172,12 @@ class HeadController extends Controller
 
 
         $head->delete();
+
+
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Eliminación del cabezal $head->name ($head->id)"
+        ]);
 
         // Creamos la respuesta
         $response = [

@@ -7,6 +7,7 @@ use App\Models\Device;
 use App\Models\DigitalOutput;
 use App\Models\Emitter;
 use App\Models\Head;
+use App\Models\History;
 use App\Models\Programs;
 use App\Models\Sector;
 use App\Models\Timer;
@@ -277,6 +278,14 @@ class ProgramController extends Controller
                         'postIrrigation' =>  date('H:i:s', strtotime($timer['postIrrigation'])),
                     ]);
                 }
+
+                $head->touch();
+
+                History::create([
+                    'userId' => $request->user()->id,
+                    'description' => "Creación del programa con nombre '$createdProgram->name' en el cabezal $head->name ($head->id)."
+                ]);
+
                 $response = [
                     'program' => $createdProgram,
                     'emitter' => $listCreatedEmitter,
@@ -288,12 +297,8 @@ class ProgramController extends Controller
         }
 
 
-        // // Creamos la respuesta
-        $response = [
-            'head' => $head,
-        ];
 
-        return response("", 201);
+        return response("", 400);
     }
 
     /**
@@ -370,6 +375,15 @@ class ProgramController extends Controller
 
 
         $program->delete();
+
+        $head = Head::where("id", $fields['headId'])->first();
+
+        $head->touch();
+
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Eliminación del programa $program->name"
+        ]);
 
         return response("", 204);
     }

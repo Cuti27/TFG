@@ -11,6 +11,7 @@ use App\Models\DigitalInput;
 use App\Models\DigitalOutput;
 use App\Models\waittingId;
 use App\Models\Head;
+use App\Models\History;
 use App\Models\TypeAnalogicalInput;
 use App\Models\TypeAnalogicalOutput;
 use App\Models\TypeDevice;
@@ -122,6 +123,14 @@ class DeviceController extends Controller
 
         $waittingId->delete();
 
+        $head = Head::where("id", $device->headId)->first();
+
+        $head->touch();
+
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Creación del dispositivo con id $device->id y nombre $device->name ($device->type) en el cabezal $head->name ($head->id)"
+        ]);
 
         // Creamos la respuesta
         $response = [
@@ -205,6 +214,11 @@ class DeviceController extends Controller
             'userId' => $request->user()->id,
         ]);
 
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Creación del id en espera $generatedId"
+        ]);
+
         // Creamos la respuesta
         $response = [
             'waittingId' => $waittingId,
@@ -242,7 +256,10 @@ class DeviceController extends Controller
 
         $idDevice->delete();
 
-        // TODO: terminar el envio desde generatedId.vue
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Eliminación del id en espera $idDevice"
+        ]);
 
         return response($response, 200);
     }
@@ -381,6 +398,15 @@ class DeviceController extends Controller
             $listDigitalOutput = DigitalOutput::where('deviceId', $fields["idDevice"])->get();
         }
 
+        $head = Head::where("id", $device->headId)->first();
+
+        $head->touch();
+
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Modificación de las salidas digitales del dispositivo '$device->name' en el cabezal $head->name ($head->id)"
+        ]);
+
         $response = [
             'device' => $device,
             'listDigitalOutput' => $listDigitalOutput,
@@ -458,6 +484,15 @@ class DeviceController extends Controller
             $listDigitalInput = DigitalInput::where('deviceId', $fields["idDevice"])->get();
         }
 
+        $head = Head::where("id", $device->headId)->first();
+
+        $head->touch();
+
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Modificación de las entradas digitales del dispositivo '$device->name' en el cabezal $head->name ($head->id)"
+        ]);
+
         $response = [
             'device' => $device,
             'listDigitalInput' => $listDigitalInput,
@@ -530,6 +565,15 @@ class DeviceController extends Controller
             }
             $listAnalogicalInput = AnalogicalInput::where('deviceId', $fields["idDevice"])->get();
         }
+
+        $head = Head::where("id", $device->headId)->first();
+
+        $head->touch();
+
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Modificación de las salidas analógicas del dispositivo '$device->name' en el cabezal $head->name ($head->id)"
+        ]);
 
         $response = [
             'device' => $device,
@@ -612,6 +656,15 @@ class DeviceController extends Controller
             }
             $listAnalogicalOutput = AnalogicalOutput::where('deviceId', $fields["idDevice"])->get();
         }
+
+        $head = Head::where("id", $device->headId)->first();
+
+        $head->touch();
+
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Modificación de las entradas analógicas del dispositivo '$device->name' en el cabezal $head->name ($head->id)"
+        ]);
 
         // Creamos la respuesta
         $response = [
@@ -744,6 +797,15 @@ class DeviceController extends Controller
         // AnalogicalInput::where()
 
         $device->delete();
+
+        $head = Head::where("id", $device->headId)->first();
+
+        $head->touch();
+
+        History::create([
+            'userId' => $request->user()->id,
+            'description' => "Eliminación del dispositivos '$device->name', y sus salidas y entradas, presentes en el cabezal $head->name ($head->id)"
+        ]);
 
         // Creamos la respuesta
         $response = [

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\History;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -35,6 +36,12 @@ class AuthController extends Controller
         //  Creamos el token
         $token = $user->createToken('myapptoken')->plainTextToken;
 
+
+        History::create([
+            'userId' => $user->id,
+            'description' => "Registro del usuario $user->name con correo '$user->email'"
+        ]);
+
         // Creamos la respuesta
         $response = [
             'user' => $user,
@@ -62,6 +69,11 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('myapptoken')->plainTextToken;
+
+        History::create([
+            'userId' => $user->id,
+            'description' => "Login del usuario $user->name con correo '$user->email'"
+        ]);
 
         $response = [
             'user' => $user,
