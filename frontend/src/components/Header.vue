@@ -20,15 +20,9 @@ export default {
   background: linear-gradient(160deg, $primary, $primaryDark);
   box-shadow: 20px 20px 60px $primary, -20px -20px 60px #ffffff;
   padding: 20px;
-  margin: 20px;
+  margin: 0px;
   margin-bottom: 40px;
-  // background: linear-gradient($primaryShadow, $secondaryShadow),
-  //   url("../assets/header.jpg");
-  // background-repeat: no-repeat;
-  // background-attachment: fixed;
-  // background-position: center;
-  // background-size: cover;
-  // background-position-y: -150px;
+  margin-top: 10px;
   color: $white;
   min-height: 150px;
   display: flex;

@@ -2,10 +2,11 @@
   <form>
     <table :ref="`table_${title}`" :class="{ style: checkStyle() }">
       <caption>
+      <div class="center">
         {{
           title
         }}
-        <div class="botonera center">
+        <div >
           <span class="input-number-decrement" @click="disminuir()">–</span
           ><input
             class="input-number"
@@ -14,6 +15,8 @@
             min="0"
           /><span class="input-number-increment" @click="aumentar()">+</span>
         </div>
+      </div>
+        
       </caption>
       <!-- TODO: Boton con el guardado -->
       <thead>
@@ -31,8 +34,6 @@
         >
           <td :data-label="type">{{ n }}</td>
           <td data-label="Selecciona uno">
-            <br />
-            <br />
             <custom-select
               class="select"
               button
@@ -228,6 +229,7 @@ export default {
 }
 
 table {
+  table-layout: fixed;
   border: 1px solid #ccc;
   border-collapse: collapse;
   margin: 0;
@@ -261,6 +263,7 @@ table {
   align-items: center;
   margin: 0px;
   width: 100%;
+  flex-direction: column;
 }
 
 .input-number {

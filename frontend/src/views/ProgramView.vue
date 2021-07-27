@@ -169,7 +169,7 @@ export default {
       horaInicio: false,
       emisor: false,
       temporizador: 0,
-      map: true,
+      map: 0,
       myOptions: {
         useKeyboardNavigation: true,
         labels: {

@@ -293,9 +293,11 @@ export default {
 .header {
   box-shadow: 5px 5px 15px $primaryDark, -5px -5px 15px #ffffff;
   border-radius: 5px;
-  margin: 10px;
+  margin: 0px;
+  margin-bottom: 10px;
   padding: 10px 15px;
   background: $white;
+  width: 100%;
 }
 
 .btn {
