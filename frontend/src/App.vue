@@ -1,16 +1,22 @@
 <template>
   <v-app class="bgImg">
     <div id="mainContent" :class="{ center: true, move: !collapse }">
-      <div v-if="windowWidth < 500" id="nav" :class="{ change: !collapse }">
+      <nav id="mainNavigation" v-if="windowWidth < 500">
+        <v-img 
+          src="./assets/Logo.png"
+          max-height="60"
+          max-width="60"
+        >
+        </v-img>
         <div
-          :class="{ container: true, change: !collapse, menuHamburguesa: true }"
+          :class="{change: !collapse, menuHamburguesa: true }"
           @click="collapse = !collapse"
         >
           <div class="bar1"></div>
           <div class="bar2"></div>
           <div class="bar3"></div>
         </div>
-      </div>
+      </nav>
       <sidebar-menu
         width="200px"
         :menu="menu"
@@ -43,7 +49,7 @@
         <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
       </sidebar-menu>
 
-      <v-main @click="touchOut()">
+      <v-main @click="touchOut()" :class="{'mt-10': windowWidth < 500}">
         <!-- Provides the application the proper gutter -->
         <v-container fluid>
           <!-- If using vue-router -->
@@ -100,7 +106,7 @@
         </v-container>
       </v-main>
 
-      <custom-footer :class="{move: !collapse}"></custom-footer>
+      <custom-footer :class="{'move-footer': !collapse}"></custom-footer>
     </div>
   </v-app>
 </template>
@@ -285,6 +291,22 @@ $input-text-align: center;
 
 @import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
 
+nav#mainNavigation {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 25px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background-color: rgba(255, 255, 255, 1);
+  position: fixed; 
+  top: 0; 
+  width: 100%; 
+  z-index: 999;
+  border-radius: 0px 0px 25px 25px;
+  border: 1px solid black;
+  margin-bottom: 15px;
+}
+
 .center {
   margin: 0 auto;
   margin-left: 50px;
@@ -327,6 +349,7 @@ h3 {
   width: calc(100% - 270px);
   margin-left: 220px;
 }
+
 .container {
   display: inline-block;
 }
@@ -517,9 +540,12 @@ h3 {
 }
 
 @media (max-width: "480px") {
-  #app .move {
-    width: 98vw;
+  .center {
+    margin: 0 auto;
   }
+  // #app .move {
+  //   width: 98vw;
+  // }
   #nav.change {
     left: 220px;
   }
@@ -538,14 +564,6 @@ h3 {
     }
   }
   .change {
-    // .bar1,
-    // .bar2,
-    // .bar3 {
-    //   // -webkit-transform:  translateX(300px);
-    //   //  transform: translateX(300px);
-    //   margin-left: 200px;
-    //   border: 0px;
-    // }
 
     .bar1 {
       -webkit-transform: rotate(-45deg) translate(-9px, 6px);
@@ -562,6 +580,8 @@ h3 {
       -webkit-transform: rotate(45deg) translate(-8px, -8px);
       transform: rotate(45deg) translate(-8px, -8px);
     }
+
+    
   }
   .v-sidebar-menu {
     transition: 0.3s all;
@@ -569,13 +589,13 @@ h3 {
   .v-sidebar-menu.vsm_collapsed {
     transform: translateX(-100%);
   }
-  .center {
-    margin-left: 0px;
-  }
 
-  footer {
-    margin-left: 0px !important;
-  }
+  #mainContent{
+      margin: 0px;
+      width: 100vw;
+    }
+
+
 }
 
 @media (min-width: "1980px"){

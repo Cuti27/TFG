@@ -22,7 +22,7 @@
             @click="loadEmitterSector()"
             color="primary"
             dark
-            class="m-2"
+            class="my-2"
             v-bind="attrs"
             v-on="on"
           >
@@ -55,7 +55,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-btn color="primary" dark class="ml-5" @click="nuevoDispositivo">
+      <v-btn color="primary" dark class="mx-1 my-2 wrap" @click="nuevoDispositivo">
         Listados de dispositivos
       </v-btn>
     </div>
@@ -293,14 +293,23 @@ export default {
 .header {
   box-shadow: 5px 5px 15px $primaryDark, -5px -5px 15px #ffffff;
   border-radius: 5px;
-  margin: 0px;
+  margin: 0 auto;
   margin-bottom: 10px;
   padding: 10px 15px;
   background: $white;
   width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .btn {
   cursor: pointer;
+}
+
+.wrap {
+  white-space: normal;
 }
 </style>

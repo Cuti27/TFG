@@ -451,16 +451,16 @@ h3 {
 
 .form {
   display: grid;
-  grid-template-columns: auto;
+  grid-template-columns: 1fr;
   grid-template-rows: auto;
   grid-template-areas:
-    "activo activo"
-    "dias dias"
-    "fuentes fuentes"
-    "secciones secciones"
-    "emisor emisor"
-    "hora hora"
-    "fertirrigacion fertirrigacion";
+    "activo"
+    "dias"
+    "fuentes"
+    "secciones"
+    "emisor"
+    "hora"
+    "fertirrigacion";
   align-items: center;
   margin: 0;
   padding: 0;
@@ -577,13 +577,13 @@ h3 {
 @media (max-width: 768px) {
   .form {
     grid-template-areas:
-      "activo activo"
-      "dias dias"
-      "fuentes fuentes"
-      "secciones secciones"
-      "emisor emisor"
-      "hora hora"
-      "fertirrigacion fertirrigacion";
+    "activo"
+    "dias"
+    "fuentes"
+    "secciones"
+    "emisor"
+    "hora"
+    "fertirrigacion";
     .fertirrigacion {
       grid-column-start: col-start -3;
     }

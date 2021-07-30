@@ -2,7 +2,7 @@
   <div>
     <!-- Header -->
     <header-custom
-      :name="`Listado de programas del cabezal: ${selectedHead.name}`"
+      :name="`Cabezal: ${selectedHead.name}`"
     ></header-custom>
 
     <table-program></table-program>

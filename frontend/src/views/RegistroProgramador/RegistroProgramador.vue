@@ -334,7 +334,6 @@ export default {
 
   .identificador {
     height: 100%;
-    width: 85vw;
     .identificadorBody {
       grid-area: id;
       display: flex;
@@ -360,21 +359,5 @@ export default {
   .InputOutput {
     grid-area: inputOutput;
   }
-
-  // .salidasDigitales {
-  //   grid-area: salidasDigitales;
-  // }
-
-  // .entradasDigitales {
-  //   grid-area: entradasDigitales;
-  // }
-
-  // .salidasAnalogicas {
-  //   grid-area: salidasAnalogicas;
-  // }
-
-  // .entradasAnalogicas {
-  //   grid-area: entradasAnalogicas;
-  // }
 }
 </style>

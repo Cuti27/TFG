@@ -1,5 +1,5 @@
 <template>
-  <v-footer rounded v-bind="localAttrs" :padless="padless">
+  <v-footer id="footer" rounded v-bind="localAttrs" :padless="padless">
     <v-card
       flat
       tile
@@ -66,4 +66,25 @@ export default {
 $color-pack: false;
 
 @import "@/css/colorSchema.scss";
+#footer{
+  margin: 24px 12px 0px 12px;
+  max-width: 1980px;
+  width: -webkit-calc(100% - 70px);
+  width: -moz-calc(100% - 70px);
+  width: calc(100% - 70px);
+}
+
+.move-footer {
+  width: -webkit-calc(100% - 290px) !important;
+  width: -moz-calc(100% - 290px) !important;
+  width: calc(100% - 290px) !important;
+  margin-left: 220px;
+}
+@media (max-width: "480px"){
+  #footer{
+  width: -webkit-calc(100% - 24px) !important;
+  width: -moz-calc(100% - 24px) !important;
+  width: calc(100% - 24px) !important;
+}
+}
 </style>

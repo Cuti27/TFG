@@ -5,7 +5,7 @@
         class="white--text align-center"
         height="200px"
         gradient="to top right, rgba(69, 97, 133, 0.9), rgba(69, 97, 133, 0.5)"
-        :src="img"
+        :lazy-src="img"
       >
         <v-card-title class="align-center justify-center"
           >{{ type }} - {{ name }}</v-card-title

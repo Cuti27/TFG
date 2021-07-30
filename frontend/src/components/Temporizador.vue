@@ -17,15 +17,22 @@
           width="290px"
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              :class="{ 'centered-input': true, 'mt-8': windowWidth > 1030 }"
+            <div :class="{ 'centered-input': true, 'mt-8': windowWidth > 1030 }">
+               <v-text-field
               hide-details
               v-model="time"
               label="Seleccione una hora"
-              readonly
+              type="time"
+              step="1"
+            ></v-text-field>
+            <font-awesome-icon
+              icon="clock"
+              size="lg"
               v-bind="attrs"
               v-on="on"
-            ></v-text-field>
+            />
+            </div>
+           
           </template>
           <v-time-picker
             @input="update"
@@ -56,15 +63,22 @@
           width="290px"
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              :class="{ 'centered-input': true, 'mt-8': windowWidth > 1030 }"
+            <div :class="{ 'centered-input': true, 'mt-8': windowWidth > 1030 }">
+               <v-text-field
               hide-details
               v-model="time1"
               label="Seleccione una hora"
-              readonly
+              type="time"
+              step="1"
+            ></v-text-field>
+            <font-awesome-icon
+              icon="clock"
+              size="lg"
               v-bind="attrs"
               v-on="on"
-            ></v-text-field>
+            />
+            </div>
+            
           </template>
           <v-time-picker
             @input="update"
@@ -95,15 +109,21 @@
           width="290px"
         >
           <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              class="centered-input"
+            <div :class="{ 'centered-input': true, 'mt-8': windowWidth > 1030 }">
+               <v-text-field
               hide-details
               v-model="time2"
               label="Seleccione una hora"
-              readonly
+              type="time"
+              step="1"
+            ></v-text-field>
+            <font-awesome-icon
+              icon="clock"
+              size="lg"
               v-bind="attrs"
               v-on="on"
-            ></v-text-field>
+            />
+            </div>
           </template>
           <v-time-picker
             @input="update"
@@ -141,11 +161,11 @@ export default {
   },
   data() {
     return {
-      time: null,
+      time: '',
       modal: false,
-      time1: null,
+      time1: '',
       modal1: false,
-      time2: null,
+      time2: '',
       modal2: false,
       inicioHora: this.value.inicio[0],
       inicioMinutos: this.value.inicio[1],

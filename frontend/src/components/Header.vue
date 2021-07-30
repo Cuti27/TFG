@@ -28,6 +28,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5em;
+  font-size: 5vw
+}
+
+@media screen and (min-width: 480px) {
+  .header {
+     font-size: 24px;
+  }
 }
 </style>
