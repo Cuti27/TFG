@@ -34,9 +34,11 @@
         >
           <td :data-label="type">{{ n }}</td>
           <td data-label="Selecciona uno">
+            <br>
             <custom-select
               class="select"
               button
+              :width="160"
               @change="updateSelect($event, index)"
               :selected="selected[index].type - 1"
               :values="optionsName"

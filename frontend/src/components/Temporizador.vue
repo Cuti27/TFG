@@ -7,7 +7,7 @@
     </h3>
     <div class="inicio">
       <h3 v-if="title || windowWidth < 1030">Hora de inicio</h3>
-      <div class="mx-2 mb-2">
+      <div class="mx-2 mb-2 input-time">
         <v-dialog
           transition="dialog-bottom-transition"
           ref="dialog"
@@ -53,7 +53,7 @@
     </div>
     <div class="duracion">
       <h3 v-if="title || windowWidth < 1030">Duración</h3>
-      <div class="mx-2 mb-2">
+      <div class="mx-2 mb-2 input-time">
         <v-dialog
           transition="dialog-bottom-transition"
           ref="dialog1"
@@ -99,7 +99,7 @@
     </div>
     <div class="postriego">
       <h3 v-if="title || windowWidth < 1030">Tiempo de postriego</h3>
-      <div class="mx-2 mb-2">
+      <div class="mx-2 mb-2 input-time">
         <v-dialog
           transition="dialog-bottom-transition"
           ref="dialog2"
@@ -222,14 +222,25 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
+.input-time{
+  width: 100%;
+}
+
 .temporizador label {
   left: 30px !important;
   right: auto;
   position: absolute;
 }
 
-.centered-input input {
-  text-align: center;
+.centered-input {
+   width: 100%;
+   margin: 0 20px;
+   margin-left: 30px;
+   input{
+     text-align: center;
+   }
+  
+ 
 }
 
 .temporizador {
@@ -242,7 +253,7 @@ export default {
   min-width: 220px;
   border: 1px solid $primaryDark;
   border-radius: 15px;
-  padding: 20px;
+  padding: 5px;
   box-shadow: rgba(22, 62, 93, 0.5) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.3) 0px 2px 6px 2px;
 
@@ -253,7 +264,8 @@ export default {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    max-width: 185px;
+    // max-width: 185px;
+    width: 100%;
 
     div {
       display: flex;

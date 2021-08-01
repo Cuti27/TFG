@@ -21,7 +21,7 @@
     </header-custom>
 
     <!-- Botón flotante con el que se puede guardar -->
-    <div class="guardar">
+    <div v-if="windowWidth >= 500" class="guardar">
       <submit-button @click="saveProgram">Guardar</submit-button>
     </div>
 
@@ -124,6 +124,7 @@
         <submit-button @click="goFertirrigacion()"
           >Fertirrigacion</submit-button
         >
+        <submit-button v-if="windowWidth < 500" @click="saveProgram">Guardar</submit-button>
       </div>
     </div>
 
@@ -238,7 +239,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["emitter", "sectors", "programDays"]),
+    ...mapGetters(["emitter", "sectors", "programDays", "windowWidth"]),
     ...mapGetters({
       name: "programName", // Nombre del programa
     }),
@@ -451,23 +452,23 @@ h3 {
 
 .form {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: auto;
   grid-template-rows: auto;
   grid-template-areas:
-    "activo"
-    "dias"
-    "fuentes"
-    "secciones"
-    "emisor"
-    "hora"
-    "fertirrigacion";
+    "activo activo"
+    "dias dias"
+    "fuentes fuentes"
+    "secciones secciones"
+    "emisor emisor"
+    "hora hora"
+    "fertirrigacion fertirrigacion";
   align-items: center;
   margin: 0;
   padding: 0;
   margin-top: 10px;
 
   div {
-    padding-top: 10px;
+    margin-top: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -511,10 +512,6 @@ h3 {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-
-    .temporizadores {
-      padding-left: 10px;
-    }
   }
 
   .duracion,
@@ -577,25 +574,19 @@ h3 {
 @media (max-width: 768px) {
   .form {
     grid-template-areas:
-    "activo"
-    "dias"
-    "fuentes"
-    "secciones"
-    "emisor"
-    "hora"
-    "fertirrigacion";
-    .fertirrigacion {
-      grid-column-start: col-start -3;
-    }
+    "activo activo"
+    "dias dias"
+    "fuentes fuentes"
+    "secciones secciones"
+    "emisor emisor"
+    "hora hora"
+    "fertirrigacion fertirrigacion";
+
   }
 }
 
 @media (max-width: 576px) {
-  .form {
-    .fertirrigacion {
-      grid-column-start: col-start -2;
-    }
-  }
+
 
   .guardar {
     right: 70px;
@@ -603,7 +594,15 @@ h3 {
       font-size: 0.9em;
     }
   }
+
+  .activo {
+     div:first-child {
+       max-width: 100% !important;
+       width: 100% !important;
+     }
+  }
 }
+
 
 @media (max-width: "480px") {
   .ayuda {

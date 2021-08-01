@@ -272,7 +272,7 @@ $transition: all #{$speed} cubic-bezier(0.31, -0.105, 0.43, 1.4);
   width: 200px;
   height: 75px;
   line-height: 100px;
-  margin: auto;
+  margin: 10px 15px;
   margin-top: 20px;
   color: #fff;
   position: relative;

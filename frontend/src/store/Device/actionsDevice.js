@@ -211,6 +211,7 @@ export default {
         });
 
         dispatch("getDeviceId");
+        commit("updateComunicationSuccess", "Identificador eliminado correctamente");
         commit("removeIsLoading");
     },
     async actionCreateDevice({ commit, state }, data) {

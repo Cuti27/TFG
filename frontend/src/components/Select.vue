@@ -1,5 +1,5 @@
 <template>
-  <div :style="{width, height, 'max-width': width, 'max-height': height}" class="selector">
+  <div :style="{width: width,height: height, 'max-width': width, 'max-height': height}" class="selector">
     <div class="arrow izquierda">
       <font-awesome-icon
         :class="{ button: !button }"

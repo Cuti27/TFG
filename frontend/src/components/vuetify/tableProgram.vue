@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-5">
     <v-alert
       class="onTop"
       v-if="error"
@@ -67,11 +67,12 @@
       class="elevation-1"
       hide-default-footer
       :items-per-page="15"
+      dense
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Listado de programas</v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
+          <v-toolbar-title  v-show="windowWidth > 500">Listado de programas</v-toolbar-title>
+          <v-divider  v-show="windowWidth > 500" class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
 
           <v-dialog
@@ -178,7 +179,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(["programas", "numProgramas"]),
+    ...mapGetters(["programas", "numProgramas", "windowWidth"]),
     ...mapGetters({
       pageCount: "last_page",
     }),

@@ -1,5 +1,5 @@
 <template>
-  <div class="tableCabezal">
+  <div class="tableCabezal mb-5">
     <v-data-table
       :headers="headers"
       :items="cabezales"
@@ -11,8 +11,8 @@
       <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>Listado de cabezales</v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
-          <v-spacer></v-spacer>
+          <v-divider  v-show="windowWidth > 500" class="mx-4" inset vertical></v-divider>
+          <v-spacer ></v-spacer>
           <v-dialog
             transition="dialog-bottom-transition"
             v-model="dialog"
@@ -138,7 +138,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(["cabezales", "numCabezales"]),
+    ...mapGetters(["cabezales", "numCabezales", "windowWidth"]),
     ...mapGetters({
       pageCount: "last_page",
     }),

@@ -1,7 +1,7 @@
 <template>
   <v-app class="bgImg">
     <div id="mainContent" :class="{ center: true, move: !collapse }">
-      <nav id="mainNavigation" v-if="windowWidth < 500">
+      <nav v-show="windowWidth < 500"  id="mainNavigation">
         <v-img 
           src="./assets/Logo.png"
           max-height="60"
@@ -136,6 +136,8 @@ export default {
       "auth",
       "comunicationError",
       "isLoading",
+      "windowWidth",
+      "windowHeight"
     ]),
     ...mapGetters({
       snackbar: "comunicationSuccess",
@@ -148,8 +150,6 @@ export default {
   data() {
     return {
       showProgramador: false,
-      windowWidth: 0,
-      windowHeight: 0,
       cabezales: this.$root.cabezales,
       programas: this.$root.programas,
       dias: [false, false, false, false, false, true, true],
@@ -247,31 +247,32 @@ export default {
       "getTypeDevice",
       "logout",
       "closeError",
+      "updateWindowWidth",
+      "updateWindowHeight"
     ]),
     touchOut() {
       if (!this.collapse) this.collapse = true;
     },
-    getWindowWidth() {
-      this.windowWidth = document.documentElement.clientWidth;
+    windowsW() {
+      this.updateWindowWidth(document.documentElement.clientWidth);
     },
-
-    getWindowHeight() {
-      this.windowHeight = document.documentElement.clientHeight;
-    },
+    windowsH() {
+      this.updateWindowHeight(document.documentElement.clientHeight);
+    }
   },
+
   mounted() {
     this.$nextTick(function () {
-      window.addEventListener("resize", this.getWindowWidth);
-      window.addEventListener("resize", this.getWindowHeight);
+      window.addEventListener("resize", this.windowsW);
+      window.addEventListener("resize", this.windowsH);
 
-      //Init
-      this.getWindowWidth();
-      this.getWindowHeight();
+      this.updateWindowWidth(document.documentElement.clientWidth);
+      this.updateWindowHeight(document.documentElement.clientHeight);
     });
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.getWindowWidth);
-    window.removeEventListener("resize", this.getWindowHeight);
+    window.removeEventListener("resize", this.windowsW);
+    window.removeEventListener("resize", this.windowsH);
   },
   created() {
     this.getAnalogicalInput();
@@ -304,7 +305,7 @@ nav#mainNavigation {
   z-index: 999;
   border-radius: 0px 0px 25px 25px;
   border: 1px solid black;
-  margin-bottom: 15px;
+  margin: 0px auto;
 }
 
 .center {
@@ -561,6 +562,10 @@ h3 {
       border-radius: 10px;
       margin: 6px 0;
       transition: 0.4s;
+      :hover > & {
+        box-shadow: 0 4px 25px 0 rgba(34,41,47,.25);
+       
+      }
     }
   }
   .change {
@@ -580,8 +585,7 @@ h3 {
       -webkit-transform: rotate(45deg) translate(-8px, -8px);
       transform: rotate(45deg) translate(-8px, -8px);
     }
-
-    
+ 
   }
   .v-sidebar-menu {
     transition: 0.3s all;
