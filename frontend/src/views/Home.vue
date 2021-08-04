@@ -23,8 +23,8 @@
         </p>
       </div>
       <div class="image">
-        <img class="logo" src="src/assets/Logo.png" alt="" />
-        <img src="src/assets/Home1.jpg" alt="" />
+        <img class="logo" src="../assets/Logo.png" alt="" />
+        <img src="../assets/Home1.jpg" alt="" />
       </div>
     </section>
 
@@ -235,7 +235,6 @@ export default {};
       -webkit-flex-shrink: 1;
       -ms-flex-shrink: 1;
       flex-shrink: 1;
-      width: 65%;
       max-width: 64rem;
       margin: 0 auto;
       border-radius: 76px 0px 0px 76px;
@@ -387,9 +386,8 @@ export default {};
       .content {
         height: 50%;
         border-radius: 0px 0px 76px 76px;
-        margin: 0px 15px;
+        margin: 0px 15px 10px;
         padding: 2rem 5rem 3rem 5rem;
-        max-height: 30vh;
       }
 
       .image {

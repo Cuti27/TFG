@@ -5,13 +5,14 @@
     </div>
     <div class="sources">
       <div
+        
         v-for="(item, index) in options"
         :key="item + index"
         @click.prevent="toggle(index)"
       >
         <input :id="item + '-' + index" type="radio" />
         <label
-          :class="{ blanco: !selected[index] }"
+          :class="{ blanco: !selected[index], sourceItem: true }"
           :for="item + '-' + index"
           >{{ item }}</label
         >
@@ -55,6 +56,15 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
+.sourceItem{
+  transition: all 0.5s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 25px 0 rgba(34,41,47,.25);
+  }
+  
+}
+
 input,
 label {
   background: $primaryDark;
@@ -81,6 +91,7 @@ label {
   border: 2px;
   box-shadow: 2px 2px 4px $primaryShadow;
   margin: 5px;
+  margin-bottom: 10px;
   line-height: 50px;
   cursor: pointer;
 }

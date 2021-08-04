@@ -18,7 +18,6 @@
       </div>
         
       </caption>
-      <!-- TODO: Boton con el guardado -->
       <thead>
         <tr>
           <th scope="col">{{ type }}</th>

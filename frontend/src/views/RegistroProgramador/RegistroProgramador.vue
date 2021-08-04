@@ -165,6 +165,9 @@
           @update="createAnalogicalInput"
         ></output-input>
       </div>
+      <div>
+        <submit-button @click="resetPage()">Terminar</submit-button>
+      </div>
     </div>
   </div>
 </template>
@@ -176,6 +179,7 @@ import headerCustom from "@/components/Header";
 import customSelect from "@/components/Select";
 import outputInput from "@/views/RegistroProgramador/components/outputInput";
 import perfilProgramador from "@/views/RegistroProgramador/components/perfilProgramador";
+import SubmitButton from "@/components/SubmitButton";
 
 // Imagenes necesarias
 import imageEsp32 from "@/assets/esp32.png";
@@ -188,6 +192,7 @@ export default {
     customSelect,
     outputInput,
     perfilProgramador,
+    SubmitButton,
   },
   data() {
     return {
@@ -264,7 +269,11 @@ export default {
       "createAnalogicalOutput",
       "createAnalogicalInput",
        "deleteDevice",
+       "resetConfigureDevice"
     ]),
+    resetPage(){
+      this.resetConfigureDevice();
+    },
     remove(){
       this.deleteDevice(this.radioGroup);
       this.changeDialog();

@@ -10,7 +10,7 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Listado de cabezales</v-toolbar-title>
+          <v-toolbar-title v-show="windowWidth > 500">Listado de cabezales</v-toolbar-title>
           <v-divider  v-show="windowWidth > 500" class="mx-4" inset vertical></v-divider>
           <v-spacer ></v-spacer>
           <v-dialog
@@ -230,5 +230,9 @@ export default {
 
 .tableCabezal{
   width: 100%;
+}
+
+th{ 
+  height: 0px;
 }
 </style>

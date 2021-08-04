@@ -35,12 +35,14 @@
               <span>
                 {{ item.id }}
               </span>
-              <v-btn @click="doCopy(item.id)" v-if="canCopy" class="btn"
-                ><font-awesome-icon :icon="['far', 'copy']"
-              /></v-btn>
-              <v-btn class="btn" @click="deleteDeviceId(item.id)"
-                ><font-awesome-icon :icon="['fa', 'trash-alt']"
-              /></v-btn>
+              <div class="buttons">
+                <v-btn @click="doCopy(item.id)" v-if="canCopy" class="btn"
+                  ><font-awesome-icon :icon="['far', 'copy']"
+                /></v-btn>
+                <v-btn class="btn" @click="deleteDeviceId(item.id)"
+                  ><font-awesome-icon :icon="['fa', 'trash-alt']"
+                /></v-btn>
+              </div>
             </div>
 
             <v-spacer></v-spacer>
@@ -129,10 +131,16 @@ form {
   justify-content: space-around;
   span {
     margin-right: 10px;
+    word-wrap: break-word;
+    width: 50%;
   }
 }
 
-.btn {
-  margin-right: 5px;
+.buttons {
+  .btn {
+    margin-right: 5px;
+  }
+  width: 50%;
+  margin: auto 0px;
 }
 </style>

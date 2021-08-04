@@ -1,13 +1,14 @@
 <template>
   <div class="temporizador">
     <h3
-      :style="{ 'align-self': title && windowWidth >= 990 ? 'end' : 'center' }"
+      :style="{ 'align-self': title && windowWidth >= 990 ? 'end' : 'center', 'mt-2': true }"
     >
       <slot></slot>
     </h3>
-    <div class="inicio">
+    <hr>
+    <div class="inicio mt-5">
       <h3 v-if="title || windowWidth < 1030">Hora de inicio</h3>
-      <div class="mx-2 mb-2 input-time">
+      <div class="mx-2  input-time">
         <v-dialog
           transition="dialog-bottom-transition"
           ref="dialog"
@@ -17,9 +18,10 @@
           width="290px"
         >
           <template v-slot:activator="{ on, attrs }">
-            <div :class="{ 'centered-input': true, 'mt-8': windowWidth > 1030 }">
+            <div :class="{ 'centered-input': true, 'mt-2': true }">
                <v-text-field
               hide-details
+              @input="update"
               v-model="time"
               label="Seleccione una hora"
               type="time"
@@ -35,6 +37,7 @@
            
           </template>
           <v-time-picker
+            class="clockIcon"
             @input="update"
             format="24hr"
             use-seconds
@@ -63,9 +66,10 @@
           width="290px"
         >
           <template v-slot:activator="{ on, attrs }">
-            <div :class="{ 'centered-input': true, 'mt-8': windowWidth > 1030 }">
+            <div :class="{ 'centered-input': true, 'mt-2': true }">
                <v-text-field
               hide-details
+              @input="update"
               v-model="time1"
               label="Seleccione una hora"
               type="time"
@@ -81,6 +85,7 @@
             
           </template>
           <v-time-picker
+            class="clockIcon"
             @input="update"
             format="24hr"
             use-seconds
@@ -109,9 +114,10 @@
           width="290px"
         >
           <template v-slot:activator="{ on, attrs }">
-            <div :class="{ 'centered-input': true, 'mt-8': windowWidth > 1030 }">
+            <div :class="{ 'centered-input': true, 'mt-2': true }">
                <v-text-field
               hide-details
+              @input="update"
               v-model="time2"
               label="Seleccione una hora"
               type="time"
@@ -126,6 +132,7 @@
             </div>
           </template>
           <v-time-picker
+            class="clockIcon"
             @input="update"
             format="24hr"
             use-seconds
@@ -222,6 +229,12 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
+hr{
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
 .input-time{
   width: 100%;
 }
@@ -244,12 +257,9 @@ export default {
 }
 
 .temporizador {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  transition: all 0.5s ease;
   margin: 10px 50px;
   flex-wrap: wrap;
-  width: 100%;
   min-width: 220px;
   border: 1px solid $primaryDark;
   border-radius: 15px;
@@ -281,6 +291,11 @@ export default {
     &:hover {
       color: $primary;
     }
+  }
+
+  &:hover{
+    transform: translateY(-5px);
+  box-shadow: 0 4px 25px 0 rgba(34,41,47,.25);
   }
 }
 

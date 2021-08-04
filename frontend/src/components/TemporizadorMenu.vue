@@ -9,7 +9,7 @@
       v-for="(temp, index) in temporizadores"
       :key="'Temporizador' + index"
       v-model="temporizadores[index]"
-      :title="index == 0"
+      title
       @delete="remove($event)"
       :id="index"
       :value="temporizadores[index]"
