@@ -25,8 +25,38 @@
         @toggle-collapse="collapse = !collapse"
         @item-click="collapse = true"
       >
-        <div slot="header" v-if="!collapse">
-          <img src="./assets/Logo.png" width="200px" alt="" />
+        <div class="slotHeader" slot="header">
+          <img v-if="!collapse" src="./assets/Logo.png" width="200px" alt="" />
+          <router-link to="Profile" tag="div">
+            <div class="profile btn">
+            <div class="pIcon">
+              <v-avatar
+                  size="36px"
+                >
+                  <img
+                    v-if="message.avatar"
+                    alt="Avatar"
+                    src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+                  >
+                  <v-icon
+                    v-else
+                    :color="message.color"
+                    v-text="message.icon"
+                  ></v-icon>
+                </v-avatar>
+                <v-divider class="mx-1" inset vertical></v-divider>
+            </div>
+            <div class="pInfo" v-if="!collapse">
+              <strong>
+                Nombre apellido1 apellido2
+              </strong>
+              <span>
+                correo@correo.com
+              </span>
+            </div>
+          </div>
+          </router-link>
+          
         </div>
         <div slot="footer">
           <div v-if="logged" class="auxiliares">
@@ -149,6 +179,12 @@ export default {
   },
   data() {
     return {
+      message: {
+          avatar: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
+          name: 'John Leider',
+          title: 'Welcome to Vuetify!',
+          excerpt: 'Thank you for joining our community...',
+        },
       showProgramador: false,
       cabezales: this.$root.cabezales,
       programas: this.$root.programas,
@@ -159,8 +195,7 @@ export default {
       timeout: 5000,
       menu: [
         {
-          header: true,
-          title: "Main Navigation",
+          header: false,
           hiddenOnCollapse: true,
         },
         {
@@ -291,6 +326,42 @@ $icon-color: darken($primaryDark, 10%);
 $input-text-align: center;
 
 @import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
+
+
+.slotHeader {
+  max-height: 240px;
+
+  .profile {
+  display: grid;
+  grid-template-rows: 1fr 2fr;
+  grid-template-columns: auto;
+  grid-template-areas: "pIcon pInfo";
+  padding-left: 5px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  border: 1px solid black;
+  padding: 1px;
+  max-height: 75px;
+  margin: 5px 1px;
+  transition: all 0.5s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 25px 0 rgba(34,41,47,.25);
+    background: rgba(200,200,200,0.5);
+  }
+
+  .pIcon{
+    grid-area: pIcon;
+    display: flex;
+    align-items:center;
+  }
+  .pInfo{
+    grid-area: pInfo;
+    padding-left: 5px;
+  }
+}
+}
 
 nav#mainNavigation {
   display: flex;

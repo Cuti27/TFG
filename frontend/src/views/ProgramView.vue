@@ -31,7 +31,7 @@
       <div class="activo">
         <div>
           <h3 for="Activo">Programa:</h3>
-          <v-switch v-model="programa" :label="isActive"></v-switch>
+          <v-switch inset v-model="programa" :label="isActive"></v-switch>
         </div>
       </div>
 
@@ -43,7 +43,7 @@
           name="Dias"
           :options="['Manual', 'Automático']"
         ></select-button>
-        <day-selector></day-selector>
+        <day-selector :disabled="diasAutomatico"></day-selector>
       </div>
 
       <!-- Selector de fuentes -->
@@ -100,9 +100,11 @@
           ></select-button>
         </div>
 
-        <div v-if="!horaInicio">
+        <div class="table" v-if="!horaInicio">
           <!-- use the modal component, pass in the prop -->
-          <program-list :show="true"></program-list>
+          <table-program hideHeader customAction id="block">
+            <v-btn>Usar</v-btn>
+          </table-program>
         </div>
         <div class="temporizadores" v-else>
           <h3 for="Horas">Temporización:</h3>
@@ -140,7 +142,7 @@ import SubmitButton from "@/components/SubmitButton";
 import SelectButton from "@/components/SelectButton";
 import temporizadorMenu from "@/components/TemporizadorMenu";
 import headerCustom from "@/components/Header";
-import programList from "@/components/vuetify/dialog/programDialog";
+import tableProgram from "@/components/vuetify/tableProgram";
 
 import { mapGetters, mapActions } from "vuex";
 
@@ -149,11 +151,11 @@ export default {
     daySelector,
     sourceSelector,
     // sectionSelector,
-    programList,
     SubmitButton,
     SelectButton,
     temporizadorMenu,
     headerCustom,
+    tableProgram,
   },
   data() {
     return {
@@ -360,6 +362,16 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
+
+.table{
+  width: 100%;
+  margin: 0px 10px;
+}
+
+#block{
+  display: block;
+  width: 100%;
+}
 
 .map {
   img {

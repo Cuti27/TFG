@@ -11,7 +11,7 @@
       @input="error = ''"
       >{{ error }}</v-alert
     >
-    <div class="header">
+    <div  v-if="!hideHeader" class="header">
       <v-dialog
         transition="dialog-bottom-transition"
         v-model="dialog"
@@ -71,8 +71,8 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title  v-show="windowWidth > 500">Listado de programas</v-toolbar-title>
-          <v-divider  v-show="windowWidth > 500" class="mx-4" inset vertical></v-divider>
+          <v-toolbar-title v-if="!hideHeader"  v-show="windowWidth > 500">Listado de programas</v-toolbar-title>
+          <v-divider  v-if="!hideHeader"  v-show="windowWidth > 500" class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
 
           <v-dialog
@@ -115,7 +115,8 @@
         /></span>
       </template>
       <template v-slot:item.actions="{ item }">
-        <font-awesome-icon
+        <div v-if="!customAction">
+           <font-awesome-icon
           class="btn mr-2"
           @click="editItem(item)"
           icon="edit"
@@ -125,6 +126,8 @@
           @click="deleteItem(item)"
           icon="trash-alt"
         />
+        </div>
+        <slot v-else></slot>
       </template>
       <template v-slot:no-data>
         <v-btn color="primary" @click="initialize"> Recargar </v-btn>
@@ -177,6 +180,10 @@ export default {
     },
     error: "",
   }),
+  props: {
+    "hideHeader": Boolean,
+    customAction: Boolean,
+  },
 
   computed: {
     ...mapGetters(["programas", "numProgramas", "windowWidth"]),

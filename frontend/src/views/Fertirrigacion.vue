@@ -15,44 +15,64 @@
     <v-container>
       <v-row>
         <v-col class="phControl">
-          <div class="ph">
-            <label for="ph">VALOR DE PH: </label>
-            <v-text-field
-              id="ph"
-              type="number"
-              :value="ph"
-              :min="0"
-              :max="14"
-              placeholder="pH"
-              @input="updatePH(parseInt($event))"
-            ></v-text-field>
-          </div>
-          <div class="phPre">
-            <v-switch
-              inset
-              v-model="phPre"
-              :label="isActivePreRiego(phPre)"
-            ></v-switch>
-          </div>
-          <div class="phRie">
-            <v-switch
-              inset
-              v-model="phRie"
-              :label="isActiveRiego(phRie)"
-            ></v-switch>
-          </div>
-
-          <div class="phPost">
-            <v-switch
-              inset
-              v-model="phPost"
-              :label="isActivePostRiego(phPost)"
-            ></v-switch>
-          </div>
-
-          <div class="controlAbono">
-            <v-switch inset v-model="control" :label="isSecuencial"></v-switch>
-          </div>
+          <v-container>
+            <v-row>
+              <v-col>
+                <div class="ph">
+                  <label for="ph">VALOR DE PH: </label>
+                  <v-text-field
+                    id="ph"
+                    type="number"
+                    :value="ph"
+                    :min="0"
+                    :max="14"
+                    placeholder="pH"
+                    @input="updatePH(parseInt($event))"
+                  ></v-text-field>
+                </div>
+              </v-col>
+            </v-row>
+              <v-row>
+              <v-col>
+                <div class="phPost">
+                  <v-switch
+                    inset
+                    v-model="phPost"
+                    :label="isActivePostRiego(phPost)"
+                  ></v-switch>
+                </div>
+              </v-col>
+              <v-col>
+                <div class="phPre">
+                  <v-switch
+                    inset
+                    v-model="phPre"
+                    :label="isActivePreRiego(phPre)"
+                  ></v-switch>
+                </div>
+              </v-col>
+            </v-row>
+            <v-row>
+               <v-col>
+                <div class="phRie">
+                  <v-switch
+                    inset
+                    v-model="phRie"
+                    :label="isActiveRiego(phRie)"
+                  ></v-switch>
+                </div>
+              </v-col>
+              <v-col>
+                <div class="controlAbono">
+                  <v-switch
+                    inset
+                    v-model="control"
+                    :label="isSecuencial"
+                  ></v-switch>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-col>
       </v-row>
 
@@ -334,9 +354,6 @@ export default {
     z-index: 9950;
     top: 10px;
   }
-  .ph label {
-    margin-right: 8px;
-  }
 
   .input {
     width: 90%;
@@ -349,8 +366,14 @@ export default {
   .controlAbono {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin: 0px 10% 0px 10%;
+    margin: 0px 0px 0px 10%;
+  }
+  .ph {
+    label{
+      margin-right: 8px;
+    }
+    max-width: 180px;
+    margin: 0px auto;
   }
 
   .lineaAbonoToggle {
@@ -377,58 +400,8 @@ export default {
   //   }
 
   .phControl {
-    // grid-area: phControl;
     display: flex;
     flex-wrap: wrap;
   }
-
-  //   .controlAbono {
-  //     grid-area: controlAbono;
-  //   }
-
-  //   .lineaAbono {
-  //     grid-area: lineaAbono;
-  //   }
-
-  //   .selectorAbono {
-  //     grid-area: selectorAbono;
-  //   }
-
-  //   .consigna {
-  //     grid-area: consigna;
-  //   }
-  //   .selectorConsignea {
-  //     grid-area: selector;
-  //   }
-  //   .tiempo {
-  //     grid-area: tiempo;
-  //   }
 }
-
-// @media (max-width: 768px) {
-//   .view {
-//     grid-template-areas:
-//       "header header"
-//       "phControl phControl"
-//       "lineaAbono  lineaAbono"
-//       "controlAbono controlAbono"
-//       "selectorAbono selector"
-//       "consigna consigna"
-//       "tiempo tiempo";
-//   }
-// }
-
-// @media (max-width: 633px) {
-//   .view {
-//     grid-template-areas:
-//       "header header"
-//       "phControl phControl"
-//       "controlAbono controlAbono"
-//       "lineaAbono lineaAbono"
-//       "selectorAbono selectorAbono"
-//       "selector selector"
-//       "consigna consigna"
-//       "tiempo tiempo";
-//   }
-// }
 </style>

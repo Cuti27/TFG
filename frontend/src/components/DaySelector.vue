@@ -6,9 +6,9 @@
       :key="index"
       @click.prevent="togleValue(index)"
     >
-      <input :id="day + '-' + index" type="radio" :checked="daysValue[index]" />
+      <input :disabled="disabled" :id="day + '-' + index" type="radio" :checked="daysValue[index]" />
       <label
-        :class="{ blanco: !daysValue[index], xs }"
+        :class="{ blanco: !daysValue[index], xs, disabled }"
         :for="day + '-' + index"
         >{{ day }}</label
       >
@@ -107,5 +107,21 @@ label.blanco:hover {
   align-items: center;
   flex-wrap: wrap;
   flex-wrap: 1;
+}
+
+.disabled{
+  text-decoration: line-through;
+  color: rgba(200,200,200, 0.5);
+  background: $primaryShadow;
+
+  &.blanco{
+    color: rgba(0,0,0, 0.5);
+    background: rgba(200,200,200,0.5)
+  }
+
+  &:hover{
+        transform: none;
+        box-shadow: 0;
+  }
 }
 </style>
