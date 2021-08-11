@@ -19,17 +19,17 @@
       </nav>
       <sidebar-menu
         width="200px"
-        :menu="menu"
+        :menu="logged? menuLogged : menuNoLogged"
         :collapsed="collapse"
         theme="white-theme"
         @toggle-collapse="collapse = !collapse"
         @item-click="collapse = true"
       >
-        <div class="slotHeader" slot="header">
+        <div v-if="logged"  class="slotHeader" slot="header">
           <img v-if="!collapse" src="./assets/Logo.png" width="200px" alt="" />
           <router-link to="Profile" tag="div">
-            <div class="profile btn">
-            <div class="pIcon">
+            <div :class="{profile: true, border: !collapse}">
+            <div class="pIcon ml-1">
               <v-avatar
                   size="36px"
                 >
@@ -193,7 +193,7 @@ export default {
       collapse: false,
 
       timeout: 5000,
-      menu: [
+      menuNoLogged: [
         {
           header: false,
           hiddenOnCollapse: true,
@@ -218,6 +218,58 @@ export default {
             },
           },
         },
+      ],
+      menuLogged: [
+      ],
+    };
+  },
+  methods: {
+    ...mapActions([
+      "updateLogin",
+      "updateRegistro",
+      "getAnalogicalInput",
+      "getAnalogicalOutput",
+      "getDigitalInput",
+      "getDigitalOutput",
+      "getTypeDevice",
+      "logout",
+      "closeError",
+      "updateWindowWidth",
+      "updateWindowHeight"
+    ]),
+    touchOut() {
+      if (!this.collapse) this.collapse = true;
+    },
+    windowsW() {
+      this.updateWindowWidth(document.documentElement.clientWidth);
+    },
+    windowsH() {
+      this.updateWindowHeight(document.documentElement.clientHeight);
+    }
+  },
+
+  mounted() {
+    this.$nextTick(function () {
+      window.addEventListener("resize", this.windowsW);
+      window.addEventListener("resize", this.windowsH);
+
+      this.updateWindowWidth(document.documentElement.clientWidth);
+      this.updateWindowHeight(document.documentElement.clientHeight);
+    });
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.windowsW);
+    window.removeEventListener("resize", this.windowsH);
+  },
+  created() {
+    this.getAnalogicalInput();
+    this.getAnalogicalOutput();
+    this.getDigitalInput();
+    this.getDigitalOutput();
+    this.getTypeDevice();
+
+    this.menuLogged = [
+      ...this.menuNoLogged,
         {
           href: { name: "ProgramView" },
           title: "ProgramView",
@@ -268,53 +320,7 @@ export default {
             },
           },
         },
-      ],
-    };
-  },
-  methods: {
-    ...mapActions([
-      "updateLogin",
-      "updateRegistro",
-      "getAnalogicalInput",
-      "getAnalogicalOutput",
-      "getDigitalInput",
-      "getDigitalOutput",
-      "getTypeDevice",
-      "logout",
-      "closeError",
-      "updateWindowWidth",
-      "updateWindowHeight"
-    ]),
-    touchOut() {
-      if (!this.collapse) this.collapse = true;
-    },
-    windowsW() {
-      this.updateWindowWidth(document.documentElement.clientWidth);
-    },
-    windowsH() {
-      this.updateWindowHeight(document.documentElement.clientHeight);
-    }
-  },
-
-  mounted() {
-    this.$nextTick(function () {
-      window.addEventListener("resize", this.windowsW);
-      window.addEventListener("resize", this.windowsH);
-
-      this.updateWindowWidth(document.documentElement.clientWidth);
-      this.updateWindowHeight(document.documentElement.clientHeight);
-    });
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.windowsW);
-    window.removeEventListener("resize", this.windowsH);
-  },
-  created() {
-    this.getAnalogicalInput();
-    this.getAnalogicalOutput();
-    this.getDigitalInput();
-    this.getDigitalOutput();
-    this.getTypeDevice();
+    ];
   },
 };
 </script>
@@ -333,17 +339,23 @@ $input-text-align: center;
 
   .profile {
   display: grid;
-  grid-template-rows: 1fr 2fr;
+  grid-template-rows: 1fr;
   grid-template-columns: auto;
-  grid-template-areas: "pIcon pInfo";
+  grid-template-areas: "pIcon";
   padding-left: 5px;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  border: 1px solid black;
   padding: 1px;
-  max-height: 75px;
+  max-height: 36px;
   margin: 5px 1px;
   transition: all 0.5s ease;
   cursor: pointer;
+
+  &.border {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border: 1px solid black;
+    max-height: 75px;
+    grid-template-rows: 1fr 2fr;
+    grid-template-areas: "pIcon pInfo";
+  }
 
   &:hover {
     transform: translateY(-5px);
@@ -355,6 +367,7 @@ $input-text-align: center;
     grid-area: pIcon;
     display: flex;
     align-items:center;
+    justify-content: center;
   }
   .pInfo{
     grid-area: pInfo;
