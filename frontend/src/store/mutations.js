@@ -6,6 +6,12 @@ export default {
     ...mutationHead,
     ...mutationDevice,
     // Mutación para cambiar los días del state
+    setUser(state, user) {
+        state.user = user;
+    },
+    setUserHistory(state, userHistory) {
+        state.userHistory = userHistory;
+    },
     updateDayProgram(state, array) {
         Vue.set(state.program, "days", array);
         //! No se esto porque hay que ponerlo

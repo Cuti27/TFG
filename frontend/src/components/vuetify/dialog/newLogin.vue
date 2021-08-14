@@ -21,14 +21,15 @@
     <template v-slot:default="dialog">
       <v-card>
         <v-toolbar color="primary" dark><h2>Inicar sesion</h2></v-toolbar>
-        <v-container class="pa-4">
-          <form action="" class="login-form px-10">
+        <v-container class="pa-2">
+          <form action="" class="login-form px-2">
             <v-text-field
               class="mt-2"
               label="Correo"
               :rules="rulesUser"
               hide-details="auto"
               v-model="email"
+              type="email"
             ></v-text-field>
             <v-text-field
               class="mt-2"
@@ -46,7 +47,7 @@
               >Has olvidado la contraseña?</v-btn
             >
             <v-spacer></v-spacer>
-            <v-btn class="mt-5" @click="doRegistro()" id="registro"
+            <v-btn class="mt-2" @click="doRegistro()" id="registro"
               >Registrate</v-btn
             >
           </form>
@@ -78,7 +79,6 @@ export default {
       ],
       rules: {
         required: (value) => !!value || "Obligatorio.",
-        // min: (v) => v.length >= 8 || "Min 8 caracteres",
       },
       show1: false,
       password: "",

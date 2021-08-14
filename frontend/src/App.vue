@@ -1,15 +1,10 @@
 <template>
   <v-app class="bgImg">
     <div id="mainContent" :class="{ center: true, move: !collapse }">
-      <nav v-show="windowWidth < 500"  id="mainNavigation">
-        <v-img 
-          src="./assets/Logo.png"
-          max-height="60"
-          max-width="60"
-        >
-        </v-img>
+      <nav v-show="windowWidth < 500" id="mainNavigation">
+        <v-img src="./assets/Logo.png" max-height="60" max-width="60"> </v-img>
         <div
-          :class="{change: !collapse, menuHamburguesa: true }"
+          :class="{ change: !collapse, menuHamburguesa: true }"
           @click="collapse = !collapse"
         >
           <div class="bar1"></div>
@@ -18,45 +13,39 @@
         </div>
       </nav>
       <sidebar-menu
-        width="200px"
-        :menu="logged? menuLogged : menuNoLogged"
+        :width="windowWidth < 500 ? '100%' : '200px'"
+        :menu="logged ? menuLogged : menuNoLogged"
         :collapsed="collapse"
         theme="white-theme"
         @toggle-collapse="collapse = !collapse"
         @item-click="collapse = true"
       >
-        <div v-if="logged"  class="slotHeader" slot="header">
+        <div v-if="logged" class="slotHeader noselect" slot="header">
           <img v-if="!collapse" src="./assets/Logo.png" width="200px" alt="" />
-          <router-link to="Profile" tag="div">
-            <div :class="{profile: true, border: !collapse}">
-            <div class="pIcon ml-1">
-              <v-avatar
-                  size="36px"
-                >
-                  <img
-                    v-if="message.avatar"
-                    alt="Avatar"
-                    src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
-                  >
-                  <v-icon
-                    v-else
-                    :color="message.color"
-                    v-text="message.icon"
-                  ></v-icon>
+          <router-link @click.native="collapse = true" to="Profile" tag="div">
+            <div :class="{ profile: true, border: !collapse }">
+              <div class="pIcon ml-1">
+                <v-spacer></v-spacer>
+                <v-avatar color="primary" size="36px">
+                  <v-img v-if="user.img" :src="user.img"></v-img>
+                  <span v-else>{{ userInitial }}</span>
                 </v-avatar>
+                <v-spacer></v-spacer>
                 <v-divider class="mx-1" inset vertical></v-divider>
+              </div>
+              <div :class="{pInfo: true, 'text-align-center': windowWidth < 500}" v-if="!collapse">
+                <strong>
+                  {{ user.name }} </strong
+                ><br />
+                <span>
+                  {{ user.phone }} </span
+                ><br />
+                <span>
+                  {{ user.email }}
+                </span>
+              </div>
             </div>
-            <div class="pInfo" v-if="!collapse">
-              <strong>
-                Nombre apellido1 apellido2
-              </strong>
-              <span>
-                correo@correo.com
-              </span>
-            </div>
-          </div>
           </router-link>
-          
         </div>
         <div slot="footer">
           <div v-if="logged" class="auxiliares">
@@ -79,7 +68,7 @@
         <div slot="toggle-icon"><font-awesome-icon icon="arrows-alt-h" /></div>
       </sidebar-menu>
 
-      <v-main @click="touchOut()" :class="{'mt-10': windowWidth < 500}">
+      <v-main @click="touchOut()" :class="{ 'mt-10': windowWidth < 500 }">
         <!-- Provides the application the proper gutter -->
         <v-container fluid>
           <!-- If using vue-router -->
@@ -123,7 +112,7 @@
                       color="blue"
                       text
                       v-bind="attrs"
-                      @click="snackbar = false"
+                      @click="offSnacbar"
                     >
                       Cerrar
                     </v-btn>
@@ -136,13 +125,13 @@
         </v-container>
       </v-main>
 
-      <custom-footer :class="{'move-footer': !collapse}"></custom-footer>
+      <custom-footer :class="{ 'move-footer': !collapse }"></custom-footer>
     </div>
   </v-app>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 import { SidebarMenu } from "vue-sidebar-menu";
 import customFooter from "@/components/vuetify/footer";
@@ -160,6 +149,7 @@ export default {
     vRegistroId,
   },
   computed: {
+    ...mapState(["user"]),
     ...mapGetters([
       "showLogin",
       "showRegistro",
@@ -167,7 +157,7 @@ export default {
       "comunicationError",
       "isLoading",
       "windowWidth",
-      "windowHeight"
+      "windowHeight",
     ]),
     ...mapGetters({
       snackbar: "comunicationSuccess",
@@ -176,15 +166,27 @@ export default {
     logged() {
       return this.auth != null && this.auth != "";
     },
+    userInitial() {
+      if (!this.user || !this.user.name) return "";
+      let rgx = new RegExp(/(\p{L}{1})\p{L}+/, "gu");
+
+      let initials = [...this.user.name.matchAll(rgx)] || [];
+
+      initials = (
+        (initials.shift()?.[1] || "") + (initials.pop()?.[1] || "")
+      ).toUpperCase();
+
+      return initials;
+    },
   },
   data() {
     return {
       message: {
-          avatar: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
-          name: 'John Leider',
-          title: 'Welcome to Vuetify!',
-          excerpt: 'Thank you for joining our community...',
-        },
+        avatar: "https://avatars0.githubusercontent.com/u/9064066?v=4&s=460",
+        name: "John Leider",
+        title: "Welcome to Vuetify!",
+        excerpt: "Thank you for joining our community...",
+      },
       showProgramador: false,
       cabezales: this.$root.cabezales,
       programas: this.$root.programas,
@@ -219,8 +221,7 @@ export default {
           },
         },
       ],
-      menuLogged: [
-      ],
+      menuLogged: [],
     };
   },
   methods: {
@@ -235,7 +236,9 @@ export default {
       "logout",
       "closeError",
       "updateWindowWidth",
-      "updateWindowHeight"
+      "updateWindowHeight",
+      "fetchUser",
+      "offSnacbar"
     ]),
     touchOut() {
       if (!this.collapse) this.collapse = true;
@@ -245,7 +248,7 @@ export default {
     },
     windowsH() {
       this.updateWindowHeight(document.documentElement.clientHeight);
-    }
+    },
   },
 
   mounted() {
@@ -261,65 +264,71 @@ export default {
     window.removeEventListener("resize", this.windowsW);
     window.removeEventListener("resize", this.windowsH);
   },
+  beforeMount() {
+    if (!this.user) {
+      this.fetchUser();
+    }
+  },
   created() {
     this.getAnalogicalInput();
     this.getAnalogicalOutput();
     this.getDigitalInput();
     this.getDigitalOutput();
     this.getTypeDevice();
+    this.fetchUser();
 
     this.menuLogged = [
       ...this.menuNoLogged,
-        {
-          href: { name: "ProgramView" },
-          title: "ProgramView",
-          icon: {
-            element: "font-awesome-icon",
-            attributes: {
-              icon: "faucet",
-            },
+      {
+        href: { name: "ProgramView" },
+        title: "ProgramView",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "faucet",
           },
         },
-        {
-          href: { name: "Fertirrigacion" },
-          title: "Fertirrigacion",
-          icon: {
-            element: "font-awesome-icon",
-            attributes: {
-              icon: "leaf",
-            },
+      },
+      {
+        href: { name: "Fertirrigacion" },
+        title: "Fertirrigacion",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "leaf",
           },
         },
-        {
-          href: { name: "Cabezales" },
-          title: "Cabezales",
-          icon: {
-            element: "font-awesome-icon",
-            attributes: {
-              icon: "house-user",
-            },
+      },
+      {
+        href: { name: "Cabezales" },
+        title: "Cabezales",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "house-user",
           },
         },
-        {
-          href: { name: "Programas" },
-          title: "Programas",
-          icon: {
-            element: "font-awesome-icon",
-            attributes: {
-              icon: "clock",
-            },
+      },
+      {
+        href: { name: "Programas" },
+        title: "Programas",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "clock",
           },
         },
-        {
-          href: { name: "Registrar programador" },
-          title: "Registrar programador",
-          icon: {
-            element: "font-awesome-icon",
-            attributes: {
-              icon: "clock",
-            },
+      },
+      {
+        href: { name: "Registrar programador" },
+        title: "Registrar programador",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "clock",
           },
         },
+      },
     ];
   },
 };
@@ -330,50 +339,59 @@ export default {
 $primary-color: $primary;
 $icon-color: darken($primaryDark, 10%);
 $input-text-align: center;
+.toggle-btn{
+  height: 60px !important;
+}
 
 @import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
 
+.text-align-center{
+  text-align: center;
+}
 
 .slotHeader {
   max-height: 240px;
 
   .profile {
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: auto;
-  grid-template-areas: "pIcon";
-  padding-left: 5px;
-  padding: 1px;
-  max-height: 36px;
-  margin: 5px 1px;
-  transition: all 0.5s ease;
-  cursor: pointer;
-
-  &.border {
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    border: 1px solid black;
-    max-height: 75px;
-    grid-template-rows: 1fr 2fr;
-    grid-template-areas: "pIcon pInfo";
-  }
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 25px 0 rgba(34,41,47,.25);
-    background: rgba(200,200,200,0.5);
-  }
-
-  .pIcon{
-    grid-area: pIcon;
-    display: flex;
-    align-items:center;
-    justify-content: center;
-  }
-  .pInfo{
-    grid-area: pInfo;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: auto;
+    grid-template-areas: "pIcon";
     padding-left: 5px;
+    padding: 1px;
+    max-height: 36px;
+    margin: 5px 1px;
+    transition: all 0.5s ease;
+    cursor: pointer;
+
+    &.border {
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+      border: 1px solid black;
+      max-height: 75px;
+      grid-template-rows: 1fr 2fr;
+      grid-template-areas: "pIcon pInfo";
+    }
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 25px 0 rgba(34, 41, 47, 0.25);
+      background: rgba(200, 200, 200, 0.5);
+    }
+
+    .pIcon {
+      grid-area: pIcon;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pInfo {
+      grid-area: pInfo;
+      font-size: 14px;
+      text-overflow: ellipsis;
+      min-height: 70px;
+      overflow: hidden;
+    }
   }
-}
 }
 
 nav#mainNavigation {
@@ -383,9 +401,9 @@ nav#mainNavigation {
   padding-top: 5px;
   padding-bottom: 5px;
   background-color: rgba(255, 255, 255, 1);
-  position: fixed; 
-  top: 0; 
-  width: 100%; 
+  position: fixed;
+  top: 0;
+  width: 100%;
   z-index: 999;
   border-radius: 0px 0px 25px 25px;
   border: 1px solid black;
@@ -614,6 +632,16 @@ h3 {
   // }
 }
 
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
 .menuHamburguesa {
   display: none;
 }
@@ -647,13 +675,11 @@ h3 {
       margin: 6px 0;
       transition: 0.4s;
       :hover > & {
-        box-shadow: 0 4px 25px 0 rgba(34,41,47,.25);
-       
+        box-shadow: 0 4px 25px 0 rgba(34, 41, 47, 0.25);
       }
     }
   }
   .change {
-
     .bar1 {
       -webkit-transform: rotate(-45deg) translate(-9px, 6px);
       transform: rotate(-45deg) translate(-9px, 6px);
@@ -669,7 +695,6 @@ h3 {
       -webkit-transform: rotate(45deg) translate(-8px, -8px);
       transform: rotate(45deg) translate(-8px, -8px);
     }
- 
   }
   .v-sidebar-menu {
     transition: 0.3s all;
@@ -678,16 +703,14 @@ h3 {
     transform: translateX(-100%);
   }
 
-  #mainContent{
-      margin: 0px;
-      width: 100vw;
-    }
-
-
+  #mainContent {
+    margin: 0px;
+    width: 100vw;
+  }
 }
 
-@media (min-width: "1980px"){
-  #mainContent{
+@media (min-width: "1980px") {
+  #mainContent {
     margin: 0 auto;
   }
 }

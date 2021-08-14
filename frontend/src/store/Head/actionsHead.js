@@ -1,6 +1,6 @@
 import axios from "axios";
+import router from '@/router';
 
-// Función para añadir la cabecera de autenticación
 // Función para añadir la cabecera de autenticación
 const addAuthHeader = async(auth) => {
     return {
@@ -21,7 +21,7 @@ function getCookie(name) {
 export default {
     async getCabezales({ commit, state }, page = 1) {
         commit("addIsLoading");
-        const request = "http://127.0.0.1:8000/api/head?page=" + page;
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/head?page=" + page;
         console.log(state.auth);
         let response = await axios
             .get(request, await addAuthHeader(state.auth))
@@ -32,6 +32,7 @@ export default {
                     console.log(err.response.status);
                     console.log(err.response.headers);
                     commit("removeIsLoading");
+                    commit("addGlobalError", "Error al cargar los cabezales, intentalo más tarde");
                     return null;
                 }
             });
@@ -49,7 +50,7 @@ export default {
 
     async newCabezales({ commit, dispatch, state }, data) {
         commit("addIsLoading");
-        const request = "http://127.0.0.1:8000/api/head";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/head";
         console.log(state.auth);
         let response = await axios
             .post(request, data, await addAuthHeader(state.auth))
@@ -60,8 +61,10 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
+                    commit("addGlobalError", "No se ha podido crear el cabezal, intentalo más tarde");
                     commit("removeIsLoading");
                     return null;
                 }
@@ -80,7 +83,7 @@ export default {
 
     async updateHead({ commit, dispatch, state }, data) {
         commit("addIsLoading");
-        const request = "http://127.0.0.1:8000/api/head/" + data.id;
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/head/" + data.id;
         console.log(state.auth);
         await axios
             .post(request, data, await addAuthHeader(state.auth))
@@ -90,6 +93,7 @@ export default {
                     console.log(err.response.data);
                     console.log(err.response.status);
                     console.log(err.response.headers);
+                    commit("addGlobalError", "No se ha podido actualizar el cabezal, intentalo más tarde");
                     commit("removeIsLoading");
                     return null;
                 }
@@ -105,7 +109,7 @@ export default {
 
     async deleteHead({ commit, dispatch, state }, data) {
         commit("addIsLoading");
-        const request = "http://127.0.0.1:8000/api/head/" + data.id;
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/head/" + data.id;
         console.log(state.auth);
         let response = await axios
             .delete(request, await addAuthHeader(state.auth))
@@ -115,6 +119,7 @@ export default {
                     console.log(err.response.data);
                     console.log(err.response.status);
                     console.log(err.response.headers);
+                    commit("addGlobalError", "No se ha podido borrar el cabezal, intentalo más tarde");
                     commit("removeIsLoading");
                     return null;
                 }
@@ -136,7 +141,7 @@ export default {
     async getEmitterHead({ commit, state }) {
         commit("addIsLoading");
         const request =
-            "http://127.0.0.1:8000/api/head/" + state.selectedHead.id + "/emitter";
+            "http://josemiguel.myqnapcloud.com:41063/api/head/" + state.selectedHead.id + "/emitter";
         let response = await axios
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
@@ -146,8 +151,10 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
+                    commit("addGlobalError", "Error, intentalo más tarde");
                     commit("removeIsLoading");
                     return null;
                 }
@@ -166,7 +173,7 @@ export default {
     async getSectorHead({ commit, state }) {
         commit("addIsLoading");
         const request =
-            "http://127.0.0.1:8000/api/head/" + state.selectedHead.id + "/sector";
+            "http://josemiguel.myqnapcloud.com:41063/api/head/" + state.selectedHead.id + "/sector";
         let response = await axios
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
@@ -176,8 +183,10 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
+                    commit("addGlobalError", "Error, intentalo más tarde");
                     commit("removeIsLoading");
                     return null;
                 }

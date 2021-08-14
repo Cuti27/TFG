@@ -5,6 +5,7 @@ export default {
     ...stateHead,
     ...stateDevice,
     user: {},
+    userHistory: [],
     auth: JSON.parse(localStorage.getItem("sessionTokenGenhidro")),
     showRegistro: false,
     showLogin: false,

@@ -171,3 +171,54 @@ Programador riego - > mosquitto mqtt - > node - red - > mysql
     "timer": [],
     "headId": 1
 }
+
+[
+    {
+        "id": 1,
+        "name": "Mi primer programa",
+        "active": true,
+        "automaticDays": false,
+        "drip": true,
+        "userId": 1,
+        "fertigationId": null,
+        "afterProgram": false,
+        "autoTimer": false,
+        "headId": 1,
+        "timer": [
+            {
+                "id": 1,
+                "timeStart": "12:00:00",
+                "duration": "01:30:00",
+                "postIrrigation": "00:50:00",
+                "programId": 1
+            }
+        ],
+        "programDay": [
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false
+        ],
+        "sector": [
+            {
+                "id": 1,
+                "output": "1",
+                "type": 2,
+                "deviceId": "ccef77ab-8acb-4246-9fd2-cbb15267e62c",
+                "description": null,
+                "name": "Sector norte"
+            },
+            {
+                "id": 3,
+                "output": "3",
+                "type": 2,
+                "deviceId": "ccef77ab-8acb-4246-9fd2-cbb15267e62c",
+                "description": null,
+                "name": "Sector sur"
+            }
+        ]
+    }
+]

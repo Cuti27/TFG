@@ -91,4 +91,14 @@ class AuthController extends Controller
             'message' => 'Logged out'
         ];
     }
+
+    public function userInfo(Request $request)
+    {
+        return $request->user();
+    }
+
+    public function historyInfo(Request $request)
+    {
+        return response(History::where("userId", $request->user()->id)->orderBy('id', 'desc')->get(), 200);
+    }
 }

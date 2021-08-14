@@ -10,8 +10,13 @@
           :src="require('../assets/header.jpg')"
         ></v-img>
         <v-col id="top15">
-          <v-avatar size="100" style="position: relative; top: -50px">
-            <v-img class="myAvatar" :src="user.img"></v-img>
+          <v-avatar
+            color="primary"
+            :size="user.img ? 100 : 70"
+            style="position: relative; top: -50px"
+          >
+            <v-img v-if="user.img" class="myAvatar" :src="user.img"></v-img>
+            <span v-else>{{ userInitial }}</span>
           </v-avatar>
         </v-col>
         <v-list-item color="rgba(0, 0, 0, .4)">
@@ -25,6 +30,36 @@
       </v-card>
     </div>
     <v-container class="body">
+      <v-row>
+        <v-col class="py-5 px-0">
+          <div class="history">
+            <h3 class="pt-5">Historial del usuario</h3>
+            <perfect-scrollbar
+              class="scroll-area"
+              :settings="perfectScrollbarSettings"
+            >
+              <v-timeline align-top :dense="$vuetify.breakpoint.smAndDown">
+                <v-timeline-item
+                  v-for="(item, i) in userHistory"
+                  :key="i"
+                  fill-dot
+                >
+                  <v-card :color="i % 2 == 0 ? 'primary' : 'secondary'" dark>
+                    <v-card-title class="text-h6">
+                      {{ formatDate(item.created_at) }}
+                    </v-card-title>
+                    <v-card-text class="white text--primary">
+                      <p>
+                        {{ item.description }}
+                      </p>
+                    </v-card-text>
+                  </v-card>
+                </v-timeline-item>
+              </v-timeline>
+            </perfect-scrollbar>
+          </div>
+        </v-col>
+      </v-row>
       <v-row>
         <v-col class="py-5 px-0">
           <div class="devices">
@@ -85,7 +120,7 @@
                         :line-width="width"
                         :padding="padding"
                         :smooth="radius || false"
-                        :value="value"
+                        :value="irrigationHours"
                         color="rgba(255, 255, 255, .7)"
                         auto-draw
                         stroke-linecap="round"
@@ -155,10 +190,11 @@
             </v-sheet>
             <v-sheet height="600">
               <v-calendar
+                @click:event="print($event)"
                 ref="calendar"
                 :now="varToday"
                 :value="varToday"
-                :events="events"
+                :events="programEvents"
                 color="primary"
                 :type="type"
                 :event-overlap-threshold="30"
@@ -173,32 +209,19 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { PerfectScrollbar } from "vue2-perfect-scrollbar";
+import { mapActions, mapGetters, mapState } from "vuex";
+import "vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css";
 export default {
+  components: {
+    PerfectScrollbar,
+  },
   data() {
     return {
-      user: {
-        name: "Antonio Martinez Cremades",
-        email: "antonio@correo.com",
-        phone: "679974557",
-        img: "https://avatars0.githubusercontent.com/u/9064066?v=4&s=460",
+      perfectScrollbarSettings: {
+        maxScrollbarLength: 60,
+        wheelPropagation: false,
       },
-      events: [
-        {
-          name: "Weekly Meeting",
-          start: "2019-01-07 09:00",
-          end: "2019-01-07 10:00",
-        },
-        {
-          name: `Thomas' Birthday`,
-          start: "2019-01-10",
-        },
-        {
-          name: "Mash Potatoes",
-          start: "2019-01-09 12:30",
-          end: "2019-01-09 15:30",
-        },
-      ],
       varToday: this.today,
       selectedGradient: ["#41B883", "#ffffff"],
       padding: 8,
@@ -213,27 +236,41 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["getCabezales", "listProgram"]),
+    ...mapActions([
+      "getCabezales",
+      "listProgram",
+      "fetchUserHistory",
+      "setSelectedHead",
+    ]),
+    print(event) {
+      console.log(event);
+    },
     prev() {
-      if(new Date(this.varToday).getDay() != 1) {
+      if (new Date(this.varToday).getDay() != 1) {
         this.varToday = new Date(this.varToday);
         this.varToday.setDate(this.varToday.getDate() - 1);
         this.varToday = this.fromDateToString(this.varToday);
       }
     },
+
     next() {
-      if(this.type == "4day"){
+      if (this.type == "4day") {
         if (new Date(this.varToday).getDay() != 4) {
+          this.varToday = new Date(this.varToday);
+          this.varToday.setDate(this.varToday.getDate() + 1);
+          this.varToday = this.fromDateToString(this.varToday);
+        }
+      } else if (new Date(this.varToday).getDay() != 0) {
         this.varToday = new Date(this.varToday);
         this.varToday.setDate(this.varToday.getDate() + 1);
         this.varToday = this.fromDateToString(this.varToday);
       }
-      }
-      else if (new Date(this.varToday).getDay() != 0) {
-        this.varToday = new Date(this.varToday);
-        this.varToday.setDate(this.varToday.getDate() + 1);
-        this.varToday = this.fromDateToString(this.varToday);
-      }
+    },
+    toWeekDay(val) {
+      return this.week.find((day) => {
+        const correctDay = new Date(day);
+        return correctDay.getDay() == val;
+      });
     },
     fromDateToString(date) {
       let dd = String(date.getDate()).padStart(2, "0");
@@ -241,13 +278,70 @@ export default {
       let yyyy = date.getFullYear();
       return `${yyyy}-${mm}-${dd}`;
     },
+    formatDate(d) {
+      let date = new Date(d);
+      var dateString =
+        date.getFullYear() +
+        "-" +
+        ("0" + (date.getMonth() + 1)).slice(-2) +
+        "-" +
+        ("0" + date.getDate()).slice(-2) +
+        " " +
+        ("0" + date.getHours()).slice(-2) +
+        ":" +
+        ("0" + date.getMinutes()).slice(-2) +
+        ":" +
+        ("0" + date.getSeconds()).slice(-2);
+      return dateString;
+    },
+    addHour(date, string) {
+      let time = string.split(":");
+      date.setTime(
+        date.getTime() +
+          time[0] * 60 * 60 * 1000 +
+          time[1] * 60 * 1000 +
+          time[2] * 1000
+      );
+      return new Date(date);
+    },
   },
   beforeMount() {
     this.getCabezales();
     this.varToday = this.today;
+    this.fetchUserHistory();
   },
   computed: {
+    ...mapState(["user", "userHistory"]),
     ...mapGetters(["cabezales", "programas", "windowWidth"]),
+    irrigationHours() {
+      let hours = [0, 0, 0, 0, 0, 0, 0];
+      this.programas.forEach((programa) => {
+        programa.programDay.forEach((day, index) => {
+          if (day) {
+            programa.timer.forEach((time) => {
+              let duration = time.duration.split(":");
+              duration = parseFloat(duration[0]) + parseFloat(duration[1]/60) + parseFloat(duration[2]/60/60);
+              console.log("duration");
+              console.log(duration);
+              hours[(index + 1) % 7] += duration;
+            });
+          }
+        });
+      });
+      return hours;
+    },
+    userInitial() {
+      if (!this.user || !this.user.name) return "";
+      let rgx = new RegExp(/(\p{L}{1})\p{L}+/, "gu");
+
+      let initials = [...this.user.name.matchAll(rgx)] || [];
+
+      initials = (
+        (initials.shift()?.[1] || "") + (initials.pop()?.[1] || "")
+      ).toUpperCase();
+
+      return initials;
+    },
     type() {
       return this.windowWidth > 720
         ? this.calendarType
@@ -259,10 +353,55 @@ export default {
       var today = new Date();
       return this.fromDateToString(today);
     },
+    week() {
+      let curr = new Date();
+      let week = [];
+
+      for (let i = 1; i <= 7; i++) {
+        let first = curr.getDate() - curr.getDay() + i;
+        let day = new Date(curr.setDate(first)).toISOString().slice(0, 10);
+        week.push(day);
+      }
+      return week;
+    },
+    programEvents() {
+      let events = [];
+      this.programas.forEach((programa) => {
+        let days = [];
+        programa.programDay.forEach((day, index) => {
+          if (day) {
+            days.push(this.toWeekDay((index + 1) % 7));
+          }
+        });
+        days.forEach((day) => {
+          programa.timer.forEach((time) => {
+            const start = `${day} ${time.timeStart}`;
+            let eventDay = new Date(start);
+            const end = this.addHour(eventDay, time.duration);
+            events.push({
+              name: programa.name,
+              start,
+              end: this.formatDate(end),
+              color: "primary",
+            });
+            let endDay = new Date(end);
+            const fertirrigation = this.addHour(endDay, time.postIrrigation);
+            events.push({
+              name: "Fertirrigacion",
+              start: this.formatDate(end),
+              end: this.formatDate(fertirrigation),
+              color: "secondary",
+            });
+          });
+        });
+      });
+      return events;
+    },
   },
   watch: {
     selectedCabezal2(val, old) {
       if (val && val != old) {
+        this.setSelectedHead(val);
         this.listProgram();
       }
     },
@@ -273,13 +412,21 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
+.scroll-area {
+  max-width: 100%;
+  max-height: 725px;
+  overflow: hidden;
+  padding: 10px 15px;
+}
+
 .container {
   min-width: 100%;
 }
 
 .devices,
 .infoProfile,
-.week {
+.week,
+.history {
   box-shadow: 5px 5px 15px $primaryDark, -5px -5px 15px #ffffff;
   border-radius: 5px;
   padding: 10px 15px;
@@ -287,7 +434,7 @@ export default {
   background: $white;
 }
 #top15 {
-  max-height: 50px;
+  max-height: 40px;
 }
 
 .myAvatar {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import router from '@/router/index';
+import router from '@/router';
 // Función para añadir la cabecera de autenticación
 // Función para añadir la cabecera de autenticación
 const addAuthHeader = async(auth) => {
@@ -34,7 +34,7 @@ export default {
     async crearBasicDevice({ commit, state }, data) {
         commit("addIsLoading");
         const request =
-            "http://127.0.0.1:8000/api/head/" + state.selectedHead.id + "/device";
+            "http://josemiguel.myqnapcloud.com:41063/api/head/" + state.selectedHead.id + "/device";
         console.log(state.auth);
         let response = await axios
             .post(request, data, await addAuthHeader(state.auth))
@@ -45,9 +45,11 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
                     commit("removeIsLoading");
+                    commit("addGlobalError", "No se ha podido crear el dispositivo, intentalo más tarde");
                     return null;
                 }
             });
@@ -69,7 +71,7 @@ export default {
     async getAnalogicalInput({ commit }) {
         commit("addIsLoading");
         // Realizamos la petición
-        const request = "http://127.0.0.1:8000/api/analogicalInput";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/analogicalInput";
         let response = await doCall(request, null);
 
         // Actualizamos el estado
@@ -80,11 +82,14 @@ export default {
             commit("loadTypeAnalogicalInput", datosRecuperados);
             commit("removeIsLoading");
         }
+        else {
+            commit("addGlobalError", "Error, intentalo más tarde");
+        }
     },
     async getDigitalInput({ commit }) {
         commit("addIsLoading");
         // Realizamos la petición
-        const request = "http://127.0.0.1:8000/api/digitalInput";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/digitalInput";
         let response = await doCall(request, null);
 
         // Actualizamos el estado
@@ -93,11 +98,14 @@ export default {
             commit("loadTypeDigitalInput", datosRecuperados);
             commit("removeIsLoading");
         }
+        else {
+            commit("addGlobalError", "Error, intentalo más tarde");
+        }
     },
     async getAnalogicalOutput({ commit }) {
         commit("addIsLoading");
         // Realizamos la petición
-        const request = "http://127.0.0.1:8000/api/analogicalOutput";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/analogicalOutput";
         let response = await doCall(request, null);
 
         // Actualizamos el estado
@@ -106,11 +114,14 @@ export default {
             commit("loadTypeAnalogicalOutput", datosRecuperados);
             commit("removeIsLoading");
         }
+        else {
+            commit("addGlobalError", "Error, intentalo más tarde");
+        }
     },
     async getDigitalOutput({ commit }) {
         commit("addIsLoading");
         // Realizamos la petición
-        const request = "http://127.0.0.1:8000/api/digitalOutput";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/digitalOutput";
         let response = await doCall(request, null);
 
         // Actualizamos el estado
@@ -119,11 +130,14 @@ export default {
             commit("loadTypeDigitalOutput", datosRecuperados);
             commit("removeIsLoading");
         }
+        else {
+            commit("addGlobalError", "Error, intentalo más tarde");
+        }
     },
     async getTypeDevice({ commit }) {
         commit("addIsLoading");
         // Realizamos la petición
-        const request = "http://127.0.0.1:8000/api/typeDevice";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/typeDevice";
         let response = await doCall(request, null);
 
         // Actualizamos el estado
@@ -132,11 +146,14 @@ export default {
             commit("loadTypeDevice", datosRecuperados);
             commit("removeIsLoading");
         }
+        else {
+            commit("addGlobalError", "Error, intentalo más tarde");
+        }
     },
     async createDeviceId({ commit, dispatch, state }) {
         commit("addIsLoading");
         // Realizamos la petición
-        const request = "http://127.0.0.1:8000/api/create/deviceId";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/create/deviceId";
         let response = await axios
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
@@ -165,7 +182,7 @@ export default {
     async getDeviceId({ commit, state }) {
         commit("addIsLoading");
         // Realizamos la petición
-        const request = "http://127.0.0.1:8000/api/deviceId";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/deviceId";
 
         let response = await axios
             .get(request, await addAuthHeader(state.auth))
@@ -176,8 +193,10 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
+                    commit("addGlobalError", "Error, intentalo más tarde");
                     commit("removeIsLoading");
                     return null;
                 }
@@ -193,7 +212,7 @@ export default {
     async deleteDeviceId({ commit, state, dispatch }, id) {
         commit("addIsLoading");
         // Realizamos la petición
-        const request = "http://127.0.0.1:8000/api/deviceId";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/deviceId";
         let toDelete = await addAuthHeader(state.auth);
         toDelete.data = { id };
         await axios.delete(request, toDelete).catch((err) => {
@@ -205,6 +224,7 @@ export default {
                     commit("loadLogout");
                 }
                 console.log(err.response.headers);
+                commit("addGlobalError", "Error al borrar el dispositivo, intentalo más tarde");
                 commit("removeIsLoading");
                 return null;
             }
@@ -218,7 +238,7 @@ export default {
         commit("addIsLoading");
         // Realizamos la petición
         const request =
-            "http://127.0.0.1:8000/api/head/" + state.selectedHead.id + "/device";
+            "http://josemiguel.myqnapcloud.com:41063/api/head/" + state.selectedHead.id + "/device";
 
         let response = await axios
             .post(request, data, await addAuthHeader(state.auth))
@@ -229,9 +249,11 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
                     commit("removeIsLoading");
+                    commit("addGlobalError", "Error al crear el dispositivo, intentalo más tarde");
                     return null;
                 }
             });
@@ -250,7 +272,7 @@ export default {
     async getAllDevice({ commit, state }) {
         commit("addIsLoading");
         // Realizamos la petición
-        const request = "http://127.0.0.1:8000/api/device/" + state.selectedHead.id;
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/device/" + state.selectedHead.id;
 
         let response = await axios
             .get(request, await addAuthHeader(state.auth))
@@ -261,9 +283,11 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
                     commit("removeIsLoading");
+                    commit("addGlobalError", "Error al obtener todos los dispositivos, intentalo más tarde");
                     return null;
                 }
             });
@@ -279,7 +303,7 @@ export default {
     async getAllInfoDevice({ commit, state }, data) {
         commit("addIsLoading");
         // Realizamos la petición
-        const request = "http://127.0.0.1:8000/api/device/";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/device/";
 
         let response = await axios
             .post(request, data, await addAuthHeader(state.auth))
@@ -290,8 +314,10 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
+                    commit("addGlobalError", "Error, intentalo más tarde");
                     commit("removeIsLoading");
                     return null;
                 }
@@ -330,7 +356,7 @@ export default {
         console.log(listDigitalOutput);
         let dataSend = { idDevice, listDigitalOutput };
 
-        const request = "http://127.0.0.1:8000/api/head/" + head + "/digitalOutput";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/head/" + head + "/digitalOutput";
 
         let response = await axios
             .post(request, dataSend, await addAuthHeader(state.auth))
@@ -341,6 +367,7 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
                     commit("addGlobalError", "Debes seleccionar uno en el seleccionable e indicar un nombre");
@@ -379,7 +406,7 @@ export default {
 
         let dataSend = { idDevice, listDigitalInput };
 
-        const request = "http://127.0.0.1:8000/api/head/" + head + "/digitalInput";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/head/" + head + "/digitalInput";
 
         let response = await axios
             .post(request, dataSend, await addAuthHeader(state.auth))
@@ -390,6 +417,7 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
                     commit("addGlobalError", "Debes seleccionar uno en el seleccionable e indicar un nombre");
@@ -429,7 +457,7 @@ export default {
         let dataSend = { idDevice, listAnalogicalOutput };
 
         const request =
-            "http://127.0.0.1:8000/api/head/" + head + "/analogicalOutput";
+            "http://josemiguel.myqnapcloud.com:41063/api/head/" + head + "/analogicalOutput";
 
         let response = await axios
             .post(request, dataSend, await addAuthHeader(state.auth))
@@ -440,8 +468,10 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
+                    commit("addGlobalError", "Error al crear una salida analógica, intentalo más tarde");
                     commit("removeIsLoading");
                     return null;
                 }
@@ -478,7 +508,7 @@ export default {
         let dataSend = { idDevice, listAnalogicalInput };
 
         const request =
-            "http://127.0.0.1:8000/api/head/" + head + "/analogicalInput";
+            "http://josemiguel.myqnapcloud.com:41063/api/head/" + head + "/analogicalInput";
 
         let response = await axios
             .post(request, dataSend, await addAuthHeader(state.auth))
@@ -489,8 +519,10 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
+                    commit("addGlobalError", "Error al crear la salida analógica, intentalo más tarde");
                     commit("removeIsLoading");
                     return null;
                 }
@@ -511,7 +543,7 @@ export default {
     async deleteDevice({ commit, state }, id) {
         commit("addIsLoading");
         // Realizamos la petición
-        const request = "http://127.0.0.1:8000/api/device/" + id;
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/device/" + id;
         await axios.delete(request, await addAuthHeader(state.auth)).catch((err) => {
             if (err.response) {
                 console.log("Error en la llamda a: " + request);
@@ -521,6 +553,7 @@ export default {
                     commit("loadLogout");
                 }
                 console.log(err.response.headers);
+                commit("addGlobalError", "Error al borrar un dispositivo, intentalo más tarde");
                 commit("removeIsLoading");
                 return null;
             }

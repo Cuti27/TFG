@@ -11,7 +11,7 @@
       @input="error = ''"
       >{{ error }}</v-alert
     >
-    <div  v-if="!hideHeader" class="header">
+    <div v-if="!hideHeader" class="header">
       <v-dialog
         transition="dialog-bottom-transition"
         v-model="dialog"
@@ -50,12 +50,19 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="close"> Cancelar </v-btn>
-            <v-btn v-if="nameProgram" color="blue darken-1" text @click="save"> Acceder </v-btn>
-            <v-btn v-else disabled color="blue darken-1" text > Acceder </v-btn>
+            <v-btn v-if="nameProgram" color="blue darken-1" text @click="save">
+              Acceder
+            </v-btn>
+            <v-btn v-else disabled color="blue darken-1" text> Acceder </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-btn color="primary" dark class="mx-1 my-2 wrap" @click="nuevoDispositivo">
+      <v-btn
+        color="primary"
+        dark
+        class="mx-1 my-2 wrap"
+        @click="nuevoDispositivo"
+      >
         Listados de dispositivos
       </v-btn>
     </div>
@@ -71,8 +78,16 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title v-if="!hideHeader"  v-show="windowWidth > 500">Listado de programas</v-toolbar-title>
-          <v-divider  v-if="!hideHeader"  v-show="windowWidth > 500" class="mx-4" inset vertical></v-divider>
+          <v-toolbar-title v-if="!hideHeader" v-show="windowWidth > 500"
+            >Listado de programas</v-toolbar-title
+          >
+          <v-divider
+            v-if="!hideHeader"
+            v-show="windowWidth > 500"
+            class="mx-4"
+            inset
+            vertical
+          ></v-divider>
           <v-spacer></v-spacer>
 
           <v-dialog
@@ -116,16 +131,19 @@
       </template>
       <template v-slot:item.actions="{ item }">
         <div v-if="!customAction">
-           <font-awesome-icon
-          class="btn mr-2"
-          @click="editItem(item)"
-          icon="edit"
-        />
-        <font-awesome-icon
-          class="btn"
-          @click="deleteItem(item)"
-          icon="trash-alt"
-        />
+          <v-btn elevation="2" icon
+            ><font-awesome-icon
+              class="btn"
+              @click="editItem(item)"
+              icon="edit"
+          /></v-btn>
+          <v-btn elevation="2" icon>
+            <font-awesome-icon
+              class="btn"
+              @click="deleteItem(item)"
+              icon="trash-alt"
+            />
+          </v-btn>
         </div>
         <slot v-else></slot>
       </template>
@@ -181,7 +199,7 @@ export default {
     error: "",
   }),
   props: {
-    "hideHeader": Boolean,
+    hideHeader: Boolean,
     customAction: Boolean,
   },
 
@@ -202,9 +220,10 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
-    page(val, old){
-      if(val != old &&  val <= this.pageCount && val >= 1) this.getCabezales(this.page);
-    }
+    page(val, old) {
+      if (val != old && val <= this.pageCount && val >= 1)
+        this.getCabezales(this.page);
+    },
   },
 
   created() {

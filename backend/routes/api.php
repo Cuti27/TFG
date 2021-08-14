@@ -20,9 +20,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 // Login and register routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -39,6 +39,12 @@ Route::get('/typeDevice', [DeviceController::class, 'getTypeDevice']);
 
 // Auth routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
+
+    // Info of the user
+    Route::get('/user', [AuthController::class, "userInfo"]);
+
+    Route::get("/user/history", [AuthController::class, "historyInfo"]);
+
 
     // Logout sesion
     Route::post('/logout', [AuthController::class, 'logout']);

@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from '@/router';
 import actionsHead from "./Head/actionsHead.js";
 import actionsDevice from "./Device/actionsDevice.js";
 
@@ -22,6 +23,21 @@ function getCookie(name) {
 export default {
     ...actionsHead,
     ...actionsDevice,
+    async fetchUser({ commit, state }) {
+        let res = await axios
+            .get("http://josemiguel.myqnapcloud.com:41063/api/user", await addAuthHeader(state.auth))
+        if (res)
+            commit("setUser", res.data);
+    },
+    async fetchUserHistory({ commit, state }) {
+        let res = await axios
+            .get("http://josemiguel.myqnapcloud.com:41063/api/user/history", await addAuthHeader(state.auth))
+        if (res)
+            commit("setUserHistory", res.data);
+    },
+    offSnacbar({ commit }) {
+        commit("updateComunicationSuccess", "");
+    },
     updateWindowWidth({ state }, value) {
         state.windowWidth = value;
     },
@@ -41,15 +57,16 @@ export default {
     updateRegistro({ commit }, data) {
         commit("updateRegistro", data);
     },
+
     async login({ commit, state }, data) {
         commit("addIsLoading");
         await axios
-            .get("http://127.0.0.1:8000/sanctum/csrf-cookie")
+            .get("http://josemiguel.myqnapcloud.com:41063/sanctum/csrf-cookie")
             .then((csrf) => {
                 console.log(csrf);
             });
         console.log(await addAuthHeader(state.auth));
-        const request = "http://127.0.0.1:8000/api/login";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/login";
         let response = await axios
             .post(request, data, await addAuthHeader(state.auth))
             .catch((err) => {
@@ -59,9 +76,11 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
 
                     console.log(err.response.headers);
+                    commit("addGlobalError", "Credenciales erróneas");
                     commit("removeIsLoading");
                     return null;
                 }
@@ -79,7 +98,7 @@ export default {
     },
     async logout({ commit, state }) {
         commit("addIsLoading");
-        const request = "http://127.0.0.1:8000/api/logout";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/logout";
         await axios
             .post(request, {}, await addAuthHeader(state.auth))
             .catch((err) => {
@@ -89,6 +108,7 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
                 }
@@ -101,7 +121,7 @@ export default {
     },
     async register({ commit }, data) {
         commit("addIsLoading");
-        const request = "http://127.0.0.1:8000/api/register";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/register";
         let response = await axios.post(request, data).catch((err) => {
             if (err.response) {
                 console.log("Error en la llamda a: " + request);
@@ -111,6 +131,7 @@ export default {
                     commit("loadLogout");
                 }
                 console.log(err.response.headers);
+                commit("addGlobalError", "No te has podido registrar con esos datos, revisalos y vuelve a intentarlo");
                 commit("removeIsLoading");
                 return null;
             }
@@ -130,7 +151,7 @@ export default {
 
     async createProgram({ commit, state }, data) {
         commit("addIsLoading");
-        const request = "http://127.0.0.1:8000/api/program";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/program";
 
         let list = [];
         data.emitter.forEach((element, index) => {
@@ -178,7 +199,7 @@ export default {
     async listProgram({ commit, state }, page = 1) {
         commit("addIsLoading");
         const request =
-            "http://127.0.0.1:8000/api/head/" +
+            "http://josemiguel.myqnapcloud.com:41063/api/head/" +
             state.selectedHead.id +
             "/program?page=" +
             page;
@@ -192,9 +213,11 @@ export default {
                     console.log(err.response.status);
                     if (err.response.status == 401) {
                         commit("loadLogout");
+                        router.push("Home");
                     }
                     console.log(err.response.headers);
                     commit("removeIsLoading");
+                    commit("addGlobalError", "No se ha podido cargar los programas, asegurate de escoger un cabezal");
                     return null;
                 }
             });
@@ -226,7 +249,7 @@ export default {
             headId: state.selectedHead.id,
         };
 
-        const request = "http://127.0.0.1:8000/api/program";
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/program";
         let response = await axios
             .delete(request, msg, await addAuthHeader(state.auth))
             .catch((err) => {

@@ -82,12 +82,22 @@
         <v-btn @click="programList(item)">Acceder</v-btn>
       </template>
       <template v-slot:item.actions="{ item }">
-        <font-awesome-icon
-          class="mr-2 btn"
-          @click="editItem(item)"
-          icon="edit"
-        />
-        <font-awesome-icon @click="deleteItem(item)" icon="trash-alt" />
+        <div v-if="!customAction">
+          <v-btn elevation="2" icon
+            ><font-awesome-icon
+              class="btn"
+              @click="editItem(item)"
+              icon="edit"
+          /></v-btn>
+          <v-btn elevation="2" icon>
+            <font-awesome-icon
+              class="btn"
+              @click="deleteItem(item)"
+              icon="trash-alt"
+            />
+          </v-btn>
+        </div>
+        <slot v-else></slot>
       </template>
       <template v-slot:no-data>
         <v-btn class="btn" color="primary" @click="initialize">
@@ -98,7 +108,6 @@
     <div class="text-center pt-2">
       <v-pagination
         v-model="page"
-
         :length="pageCount"
       ></v-pagination>
     </div>
@@ -136,6 +145,10 @@ export default {
       name: "",
     },
   }),
+    props: {
+    hideHeader: Boolean,
+    customAction: Boolean,
+  },
 
   computed: {
     ...mapGetters(["cabezales", "numCabezales", "windowWidth"]),
