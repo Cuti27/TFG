@@ -1,12 +1,17 @@
 <template>
-  <div class="dayList">
+  <div :class="{ transition: animation, dayList: true }">
     <slot></slot>
     <div
       v-for="(day, index) in days"
       :key="index"
       @click.prevent="togleValue(index)"
     >
-      <input :disabled="disabled" :id="day + '-' + index" type="radio" :checked="daysValue[index]" />
+      <input
+        :disabled="disabled"
+        :id="day + '-' + index"
+        type="radio"
+        :checked="daysValue[index]"
+      />
       <label
         :class="{ blanco: !daysValue[index], xs, disabled }"
         :for="day + '-' + index"
@@ -24,6 +29,7 @@ export default {
     xs: {
       type: Boolean,
     },
+    animation: Boolean,
   },
   data() {
     // Creamos un array para comprobar el día
@@ -50,11 +56,30 @@ export default {
 <style lang="scss" scoped>
 @import "src/css/colorSchema.scss";
 
+.transition {
+  input,
+  label {
+    transition: background 0.3s;
+  }
+
+  label {
+    transition: all 0.5s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 25px 0 rgba(34, 41, 47, 0.25);
+    }
+  }
+
+  label.blanco:hover {
+    opacity: 0.8;
+  }
+}
+
 input,
 label {
   background: $primaryDark;
   color: #fff;
-  transition: background 0.3s;
 }
 
 label:hover {
@@ -76,12 +101,6 @@ label {
   margin: 5px;
   line-height: 50px;
   cursor: pointer;
-  transition: all 0.5s ease;
-
-  &:hover{
-    transform: translateY(-5px);
-    box-shadow: 0 4px 25px 0 rgba(34,41,47,.25);
-  }
 }
 
 .xs {
@@ -97,10 +116,6 @@ label.blanco {
   opacity: 0.5;
 }
 
-label.blanco:hover {
-  opacity: 0.8;
-}
-
 .dayList {
   display: flex;
   justify-content: center;
@@ -109,19 +124,19 @@ label.blanco:hover {
   flex-wrap: 1;
 }
 
-.disabled{
+.disabled {
   text-decoration: line-through;
-  color: rgba(200,200,200, 0.5);
+  color: rgba(200, 200, 200, 0.5);
   background: $primaryShadow;
 
-  &.blanco{
-    color: rgba(0,0,0, 0.5);
-    background: rgba(200,200,200,0.5)
+  &.blanco {
+    color: rgba(0, 0, 0, 0.5);
+    background: rgba(200, 200, 200, 0.5);
   }
 
-  &:hover{
-        transform: none;
-        box-shadow: 0;
+  &:hover {
+    transform: none;
+    box-shadow: 0;
   }
 }
 </style>

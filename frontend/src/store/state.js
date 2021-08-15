@@ -21,4 +21,5 @@ export default {
     updateName: false,
     windowWidth: 1980,
     windowHeight: 1080,
+    tempProgram: {},
 };

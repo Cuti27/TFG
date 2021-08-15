@@ -67,18 +67,23 @@
             <h5 class="mt-2">
               Puede seleccionar un cabezal para filtrar la información
             </h5>
-            <v-select
+              <v-select
               :items="cabezales"
               label="Todos los cabezales"
+              class="select-center"
               outlined
               clearable
               v-model="selectedCabezal2"
             >
-              <template slot="selection" slot-scope="data">
+            <template slot="selection" slot-scope="data">
                 {{ data.item.name }}
               </template>
               <template slot="item" slot-scope="data">
                 {{ data.item.name }}
+              </template>
+
+              <template slot="append-outer">
+                <v-btn @click="fetchAllProgram">Todos los programas</v-btn>
               </template>
             </v-select>
             <h5 v-if="selectedCabezal2" class="mt-2">
@@ -86,7 +91,7 @@
             </h5>
             <v-select
               v-if="selectedCabezal2"
-              :items="programas"
+              :items="programProfile"
               label="Todos los cabezales"
               outlined
               clearable
@@ -190,7 +195,7 @@
             </v-sheet>
             <v-sheet height="600">
               <v-calendar
-                @click:event="print($event)"
+                @click:event="showEvent($event)"
                 ref="calendar"
                 :now="varToday"
                 :value="varToday"
@@ -204,17 +209,72 @@
           </div>
         </v-col>
       </v-row>
+      <v-dialog
+      v-model="dialog"
+      max-width="360"
+    >
+      <v-card>
+        <v-card-title class="headline">Información del programa:</v-card-title>
+
+        <v-card-text>
+          <h3>{{selectedEvent.name}}</h3>
+          <v-container>
+            <v-row>
+              <v-col>
+                <span><strong>Activo:</strong> {{selectedEvent.active ? "Si" : "No"}}</span><br>
+                <span><strong>Identificador:</strong> {{ selectedEvent.id }}</span>
+              </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <div v-for="timer in selectedEvent.timer" :key="timer.id">
+                <span><strong>Hora de inicio:</strong> {{timer.timeStart}}</span><br>
+                <span><strong>Duración:</strong> {{ timer.duration}}</span><br>
+                <span><strong>Fertirrigación:</strong> {{timer.postIrrigation}}</span>
+              </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <day-selector disable xs :dias="selectedEvent.programDay"></day-selector>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <span><strong>Sectores:</strong></span><br>
+              <div v-for="sector in selectedEvent.sector" :key="sector.id">
+                <span>({{sector.id}}) {{sector.name}}</span><br>
+              </div>
+            </v-col>
+          </v-row>
+          </v-container>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            text
+            @click="dialog = false"
+          >
+            Cerrar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     </v-container>
   </div>
 </template>
 
 <script>
 import { PerfectScrollbar } from "vue2-perfect-scrollbar";
+import daySelector from "@/components/DaySelector";
 import { mapActions, mapGetters, mapState } from "vuex";
 import "vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css";
 export default {
   components: {
     PerfectScrollbar,
+    daySelector
   },
   data() {
     return {
@@ -233,6 +293,8 @@ export default {
       selectedCabezal2: null,
       selectedProgram: null,
       calendarType: "week",
+      dialog: false,
+      selectedEvent: {}
     };
   },
   methods: {
@@ -241,9 +303,12 @@ export default {
       "listProgram",
       "fetchUserHistory",
       "setSelectedHead",
+      "fetchProgramByHead",
+      "fetchAllProgram"
     ]),
-    print(event) {
-      console.log(event);
+    showEvent(event) {
+      this.selectedEvent = event.event.program;
+      this.dialog = true;
     },
     prev() {
       if (new Date(this.varToday).getDay() != 1) {
@@ -311,18 +376,16 @@ export default {
     this.fetchUserHistory();
   },
   computed: {
-    ...mapState(["user", "userHistory"]),
-    ...mapGetters(["cabezales", "programas", "windowWidth"]),
+    ...mapState(["user", "userHistory", "programProfile"]),
+    ...mapGetters(["cabezales", "windowWidth"]),
     irrigationHours() {
       let hours = [0, 0, 0, 0, 0, 0, 0];
-      this.programas.forEach((programa) => {
+      this.programProfile.forEach((programa) => {
         programa.programDay.forEach((day, index) => {
           if (day) {
             programa.timer.forEach((time) => {
               let duration = time.duration.split(":");
               duration = parseFloat(duration[0]) + parseFloat(duration[1]/60) + parseFloat(duration[2]/60/60);
-              console.log("duration");
-              console.log(duration);
               hours[(index + 1) % 7] += duration;
             });
           }
@@ -357,6 +420,12 @@ export default {
       let curr = new Date();
       let week = [];
 
+      if(curr.getDay() == 0){
+        let yesterday = new Date(curr.getTime());
+        yesterday.setDate(curr.getDate() - 1);  
+        curr = yesterday  
+      }
+
       for (let i = 1; i <= 7; i++) {
         let first = curr.getDate() - curr.getDay() + i;
         let day = new Date(curr.setDate(first)).toISOString().slice(0, 10);
@@ -366,7 +435,7 @@ export default {
     },
     programEvents() {
       let events = [];
-      this.programas.forEach((programa) => {
+      this.programProfile.forEach((programa) => {
         let days = [];
         programa.programDay.forEach((day, index) => {
           if (day) {
@@ -382,7 +451,8 @@ export default {
               name: programa.name,
               start,
               end: this.formatDate(end),
-              color: "primary",
+              color: programa.active ? "primary" : "grey darken-1",
+              program: programa
             });
             let endDay = new Date(end);
             const fertirrigation = this.addHour(endDay, time.postIrrigation);
@@ -390,7 +460,8 @@ export default {
               name: "Fertirrigacion",
               start: this.formatDate(end),
               end: this.formatDate(fertirrigation),
-              color: "secondary",
+              color: programa.active ? "secondary" : "grey darken-2",
+              program: programa
             });
           });
         });
@@ -402,7 +473,7 @@ export default {
     selectedCabezal2(val, old) {
       if (val && val != old) {
         this.setSelectedHead(val);
-        this.listProgram();
+        this.fetchProgramByHead(val.id);
       }
     },
   },
@@ -411,6 +482,13 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
+
+
+.select-center{
+  &:first-child{
+        margin-top: 10px !important;
+    }
+}
 
 .scroll-area {
   max-width: 100%;

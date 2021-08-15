@@ -103,4 +103,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/program', [ProgramController::class, 'deleteProgram']);
 
     Route::get('/head/{id}/program', [ProgramController::class, 'listProgram']);
+
+    Route::get("/program/{id}", [ProgramController::class, 'getProgram']);
+
+    Route::get("/program/{id}/activate", [ProgramController::class, 'changeProgram']);
+
+    Route::get(
+        "/allProgram",
+        [ProgramController::class, 'getProgram']
+    );
+
+    Route::get("/head/{headId}/allProgram", [ProgramController::class, 'getProgram']);
 });

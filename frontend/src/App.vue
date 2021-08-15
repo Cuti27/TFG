@@ -33,13 +33,12 @@
                 <v-spacer></v-spacer>
                 <v-divider class="mx-1" inset vertical></v-divider>
               </div>
-              <div :class="{pInfo: true, 'text-align-center': windowWidth < 500}" v-if="!collapse">
-                <strong>
-                  {{ user.name }} </strong
-                ><br />
-                <span>
-                  {{ user.phone }} </span
-                ><br />
+              <div
+                :class="{ pInfo: true, 'text-align-center': windowWidth < 500 }"
+                v-if="!collapse"
+              >
+                <strong> {{ user.name }} </strong><br />
+                <span> {{ user.phone }} </span><br />
                 <span>
                   {{ user.email }}
                 </span>
@@ -108,12 +107,7 @@
                   {{ text }}
 
                   <template v-slot:action="{ attrs }">
-                    <v-btn
-                      color="blue"
-                      text
-                      v-bind="attrs"
-                      @click="offSnacbar"
-                    >
+                    <v-btn color="blue" text v-bind="attrs" @click="offSnacbar">
                       Cerrar
                     </v-btn>
                   </template>
@@ -178,6 +172,73 @@ export default {
 
       return initials;
     },
+    menuLogged() {
+      let menu = [
+        ...this.menuNoLogged,
+        {
+          href: { name: "Cabezales" },
+          title: "Cabezales",
+          icon: {
+            element: "font-awesome-icon",
+            attributes: {
+              icon: "house-user",
+            },
+          },
+        },
+      ];
+
+      if (this.$route.name != "Cabezales" && this.$route.name != "Home" && this.$route.name != "Profile") {
+        menu.push({
+          href: { name: "Programas" },
+          title: "Programas",
+          icon: {
+            element: "font-awesome-icon",
+            attributes: {
+              icon: "clock",
+            },
+          },
+        });
+        if (this.$route.name != "Programas") {
+          if (this.$route.name == "Registrar programador") {
+            menu.push({
+              href: { name: "Registrar programador" },
+              title: "Registrar programador",
+              icon: {
+                element: "font-awesome-icon",
+                attributes: {
+                  icon: "clock",
+                },
+              },
+            });
+          } else {
+            menu.push({
+              href: { name: "Creador programa" },
+              title: "Creador programa",
+              icon: {
+                element: "font-awesome-icon",
+                attributes: {
+                  icon: "faucet",
+                },
+              },
+            });
+            if (this.$route.name != "Creador programa") {
+              menu.push({
+                href: { name: "Fertirrigacion" },
+                title: "Fertirrigacion",
+                icon: {
+                  element: "font-awesome-icon",
+                  attributes: {
+                    icon: "leaf",
+                  },
+                },
+              });
+            }
+          }
+        }
+      }
+
+      return menu;
+    },
   },
   data() {
     return {
@@ -210,18 +271,7 @@ export default {
             },
           },
         },
-        {
-          href: { name: "Prueba" },
-          title: "Pruebas",
-          icon: {
-            element: "font-awesome-icon",
-            attributes: {
-              icon: "wrench",
-            },
-          },
-        },
       ],
-      menuLogged: [],
     };
   },
   methods: {
@@ -238,7 +288,7 @@ export default {
       "updateWindowWidth",
       "updateWindowHeight",
       "fetchUser",
-      "offSnacbar"
+      "offSnacbar",
     ]),
     touchOut() {
       if (!this.collapse) this.collapse = true;
@@ -277,59 +327,9 @@ export default {
     this.getTypeDevice();
     this.fetchUser();
 
-    this.menuLogged = [
-      ...this.menuNoLogged,
-      {
-        href: { name: "ProgramView" },
-        title: "ProgramView",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "faucet",
-          },
-        },
-      },
-      {
-        href: { name: "Fertirrigacion" },
-        title: "Fertirrigacion",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "leaf",
-          },
-        },
-      },
-      {
-        href: { name: "Cabezales" },
-        title: "Cabezales",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "house-user",
-          },
-        },
-      },
-      {
-        href: { name: "Programas" },
-        title: "Programas",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "clock",
-          },
-        },
-      },
-      {
-        href: { name: "Registrar programador" },
-        title: "Registrar programador",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "clock",
-          },
-        },
-      },
-    ];
+    if (performance.navigation.type == 1){
+      this.$router.push("Cabezales");
+    }
   },
 };
 </script>
@@ -339,13 +339,13 @@ export default {
 $primary-color: $primary;
 $icon-color: darken($primaryDark, 10%);
 $input-text-align: center;
-.toggle-btn{
+.toggle-btn {
   height: 60px !important;
 }
 
 @import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
 
-.text-align-center{
+.text-align-center {
   text-align: center;
 }
 
@@ -634,11 +634,11 @@ h3 {
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 

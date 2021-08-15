@@ -9,9 +9,11 @@ use App\Models\AnalogicalOutput;
 use App\Models\Device;
 use App\Models\DigitalInput;
 use App\Models\DigitalOutput;
+use App\Models\Emitter;
 use App\Models\waittingId;
 use App\Models\Head;
 use App\Models\History;
+use App\Models\Sector;
 use App\Models\TypeAnalogicalInput;
 use App\Models\TypeAnalogicalOutput;
 use App\Models\TypeDevice;
@@ -795,6 +797,19 @@ class DeviceController extends Controller
         }
 
         // AnalogicalInput::where()
+
+        $sectors = Sector::where("digitalOutputId", $device->id)->get();
+        $emitters = Emitter::where("digitalOutputId", $device->id)->get();
+
+        if ($sectors || $emitters) {
+            $response = [
+                'message' => 'Had sector or emitter in programs, remove it before',
+                'sectors' => $sectors,
+                'emitters' => $emitters,
+            ];
+
+            response($response, 400);
+        }
 
         $device->delete();
 

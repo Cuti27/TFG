@@ -19,4 +19,29 @@ export default {
   loadSectors(state, data) {
     state.sectors = data.sectorList;
   },
+  loadProgramProfile(state, data) {
+    console.log("mutation");
+    console.log(data);
+    data.listPrograms.forEach((element, index) => {
+      element.timer = data.timer[index];
+      element.programDay = [
+        element.mon,
+        element.tue,
+        element.wed,
+        element.thu,
+        element.fri,
+        element.sat,
+        element.sun,
+      ];
+      delete element.mon;
+      delete element.tue;
+      delete element.wed;
+      delete element.thu;
+      delete element.fri;
+      delete element.sat;
+      delete element.sun;
+      element.sector = data.sector[index];
+    });
+    state.programProfile = data.listPrograms;
+  }
 };

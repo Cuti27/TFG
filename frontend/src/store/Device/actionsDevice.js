@@ -2,7 +2,7 @@ import axios from "axios";
 import router from '@/router';
 // Función para añadir la cabecera de autenticación
 // Función para añadir la cabecera de autenticación
-const addAuthHeader = async(auth) => {
+const addAuthHeader = async (auth) => {
     return {
         headers: {
             Authorization: "Bearer " + auth,
@@ -19,7 +19,7 @@ function getCookie(name) {
 }
 
 // Funcion para realizar la llamada mediante axios y realizar el tratamiento de errores
-const doCall = async(request, auth = null) => {
+const doCall = async (request, auth = null) => {
     return await axios.get(request, auth).catch((err) => {
         if (err.response) {
             console.log("Error en la llamda a: " + request);
@@ -346,7 +346,7 @@ export default {
 
         let listDigitalOutput = [];
         data.forEach((element, index) => {
-            let value = {...element };
+            let value = { ...element };
             value.deviceId = idDevice;
 
             if (!element.output) value.output = index + 1;
@@ -395,7 +395,7 @@ export default {
 
         let listDigitalInput = [];
         data.forEach((element, index) => {
-            let value = {...element };
+            let value = { ...element };
             value.deviceId = idDevice;
 
             if (!element.input) value.input = index + 1;
@@ -445,7 +445,7 @@ export default {
 
         let listAnalogicalOutput = [];
         data.forEach((element, index) => {
-            let value = {...element };
+            let value = { ...element };
             value.deviceId = idDevice;
 
             if (!element.output) value.output = index + 1;
@@ -496,7 +496,7 @@ export default {
 
         let listAnalogicalInput = [];
         data.forEach((element, index) => {
-            let value = {...element };
+            let value = { ...element };
             value.deviceId = idDevice;
 
             if (!element.input) value.input = index + 1;
@@ -552,8 +552,15 @@ export default {
                 if (err.response.status == 401) {
                     commit("loadLogout");
                 }
-                console.log(err.response.headers);
-                commit("addGlobalError", "Error al borrar un dispositivo, intentalo más tarde");
+
+                if (err.response.status == 400 && (err.response.data.sectors || err.response.data.emitters)) {
+                    commit("addGlobalError", "El dispositivo se encuentra en un programa, modifica o borra este para poder eliminarlo. ");
+                }
+                else {
+                    console.log(err.response.headers);
+                    commit("addGlobalError", "Error al borrar un dispositivo, si esta");
+                }
+
                 commit("removeIsLoading");
                 return null;
             }
@@ -561,6 +568,6 @@ export default {
 
 
         commit("removeIsLoading");
-        router.push("cabezales");
+        router.push("Cabezales");
     },
 };

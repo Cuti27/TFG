@@ -165,10 +165,10 @@
           @update="createAnalogicalInput"
         ></output-input>
       </div>
-      <div>
-        <submit-button @click="resetPage()">Terminar</submit-button>
-      </div>
     </div>
+    <div class="retroceder mt-5">
+        <submit-button @click="resetPage()">Retroceder</submit-button>
+      </div>
   </div>
 </template>
 
@@ -272,7 +272,10 @@ export default {
        "resetConfigureDevice"
     ]),
     resetPage(){
-      this.resetConfigureDevice();
+      if(!this.configureDevice || this.configureDevice == {})
+        this.$router.push("Cabezales")
+      else
+        this.resetConfigureDevice();
     },
     remove(){
       this.deleteDevice(this.radioGroup);
@@ -329,7 +332,8 @@ export default {
   .salidasDigitales,
   .entradasDigitales,
   .salidasAnalogicas,
-  .entradasAnalogicas {
+  .entradasAnalogicas,
+  .retroceder {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 25px;
     margin: 10px;

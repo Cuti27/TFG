@@ -6,4 +6,5 @@ export default {
   last_page: -1,
   emitter: [],
   sectors: [],
+  programProfile: [],
 };

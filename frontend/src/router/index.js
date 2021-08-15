@@ -11,7 +11,7 @@ const routes = [{
     },
     {
         path: "/programs",
-        name: "ProgramView",
+        name: "Creador programa",
         component: () =>
             import ("../views/ProgramView.vue"),
     },

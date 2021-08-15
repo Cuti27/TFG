@@ -25,36 +25,5 @@ class TypeAnalogicalInputSeeder extends Seeder
         TypeAnalogicalInput::create(['type' => 'Humedad relativa']);
         TypeAnalogicalInput::create(['type' => 'Presion']);
         TypeAnalogicalInput::create(['type' => 'Presostato diferencial']);
-        // DB::table('type_analogical_input')->insert([
-        //     'type' => 'Humedad',
-        // ]);
-
-        // DB::table('type_analogical_input')->insert([
-        //     'type' => 'pH',
-        // ]);
-
-        // DB::table('type_analogical_input')->insert([
-        //     'type' => 'Conductividad electrica del agua',
-        // ]);
-
-        // DB::table('type_analogical_input')->insert([
-        //     'type' => 'Temperatura',
-        // ]);
-
-        // DB::table('type_analogical_input')->insert([
-        //     'type' => 'Radiacion solar',
-        // ]);
-
-        // DB::table('type_analogical_input')->insert([
-        //     'type' => 'Humedad relativa',
-        // ]);
-
-        // DB::table('type_analogical_input')->insert([
-        //     'type' => 'Presion',
-        // ]);
-
-        // DB::table('type_analogical_input')->insert([
-        //     'type' => 'Presostato diferencial',
-        // ]);
     }
 }

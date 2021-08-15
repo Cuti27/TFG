@@ -245,13 +245,22 @@ export default {
     async deleteProgram({ commit, dispatch, state }, data) {
         commit("addIsLoading");
         let msg = {
-            programId: data.id,
-            headId: state.selectedHead.id,
+            data: {
+                programId: data.id,
+                headId: state.selectedHead.id,
+            },
+            headers: {
+                Authorization: "Bearer " + state.auth,
+                withCredentials: true,
+                "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
+            },
         };
+
+
 
         const request = "http://josemiguel.myqnapcloud.com:41063/api/program";
         let response = await axios
-            .delete(request, msg, await addAuthHeader(state.auth))
+            .delete(request, msg)
             .catch((err) => {
                 if (err.response) {
                     if (err.response.data.customError) {
@@ -283,4 +292,36 @@ export default {
     async loadUpdateName({ commit }, value) {
         commit("updateUpdatedName", value);
     },
+
+    async changeProgram({ commit, dispatch, state }, { id }) {
+        commit("addIsLoading");
+
+        const request = "http://josemiguel.myqnapcloud.com:41063/api/program/" + id + "/activate";
+        await axios
+            .get(request, await addAuthHeader(state.auth))
+            .catch((err) => {
+                if (err.response) {
+
+                    console.log("Error en la llamda a: " + request);
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    if (err.response.status == 401) {
+                        commit("loadLogout");
+                    }
+                    console.log(err.response.headers);
+
+                    commit("addGlobalError", "Error, no se ha podido conectar con el servidor");
+                    commit("removeIsLoading");
+                    return null;
+                }
+            });
+
+        // Actualizamos el estado
+        dispatch("listProgram");
+        commit("removeIsLoading");
+    },
+
+    async setTempProgram({ commit }, program) {
+        commit("setTempProgram", program);
+    }
 };

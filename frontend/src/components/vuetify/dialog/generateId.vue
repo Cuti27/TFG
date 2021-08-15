@@ -36,7 +36,7 @@
                 {{ item.id }}
               </span>
               <div class="buttons">
-                <v-btn @click="doCopy(item.id)" v-if="canCopy" class="btn"
+                <v-btn v-clipboard="item.id" class="btn"
                   ><font-awesome-icon :icon="['far', 'copy']"
                 /></v-btn>
                 <v-btn class="btn" @click="deleteDeviceId(item.id)"
@@ -69,7 +69,6 @@ export default {
     return {
       dialog: false,
       show1: false,
-      canCopy: false,
     };
   },
   props: {
@@ -81,25 +80,11 @@ export default {
   computed: {
     ...mapGetters(["listDeviceId"]),
   },
-  created() {
-    this.canCopy = !!navigator.clipboard;
-  },
 
   methods: {
     ...mapActions(["createDeviceId", "getDeviceId", "deleteDeviceId"]),
     generar() {
       this.createDeviceId();
-    },
-    async doCopy(s) {
-      console.log(`Value ${s}`);
-      navigator.clipboard.writeText(s).then(
-        () => {
-          console.log("Copied");
-        },
-        () => {
-          console.log("Not copied");
-        }
-      );
     },
   },
   beforeMount() {

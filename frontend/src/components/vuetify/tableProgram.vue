@@ -39,9 +39,14 @@
               <v-row>
                 <v-col>
                   <v-text-field
+                    v-if="checkProgram"
                     v-model="nameProgram"
                     label="Nombre"
                   ></v-text-field>
+                  <b v-else>
+                  En este cabezal no hay suficientes emisores o sectores,
+                  asegurate de que al menos tenga un emisor y un sector
+                </b>
                 </v-col>
               </v-row>
             </v-container>
@@ -53,7 +58,7 @@
             <v-btn v-if="nameProgram" color="blue darken-1" text @click="save">
               Acceder
             </v-btn>
-            <v-btn v-else disabled color="blue darken-1" text> Acceder </v-btn>
+            <v-btn v-else-if="checkProgram" disabled color="blue darken-1" text> Acceder </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -75,6 +80,7 @@
       hide-default-footer
       :items-per-page="15"
       dense
+      mobile-breakpoint="860"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -97,17 +103,21 @@
           >
             <v-card>
               <v-card-title class="headline">Estas seguro?</v-card-title>
-              <v-card-text
-                ><b
-                  >Estas seguro que quieres eliminar este programa?</b
-                ></v-card-text
-              >
+              <v-card-text>
+                <b>
+                  Estas seguro que quieres eliminar este programa?
+                </b>
+                
+              </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete"
                   >Cancelar</v-btn
                 >
-                <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="deleteItemConfirm"
                   >Si</v-btn
                 >
                 <v-spacer></v-spacer>
@@ -129,13 +139,17 @@
           >- {{ sector.name }}<br
         /></span>
       </template>
+      <template v-slot:item.activate="{ item }">
+        <v-switch
+          inset
+          v-model="item.active"
+          @change="activateDialog(item)"
+        ></v-switch>
+      </template>
       <template v-slot:item.actions="{ item }">
         <div v-if="!customAction">
           <v-btn elevation="2" icon
-            ><font-awesome-icon
-              class="btn"
-              @click="editItem(item)"
-              icon="edit"
+            ><font-awesome-icon class="btn" @click="editItem(item)" icon="edit"
           /></v-btn>
           <v-btn elevation="2" icon>
             <font-awesome-icon
@@ -159,6 +173,24 @@
         :length="pageCount"
       ></v-pagination>
     </div>
+    <v-dialog v-model="dialogChange" width="500">
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2"> Seguro? </v-card-title>
+        <v-card-text>
+          Estas seguro de querer desactivar el programa?
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="secondary" text @click="changeToggle(false)">
+            Cancelar
+          </v-btn>
+          <v-btn color="primary" text @click="changeToggle(true)">
+            Aceptar
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -171,6 +203,7 @@ export default {
   data: () => ({
     page: 1,
     // pageCount: 1,
+    dialogChange: false,
     nameProgram: "",
     dialog: false,
     dialogDelete: false,
@@ -188,6 +221,7 @@ export default {
       { text: "Sectores", value: "sector", sortable: false },
       { text: "Dias", value: "programDay", align: "center", sortable: false },
       { text: "Acciones", value: "actions", sortable: false },
+      { text: "Activado", value: "activate", sortable: false },
     ],
     editedIndex: -1,
     editedItem: {
@@ -197,6 +231,7 @@ export default {
       name: "",
     },
     error: "",
+    itemChange: {},
   }),
   props: {
     hideHeader: Boolean,
@@ -204,12 +239,21 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["programas", "numProgramas", "windowWidth"]),
+    ...mapGetters([
+      "programas",
+      "numProgramas",
+      "windowWidth",
+      "emitter",
+      "sectors",
+    ]),
     ...mapGetters({
       pageCount: "last_page",
     }),
     formTitle() {
       return this.editedIndex === -1 ? "Nuevo programa" : "Editar el programa";
+    },
+    checkProgram(){
+      return this.emitter.length != 0 && this.sectors.length != 0
     },
   },
 
@@ -229,6 +273,9 @@ export default {
   created() {
     this.initialize();
   },
+  beforeMount(){
+    this.loadEmitterSector()
+  },
 
   methods: {
     ...mapActions([
@@ -240,7 +287,28 @@ export default {
       "loadProgramName",
       "loadUpdateName",
       "resetConfigureDevice",
+      "changeProgram",
+      "setTempProgram"
     ]),
+    activateDialog(item) {
+      this.dialogChange = true;
+      this.itemChange = item;
+    },
+    changeToggle(val) {
+      this.dialogChange = false;
+
+      if (val) {
+        this.changeProgram(this.itemChange);
+      } else {
+        this.programas.every((programa) => {
+          if (programa.id == this.itemChange.id) {
+            programa.active = !programa.active;
+            return false;
+          }
+          return true;
+        });
+      }
+    },
     initialize() {
       this.listProgram();
     },
@@ -293,6 +361,7 @@ export default {
         this.error = "Debe especificar un nombre";
       }
       this.close();
+      this.setTempProgram(this.editedItem);
       this.$router.push("programs");
     },
     programList(item) {
@@ -338,5 +407,11 @@ export default {
 
 .wrap {
   white-space: normal;
+}
+
+.v-data-table > .v-data-table__wrapper .v-data-table__mobile-table-row {
+  margin: 10px; // add margin between each row
+  border: 1px solid #ededed; // add border color
+  display: block; // display table row as block
 }
 </style>

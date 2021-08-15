@@ -81,4 +81,7 @@ export default {
     updateUpdatedName(state, value) {
         state.updatedName = value;
     },
+    setTempProgram(state, value) {
+        state.tempProgram = value;
+    }
 };

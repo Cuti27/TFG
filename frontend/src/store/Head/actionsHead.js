@@ -202,4 +202,62 @@ export default {
             commit("removeIsLoading");
         }
     },
+
+    async fetchProgramByHead({ commit, state }, headId) {
+        const request =
+            "http://josemiguel.myqnapcloud.com:41063/api/head/" + headId + "/allProgram";
+        let response = await axios
+            .get(request, await addAuthHeader(state.auth))
+            .catch((err) => {
+                if (err.response) {
+                    console.log("Error en la llamda a: " + request);
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    if (err.response.status == 401) {
+                        commit("loadLogout");
+                        router.push("Home");
+                    }
+                    console.log(err.response.headers);
+                    commit("addGlobalError", "Error, no se ha podido obtener los datos de los programas");
+                    commit("removeIsLoading");
+                    return null;
+                }
+            });
+
+        // Actualizamos el estado
+        if (response && response.data) {
+            let datosRecuperados = response.data;
+            commit("loadProgramProfile", datosRecuperados);
+            commit("removeIsLoading");
+        }
+    },
+
+    async fetchAllProgram({ commit, state }) {
+        const request =
+            "http://josemiguel.myqnapcloud.com:41063/api/allProgram";
+        let response = await axios
+            .get(request, await addAuthHeader(state.auth))
+            .catch((err) => {
+                if (err.response) {
+                    console.log("Error en la llamda a: " + request);
+                    console.log(err.response.data);
+                    console.log(err.response.status);
+                    if (err.response.status == 401) {
+                        commit("loadLogout");
+                        router.push("Home");
+                    }
+                    console.log(err.response.headers);
+                    commit("addGlobalError", "Error, no se ha podido obtener los datos de los programas");
+                    commit("removeIsLoading");
+                    return null;
+                }
+            });
+
+        // Actualizamos el estado
+        if (response && response.data) {
+            let datosRecuperados = response.data;
+            commit("loadProgramProfile", datosRecuperados);
+            commit("removeIsLoading");
+        }
+    }
 };

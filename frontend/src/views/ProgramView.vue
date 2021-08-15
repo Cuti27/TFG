@@ -20,11 +20,6 @@
       </div>
     </header-custom>
 
-    <!-- Botón flotante con el que se puede guardar -->
-    <div v-if="windowWidth >= 500" class="guardar">
-      <submit-button @click="saveProgram">Guardar</submit-button>
-    </div>
-
     <!-- Cuerpo donde se va a mostrar todo el contenido de la página -->
     <div class="form">
       <!-- Toggle encargado de activar el programa -->
@@ -43,7 +38,7 @@
           name="Dias"
           :options="['Manual', 'Automático']"
         ></select-button>
-        <day-selector :disabled="diasAutomatico"></day-selector>
+        <day-selector :animation="true" :disabled="diasAutomatico"></day-selector>
       </div>
 
       <!-- Selector de fuentes -->
@@ -123,10 +118,15 @@
 
       <!-- Acceso al panel de fertirrigacion -->
       <div class="fertirrigacion">
+        <v-spacer></v-spacer>
+        <submit-button @click="resetPage">Cancelar</submit-button>
+        <v-spacer></v-spacer>
         <submit-button @click="goFertirrigacion()"
           >Fertirrigacion</submit-button
         >
-        <submit-button v-if="windowWidth < 500" @click="saveProgram">Guardar</submit-button>
+        <v-spacer></v-spacer>
+        <submit-button @click="saveProgram">Guardar</submit-button>
+        <v-spacer></v-spacer>
       </div>
     </div>
 
@@ -276,6 +276,9 @@ export default {
   },
   methods: {
     ...mapActions(["createProgram"]),
+    resetPage(){
+      this.$router.push("Programas");
+    },
     goFertirrigacion() {
       this.$router.push("Fertirrigacion");
     },
@@ -580,6 +583,12 @@ h3 {
         font-size: 1em;
       }
     }
+  }
+}
+
+@media (max-width: 910px) {
+  .fertirrigacion {
+    flex-direction: column;
   }
 }
 

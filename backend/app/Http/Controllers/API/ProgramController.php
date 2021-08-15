@@ -344,6 +344,45 @@ class ProgramController extends Controller
         return response($response, 200);
     }
 
+    public function getProgram(Request $request, string $headId = "", string $id = "")
+    {
+        $query = Programs::where('userId', $request->user()->id);
+
+        if ($headId) {
+            $query = $query->where('headId', $headId);
+        }
+
+        if ($id) {
+            $query = $query->where('id', $id);
+        }
+
+        $listPrograms = $query->get();
+
+        $timer = array();
+        $sector = array();
+        foreach ($listPrograms as $value) {
+            $result = Timer::where('programId', $value->id)->get();
+
+            if ($result) $timer[] = $result;
+
+            $result = Sector::where('programId', $value->id)->pluck("digitalOutputId");
+
+
+            $result = DigitalOutput::whereIn('id', $result)->get();
+            if ($result) $sector[] = $result;
+        }
+
+        // Creamos la respuesta
+        $result = [
+            'count' => count($listPrograms),
+            'listPrograms' => $listPrograms,
+            'timer' => $timer,
+            'sector' => $sector
+        ];
+
+        return response($result, 200);
+    }
+
     /**
      * Delete a program
      * 
@@ -384,6 +423,23 @@ class ProgramController extends Controller
             'userId' => $request->user()->id,
             'description' => "Eliminación del programa $program->name"
         ]);
+
+        return response("", 204);
+    }
+
+    public function changeProgram(Request $request, string $id)
+    {
+
+        $program = Programs::where('id', $id)->where('userId', $request->user()->id)->first();
+        if (!$program) {
+            return response([
+                'message' => 'Bad params'
+            ], 400);
+        }
+
+        $program->active = !$program->active;
+
+        $program->save();
 
         return response("", 204);
     }

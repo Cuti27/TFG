@@ -8,6 +8,9 @@ import vuetify from "@/plugins/vuetify"; // path to vuetify export
 import VueClipboard from "vue-clipboard2";
 
 import fontAwesome from "@/plugins/fontAwesome";
+import Clipboard from 'v-clipboard'
+
+Vue.use(Clipboard)
 Vue.component("font-awesome-icon", fontAwesome);
 
 require("vue-tour/dist/vue-tour.css");
