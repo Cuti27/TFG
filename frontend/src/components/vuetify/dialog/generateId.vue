@@ -6,6 +6,7 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-btn
+        id='registroIdBtn'
         color="primary"
         elevation="5"
         outlined

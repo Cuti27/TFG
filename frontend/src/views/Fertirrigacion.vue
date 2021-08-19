@@ -11,7 +11,10 @@
       @input="error = ''"
       >{{ error }}</v-alert
     >
-    <header-custom name="Configuracion de Fertirrigación"></header-custom>
+    <header-custom
+      tour="fertirrigacion"
+      name="Configuracion de Fertirrigación"
+    ></header-custom>
     <v-container>
       <v-row>
         <v-col class="phControl">
@@ -32,7 +35,7 @@
                 </div>
               </v-col>
             </v-row>
-              <v-row>
+            <v-row>
               <v-col>
                 <div class="phPost">
                   <v-switch
@@ -53,7 +56,7 @@
               </v-col>
             </v-row>
             <v-row>
-               <v-col>
+              <v-col>
                 <div class="phRie">
                   <v-switch
                     inset
@@ -245,6 +248,7 @@
         </v-container>
       </v-row>
     </v-container>
+    <v-tour name="fertirrigacion" :steps="steps" :options="myOptions"></v-tour>
   </div>
 </template>
 
@@ -277,6 +281,58 @@ export default {
       modal: false,
       time: "",
       error: "",
+      myOptions: {
+        useKeyboardNavigation: true,
+        labels: {
+          buttonSkip: "Saltar tour",
+          buttonPrevious: "Anterior",
+          buttonNext: "Siguiente",
+          buttonStop: "Finalizar",
+        },
+      },
+      steps: [
+        {
+          target: "#ph",
+          header: {
+            title: "Selector pH",
+          },
+          content:
+            "Permite establecer el valor del pH",
+        },
+        {
+          target: ".phPre",
+          header: {
+            title: "Selección prerriego",
+          },
+          content:
+            "Selecciona si se quiere controlar el pH en la fase de prerriego",
+        },
+        {
+          target: ".phRie",
+          header: {
+            title: "Selección riego",
+          },
+          content:
+            "Selecciona si se quiere controlar el pH en la fase de riego",
+        },
+        {
+          target: ".phPost",
+          header: {
+            title: "Selección postrriego",
+          },
+          content:
+            "Selecciona si se quiere controlar el pH en la fase de postrriego",
+        },
+        {
+          target: ".lineaAbono",
+          header: {
+            title: "Selección línea de abonado",
+          },
+          content:
+            "Selecciona la línea de abonado a configurar",
+        },
+        
+      ],
     };
   },
   created() {
@@ -369,7 +425,7 @@ export default {
     margin: 0px 0px 0px 10%;
   }
   .ph {
-    label{
+    label {
       margin-right: 8px;
     }
     max-width: 180px;

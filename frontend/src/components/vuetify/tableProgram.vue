@@ -25,6 +25,7 @@
             class="my-2"
             v-bind="attrs"
             v-on="on"
+            id="newProgramBtnId"
           >
             Nuevo programa
           </v-btn>
@@ -63,6 +64,7 @@
         </v-card>
       </v-dialog>
       <v-btn
+        id="dispositivosBtnId"
         color="primary"
         dark
         class="mx-1 my-2 wrap"
@@ -141,6 +143,7 @@
       </template>
       <template v-slot:item.activate="{ item }">
         <v-switch
+          id="activadoSwitchId"
           inset
           v-model="item.active"
           @change="activateDialog(item)"
@@ -149,10 +152,11 @@
       <template v-slot:item.actions="{ item }">
         <div v-if="!customAction">
           <v-btn elevation="2" icon
-            ><font-awesome-icon class="btn" @click="editItem(item)" icon="edit"
+            ><font-awesome-icon id="EditarBtnId" class="btn" @click="editItem(item)" icon="edit"
           /></v-btn>
           <v-btn elevation="2" icon>
             <font-awesome-icon
+              id="EliminarBtnId"
               class="btn"
               @click="deleteItem(item)"
               icon="trash-alt"
@@ -191,6 +195,8 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-tour name="programas" :steps="steps" :options="myOptions"></v-tour>
   </div>
 </template>
 
@@ -232,6 +238,55 @@ export default {
     },
     error: "",
     itemChange: {},
+    myOptions: {
+      useKeyboardNavigation: true,
+      labels: {
+        buttonSkip: "Saltar tour",
+        buttonPrevious: "Anterior",
+        buttonNext: "Siguiente",
+        buttonStop: "Finalizar",
+      },
+    },
+    steps: [
+      {
+        target: "#newProgramBtnId",
+        header: {
+          title: "Creación de un nuevo programa",
+        },
+        content:
+          "Permite crear un cabezal nuevo, indicando inicialmente el nombre, y posteriormente rellenando todo el formulario",
+      },
+      {
+        target: "#dispositivosBtnId",
+        header: {
+          title: "Listado de dispositivos",
+        },
+        content:
+          "Permite acceder al listado de dispositivos del cabezal, o registrar un nuevo cabezal",
+      },
+      {
+        target: "#activadoSwitchId",
+        header: {
+          title: "Activar/Desactivar programa",
+        },
+        content:
+          "Permite activar o desactivar un programa, sin necesidad de acceder a la información del mismo",
+      },
+       {
+        target: "#EditarBtnId",
+        header: {
+          title: "Editar el programa actual",
+        },
+        content: "Poniendo en primer lugar el nombre y despues modificando lo que se quiera en el formulario",
+      },
+      {
+        target: "#EliminarBtnId",
+        header: {
+          title: "Eliminar el programa",
+        },
+        content: "Permite eliminar el programa seleccionado",
+      },
+    ],
   }),
   props: {
     hideHeader: Boolean,

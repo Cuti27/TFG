@@ -1,7 +1,10 @@
 <template>
   <div class="registroProgramador">
     <!-- Header -->
-    <header-custom name="Registro de programador de riego"></header-custom>
+    <header-custom
+      :tour="showInputOutput ? 'registro' : 'listado'"
+      name="Registro de programador de riego"
+    ></header-custom>
 
     <!-- Identificador -->
     <div v-if="!showInputOutput" class="identificador">
@@ -11,13 +14,14 @@
         <form>
           <!-- Selector de dispositivo -->
           <custom-select
+            id="selectTypeProgramDevice"
             button
             class="mt-3"
             @change="update($event)"
             :selected="tipoProgramador"
             :values="listaTipos"
           ></custom-select>
-          <div v-if="tipoProgramador == 2">
+          <div v-if="tipoProgramador == 2" id="passwordIdField">
             <v-text-field label="Usuario" class="mt-3"></v-text-field>
             <v-text-field
               label="Contraseña"
@@ -26,15 +30,15 @@
             ></v-text-field>
             <v-btn>Logear</v-btn>
           </div>
-          <div v-else class="id mt-3">
+          <div v-else class="id mt-3" id="passwordIdField">
             <v-text-field v-model="nombre" label="Nombre"></v-text-field>
             <v-text-field
               v-model="id"
               label="Identificador generado"
             ></v-text-field>
-            <v-btn @click="createDevice()" class="mt-3"
-              >Comprobar conexión</v-btn
-            >
+            <v-btn id="checkConnectionBtn" @click="createDevice()" class="mt-3">
+              Comprobar conexión
+            </v-btn>
 
             <v-row justify="center">
               <v-dialog
@@ -44,7 +48,7 @@
                 max-width="500px"
               >
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn class="mt-5" v-bind="attrs" v-on="on">
+                  <v-btn id="listadoBtn" class="mt-5" v-bind="attrs" v-on="on">
                     Listado de dispositivos
                   </v-btn>
                 </template>
@@ -94,13 +98,20 @@
                     <v-spacer></v-spacer>
                   </v-card-title>
                   <v-card-text>
-                    Esto borrará todos los programas de riego a los que esta enlazado este dispositivo
+                    Esto borrará todos los programas de riego a los que esta
+                    enlazado este dispositivo
                   </v-card-text>
                   <v-card-actions class="justify-end">
                     <v-btn color="secondary" text @click="changeDialog">
                       Cancelar
                     </v-btn>
-                    <v-btn color="primary" outlined depressed text @click="remove">
+                    <v-btn
+                      color="primary"
+                      outlined
+                      depressed
+                      text
+                      @click="remove"
+                    >
                       Aceptar
                     </v-btn>
                   </v-card-actions>
@@ -110,26 +121,28 @@
           </div>
         </form>
       </div>
+
+      <v-tour name="listado" :steps="steps" :options="myOptions"></v-tour>
     </div>
 
     <!-- Imagen del dispositivo -->
     <div v-else class="device">
       <perfil-programador
-      
+        id="infoProgramador"
         :img="image.src"
         :type="listaTipos[tipoProgramador]"
         :name="nombre"
-        :id="id"
+        :idDevice="id"
         :headName="selectedHead.name"
         :headId="selectedHead.id"
         :date="selectedHead.updated_at"
       />
     </div>
-      
 
     <div v-if="showInputOutput" class="InputOutput">
       <div class="salidasDigitales">
         <output-input
+          id="digitalOutput"
           title="Salidas Digitales"
           type="Salida Digital"
           :options="digitalOutput"
@@ -140,6 +153,7 @@
       </div>
       <div class="entradasDigitales">
         <output-input
+          id="digitalInput"
           title="Entradas Digitales"
           type="Entradas Digital"
           :options="digitalInput"
@@ -149,6 +163,7 @@
       </div>
       <div class="salidasAnalogicas">
         <output-input
+          id="analogicalOutput"
           title="Salidas Analógicas"
           type="Salida Analógicas"
           :options="analogicalOutput"
@@ -158,6 +173,7 @@
       </div>
       <div class="entradasAnalogicas">
         <output-input
+          id="analogicalInput"
           title="Entradas Analógicas"
           type="Entradas Analógicas"
           :options="analogicalInput"
@@ -167,8 +183,9 @@
       </div>
     </div>
     <div class="retroceder mt-5">
-        <submit-button @click="resetPage()">Retroceder</submit-button>
-      </div>
+      <submit-button id="retrocederBtn" @click="resetPage()">Retroceder</submit-button>
+    </div>
+    <v-tour name="registro" :steps="steps2" :options="myOptions"></v-tour>
   </div>
 </template>
 
@@ -228,6 +245,107 @@ export default {
           descripcion: "",
         },
       ],
+      myOptions: {
+        useKeyboardNavigation: true,
+        labels: {
+          buttonSkip: "Saltar tour",
+          buttonPrevious: "Anterior",
+          buttonNext: "Siguiente",
+          buttonStop: "Finalizar",
+        },
+      },
+      steps: [
+        {
+          target: "#selectTypeProgramDevice",
+          header: {
+            title: "Seleccionar el tipo de selector",
+          },
+          content:
+            "Nos permite seleccionar el tipo de dispositivo que queremos configurar",
+        },
+        {
+          target: "#passwordIdField",
+          header: {
+            title: "Contraseña o id",
+          },
+          content:
+            "Una vez seleccionado el tipo de dispositivo, debemos enlazarlo, en el caso de ser agronic con su contraseña, y en caso contrario con el id con el que lo hemos configurado",
+        },
+        {
+          target: "#registroIdBtn",
+          header: {
+            title: "Boton de registro de Id",
+          },
+          content:
+            "La generación de id esta siempre disponible, un id esta activo durante un tiempo fijo, con su posterior destrucción si no se ha utilizado, tiene un máximo de 10 y servirá para poder conectarse al dispositivo deseado",
+        },
+        {
+          target: "#checkConnectionBtn",
+          header: {
+            title: "Comprobar conexión",
+          },
+          content:
+            "Una vez insertados en los campos anteriores el nombre y contraseña o identificador, nos conectaremos a el para configurar en la app la configuración realizada en el dispositivo",
+        },
+        {
+          target: "#listadoBtn",
+          header: {
+            title: "Listado de dispositivos",
+          },
+          content:
+            "Podemos ver los dispositivos conectados para reconfigurarlos, e incluso eliminarlos. (Aviso: para borrar un dispositivo no se debe encontrar en ningún programa)",
+        },
+      ],
+      steps2: [
+        {
+          target: `#infoProgramador`,
+          header: {
+            title: "Información programador",
+          },
+          content:
+            "Información relacionado con el programador actual",
+        },
+        {
+          target: `#digitalOutput`,
+          header: {
+            title: "Salidas digitales",
+          },
+          content:
+            "Panel para configurar las salidas digitales del dispositivo",
+        },
+        {
+          target: `#digitalInput`,
+          header: {
+            title: "Entradas digitales",
+          },
+          content:
+            "Panel para configurar las entradas digitales del dispositivo",
+        },
+        {
+          target: `#analogicalOutput`,
+          header: {
+            title: "Salidas digitales",
+          },
+          content:
+            "Panel para configurar las salidas analógicas del dispositivo",
+        },
+        {
+          target: `#analogicalInput`,
+          header: {
+            title: "Entradas digitales",
+          },
+          content:
+            "Panel para configurar las entradas analógicas del dispositivo",
+        },
+        {
+          target: `#retrocederBtn`,
+          header: {
+            title: "Retroceder",
+          },
+          content:
+            "Permite volver a la ventana anterior",
+        },
+      ],
     };
   },
   computed: {
@@ -248,10 +366,10 @@ export default {
     showInputOutput() {
       return this.configureDevice;
     },
-    dialogCheck(){
-      return this.dialogDelete && this.radioGroup
+    dialogCheck() {
+      return this.dialogDelete && this.radioGroup;
     },
-    radioGroupCheck(){
+    radioGroupCheck() {
       return this.radioGroup == "";
     },
   },
@@ -268,21 +386,20 @@ export default {
       "createDigitalInput",
       "createAnalogicalOutput",
       "createAnalogicalInput",
-       "deleteDevice",
-       "resetConfigureDevice"
+      "deleteDevice",
+      "resetConfigureDevice",
     ]),
-    resetPage(){
-      if(!this.configureDevice || this.configureDevice == {})
-        this.$router.push("Cabezales")
-      else
-        this.resetConfigureDevice();
+    resetPage() {
+      if (!this.configureDevice || this.configureDevice == {})
+        this.$router.push("Cabezales");
+      else this.resetConfigureDevice();
     },
-    remove(){
+    remove() {
       this.deleteDevice(this.radioGroup);
       this.changeDialog();
     },
-    changeDialog(){
-      if(this.radioGroup){
+    changeDialog() {
+      if (this.radioGroup) {
         this.dialogDelete = !this.dialogDelete;
       }
     },
@@ -364,9 +481,8 @@ export default {
   .device {
     width: 100%;
     display: flex;
-      justify-content: center;
-      align-items: center;
-
+    justify-content: center;
+    align-items: center;
   }
 
   .InputOutput {

@@ -10,16 +10,30 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title v-show="windowWidth > 500">Listado de cabezales</v-toolbar-title>
-          <v-divider  v-show="windowWidth > 500" class="mx-4" inset vertical></v-divider>
-          <v-spacer ></v-spacer>
+          <v-toolbar-title v-show="windowWidth > 500"
+            >Listado de cabezales</v-toolbar-title
+          >
+          <v-divider
+            v-show="windowWidth > 500"
+            class="mx-4"
+            inset
+            vertical
+          ></v-divider>
+          <v-spacer></v-spacer>
           <v-dialog
             transition="dialog-bottom-transition"
             v-model="dialog"
             max-width="500px"
           >
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+              <v-btn
+                id="newCabezalBtnId"
+                color="primary"
+                dark
+                class="mb-2"
+                v-bind="attrs"
+                v-on="on"
+              >
                 Nuevo cabezal
               </v-btn>
             </template>
@@ -79,18 +93,20 @@
         </v-toolbar>
       </template>
       <template v-slot:item.acceder="{ item }">
-        <v-btn @click="programList(item)">Acceder</v-btn>
+        <v-btn id="AccederBtnId" @click="programList(item)">Acceder</v-btn>
       </template>
       <template v-slot:item.actions="{ item }">
         <div v-if="!customAction">
           <v-btn elevation="2" icon
             ><font-awesome-icon
+              id="EditarBtnId"
               class="btn"
               @click="editItem(item)"
               icon="edit"
           /></v-btn>
           <v-btn elevation="2" icon>
             <font-awesome-icon
+              id="EliminarBtnId"
               class="btn"
               @click="deleteItem(item)"
               icon="trash-alt"
@@ -106,11 +122,10 @@
       </template>
     </v-data-table>
     <div class="text-center pt-2">
-      <v-pagination
-        v-model="page"
-        :length="pageCount"
-      ></v-pagination>
+      <v-pagination v-model="page" :length="pageCount"></v-pagination>
     </div>
+
+    <v-tour name="cabezales" :steps="steps" :options="myOptions"></v-tour>
   </div>
 </template>
 
@@ -144,8 +159,48 @@ export default {
     defaultItem: {
       name: "",
     },
+    myOptions: {
+      useKeyboardNavigation: true,
+      labels: {
+        buttonSkip: "Saltar tour",
+        buttonPrevious: "Anterior",
+        buttonNext: "Siguiente",
+        buttonStop: "Finalizar",
+      },
+    },
+    steps: [
+      {
+        target: "#newCabezalBtnId",
+        header: {
+          title: "Creación de un nuevo cabezal",
+        },
+        content:
+          "Permite crear un cabezal nuevo, únicamente con el nombre de este",
+      },
+      {
+        target: "#AccederBtnId",
+        header: {
+          title: "Acceder al cabezal",
+        },
+        content: "Siempre puedes escoger un cabezal para acceder a el",
+      },
+      {
+        target: "#EditarBtnId",
+        header: {
+          title: "Editar el cabezal",
+        },
+        content: "Permite editar el nombre del cabezal seleccionado",
+      },
+      {
+        target: "#EliminarBtnId",
+        header: {
+          title: "Eliminar el cabezal",
+        },
+        content: "Permite eliminar el cabezal seleccionado",
+      },
+    ],
   }),
-    props: {
+  props: {
     hideHeader: Boolean,
     customAction: Boolean,
   },
@@ -167,9 +222,10 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
-    page(val, old){
-      if(val != old &&  val <= this.pageCount && val >= 1) this.getCabezales(this.page);
-    }
+    page(val, old) {
+      if (val != old && val <= this.pageCount && val >= 1)
+        this.getCabezales(this.page);
+    },
   },
 
   created() {
@@ -241,11 +297,11 @@ export default {
   cursor: pointer;
 }
 
-.tableCabezal{
+.tableCabezal {
   width: 100%;
 }
 
-th{ 
+th {
   height: 0px;
 }
 </style>

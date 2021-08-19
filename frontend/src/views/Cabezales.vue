@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Header -->
-    <header-custom name="Listado de cabezales"></header-custom>
+    <header-custom tour="cabezales" name="Listado de cabezales"></header-custom>
 
     <table-cabezal></table-cabezal>
   </div>
@@ -9,7 +9,6 @@
 
 <script>
 import headerCustom from "@/components/Header";
-// import customTable from "@/components/CustomTable";
 import tableCabezal from "@/components/vuetify/tableCabezal";
 import { mapActions } from "vuex";
 

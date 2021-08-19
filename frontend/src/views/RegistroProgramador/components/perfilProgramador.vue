@@ -10,8 +10,8 @@
         <v-card-title class="align-center justify-center"
           >{{ type }} - {{ name }}</v-card-title
         >
-        <v-card-subtitle v-if="id" class="pb-0 white--text">
-          {{ id }}
+        <v-card-subtitle v-if="idDevice" class="pb-0 white--text">
+          {{ idDevice }}
         </v-card-subtitle>
         <v-card-text class="text--primary">
           <div class="white--text align-center">
@@ -42,7 +42,7 @@ export default {
       type: String,
       required: true,
     },
-    id: {
+    idDevice: {
       type: String || Number,
     },
     headName: {

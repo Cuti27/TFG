@@ -3,6 +3,7 @@
     <!-- Header -->
     <header-custom
       :name="`Cabezal: ${selectedHead.name}`"
+      tour="programas"
     ></header-custom>
 
     <table-program></table-program>

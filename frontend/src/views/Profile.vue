@@ -28,11 +28,16 @@
           </v-list-item-content>
         </v-list-item>
       </v-card>
+      <div class="ayuda">
+        <a @click.prevent="$tours['profile'].start()">
+          <font-awesome-icon icon="info-circle" />
+        </a>
+      </div>
     </div>
     <v-container class="body">
       <v-row>
         <v-col class="py-5 px-0">
-          <div class="history">
+          <div id="historialContainer" class="history">
             <h3 class="pt-5">Historial del usuario</h3>
             <perfect-scrollbar
               class="scroll-area"
@@ -67,7 +72,8 @@
             <h5 class="mt-2">
               Puede seleccionar un cabezal para filtrar la información
             </h5>
-              <v-select
+            <v-select
+              id="selectCabezal"
               :items="cabezales"
               label="Todos los cabezales"
               class="select-center"
@@ -75,7 +81,7 @@
               clearable
               v-model="selectedCabezal2"
             >
-            <template slot="selection" slot-scope="data">
+              <template slot="selection" slot-scope="data">
                 {{ data.item.name }}
               </template>
               <template slot="item" slot-scope="data">
@@ -83,7 +89,7 @@
               </template>
 
               <template slot="append-outer">
-                <v-btn @click="fetchAllProgram">Todos los programas</v-btn>
+                <v-btn id="allProgramBtn" @click="fetchAllProgram">Todos los programas</v-btn>
               </template>
             </v-select>
             <h5 v-if="selectedCabezal2" class="mt-2">
@@ -121,6 +127,7 @@
                   <v-card-text>
                     <v-sheet color="rgba(0, 0, 0, .12)">
                       <v-sparkline
+                        id="informacionHorasRiegoKPI"
                         :gradient="selectedGradient"
                         :line-width="width"
                         :padding="padding"
@@ -131,7 +138,7 @@
                         stroke-linecap="round"
                       >
                         <template class="text-h5" v-slot:label="item">
-                          {{ item.value }}h
+                          {{ item.value.toFixed(2) }}h
                         </template>
                       </v-sparkline>
                     </v-sheet>
@@ -154,6 +161,7 @@
                   <v-card-text>
                     <v-sheet color="rgba(0, 0, 0, .12)">
                       <v-sparkline
+                        id="informacionHumedadKPI"
                         :gradient="selectedGradient"
                         :line-width="width"
                         :padding="padding"
@@ -195,6 +203,7 @@
             </v-sheet>
             <v-sheet height="600">
               <v-calendar
+                id="CalendarioCalendar"
                 @click:event="showEvent($event)"
                 ref="calendar"
                 :now="varToday"
@@ -209,60 +218,73 @@
           </div>
         </v-col>
       </v-row>
-      <v-dialog
-      v-model="dialog"
-      max-width="360"
-    >
-      <v-card>
-        <v-card-title class="headline">Información del programa:</v-card-title>
-
-        <v-card-text>
-          <h3>{{selectedEvent.name}}</h3>
-          <v-container>
-            <v-row>
-              <v-col>
-                <span><strong>Activo:</strong> {{selectedEvent.active ? "Si" : "No"}}</span><br>
-                <span><strong>Identificador:</strong> {{ selectedEvent.id }}</span>
-              </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <div v-for="timer in selectedEvent.timer" :key="timer.id">
-                <span><strong>Hora de inicio:</strong> {{timer.timeStart}}</span><br>
-                <span><strong>Duración:</strong> {{ timer.duration}}</span><br>
-                <span><strong>Fertirrigación:</strong> {{timer.postIrrigation}}</span>
-              </div>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <day-selector disable xs :dias="selectedEvent.programDay"></day-selector>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <span><strong>Sectores:</strong></span><br>
-              <div v-for="sector in selectedEvent.sector" :key="sector.id">
-                <span>({{sector.id}}) {{sector.name}}</span><br>
-              </div>
-            </v-col>
-          </v-row>
-          </v-container>
-        </v-card-text>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            text
-            @click="dialog = false"
+      <v-dialog v-model="dialog" max-width="360">
+        <v-card>
+          <v-card-title class="headline"
+            >Información del programa:</v-card-title
           >
-            Cerrar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+
+          <v-card-text>
+            <h3>{{ selectedEvent.name }}</h3>
+            <v-container>
+              <v-row>
+                <v-col>
+                  <span
+                    ><strong>Activo:</strong>
+                    {{ selectedEvent.active ? "Si" : "No" }}</span
+                  ><br />
+                  <span
+                    ><strong>Identificador:</strong>
+                    {{ selectedEvent.id }}</span
+                  >
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <div v-for="timer in selectedEvent.timer" :key="timer.id">
+                    <span
+                      ><strong>Hora de inicio:</strong>
+                      {{ timer.timeStart }}</span
+                    ><br />
+                    <span><strong>Duración:</strong> {{ timer.duration }}</span
+                    ><br />
+                    <span
+                      ><strong>Fertirrigación:</strong>
+                      {{ timer.postIrrigation }}</span
+                    >
+                  </div>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <day-selector
+                    disable
+                    xs
+                    :dias="selectedEvent.programDay"
+                  ></day-selector>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <span><strong>Sectores:</strong></span
+                  ><br />
+                  <div v-for="sector in selectedEvent.sector" :key="sector.id">
+                    <span>({{ sector.id }}) {{ sector.name }}</span
+                    ><br />
+                  </div>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" text @click="dialog = false"> Cerrar </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
+    <v-tour name="profile" :steps="steps" :options="myOptions"></v-tour>
   </div>
 </template>
 
@@ -274,7 +296,7 @@ import "vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css";
 export default {
   components: {
     PerfectScrollbar,
-    daySelector
+    daySelector,
   },
   data() {
     return {
@@ -294,7 +316,66 @@ export default {
       selectedProgram: null,
       calendarType: "week",
       dialog: false,
-      selectedEvent: {}
+      selectedEvent: {},
+      myOptions: {
+        useKeyboardNavigation: true,
+        labels: {
+          buttonSkip: "Saltar tour",
+          buttonPrevious: "Anterior",
+          buttonNext: "Siguiente",
+          buttonStop: "Finalizar",
+        },
+      },
+      steps: [
+        {
+          target: "#historialContainer",
+          header: {
+            title: "Historial",
+          },
+          content:
+            "En esta sección podemos ver una línea del tiempo donde vemos los movimientos hechos en el último mes",
+        },
+        {
+          target: "#selectCabezal",
+          header: {
+            title: "Selección de cabezal",
+          },
+          content:
+            "Puede seleccionar un cabezal para ver información relevante a este. Tras esto, se podrá ver la información en concreto de un programa de ese cabezal",
+        },
+        {
+          target: "#allProgramBtn",
+          header: {
+            title: "Busqueda global",
+          },
+          content:
+            "Análisis completo de todos los cabezales, con un funcionamiento parecido al anterior, pero de todos los cabezales del usuario",
+        },
+        {
+          target: "#informacionHorasRiegoKPI",
+          header: {
+            title: "Información riego",
+          },
+          content:
+            "Análisis de las horas de riego de cada día de la semana, filtrado por el cabezal seleccionado previamente",
+        },
+        {
+          target: "#informacionHumedadKPI",
+          header: {
+            title: "Información humedad",
+          },
+          content:
+            "Registro de la humedad por horas del cabezal previamente seleccionado",
+        },
+        {
+          target: "#CalendarioCalendar",
+          header: {
+            title: "Calendario de programas",
+          },
+          content:
+            "Calendario donde podemos ver los temporizadores de todos los programas del cabezal seleccionado, y ver concretamente la información de estos al hacer click.",
+        },
+      ],
     };
   },
   methods: {
@@ -304,7 +385,7 @@ export default {
       "fetchUserHistory",
       "setSelectedHead",
       "fetchProgramByHead",
-      "fetchAllProgram"
+      "fetchAllProgram",
     ]),
     showEvent(event) {
       this.selectedEvent = event.event.program;
@@ -385,7 +466,10 @@ export default {
           if (day) {
             programa.timer.forEach((time) => {
               let duration = time.duration.split(":");
-              duration = parseFloat(duration[0]) + parseFloat(duration[1]/60) + parseFloat(duration[2]/60/60);
+              duration =
+                parseFloat(duration[0]) +
+                parseFloat(duration[1] / 60) +
+                parseFloat(duration[2] / 60 / 60);
               hours[(index + 1) % 7] += duration;
             });
           }
@@ -420,10 +504,10 @@ export default {
       let curr = new Date();
       let week = [];
 
-      if(curr.getDay() == 0){
+      if (curr.getDay() == 0) {
         let yesterday = new Date(curr.getTime());
-        yesterday.setDate(curr.getDate() - 1);  
-        curr = yesterday  
+        yesterday.setDate(curr.getDate() - 1);
+        curr = yesterday;
       }
 
       for (let i = 1; i <= 7; i++) {
@@ -452,7 +536,7 @@ export default {
               start,
               end: this.formatDate(end),
               color: programa.active ? "primary" : "grey darken-1",
-              program: programa
+              program: programa,
             });
             let endDay = new Date(end);
             const fertirrigation = this.addHour(endDay, time.postIrrigation);
@@ -461,7 +545,7 @@ export default {
               start: this.formatDate(end),
               end: this.formatDate(fertirrigation),
               color: programa.active ? "secondary" : "grey darken-2",
-              program: programa
+              program: programa,
             });
           });
         });
@@ -483,11 +567,83 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
-
-.select-center{
-  &:first-child{
-        margin-top: 10px !important;
+@media (max-width: 480px) {
+  .ayuda {
+    svg {
+      top: calc(50% - 0.6em) !important;
+      left: calc(50% - 0.5em) !important;
     }
+  }
+}
+
+.ayuda {
+  position: absolute;
+  bottom: -30px;
+  right: 0px;
+  margin: 0.15em;
+  position: absolute;
+  font-size: 1.2em;
+  $timing: 265ms;
+  $iconColor: $primary;
+  $accent: $primaryDark;
+  $bluefade: $secondary;
+  z-index: 1000;
+
+  @mixin transformScale($size: 1) {
+    transform: scale($size);
+    -ms-transform: scale($size);
+    -webkit-transform: scale($size);
+  }
+
+  svg {
+    color: $white;
+    position: absolute;
+    top: calc(50% - 0.5em) !important;
+    left: calc(50% - 0.5em) !important;
+    transition: all $timing ease-out;
+    fill: none;
+    stroke: #646464;
+    stroke-width: 1px;
+    stroke-dasharray: 2, 2;
+    stroke-linejoin: round;
+  }
+
+  a {
+    display: inline-block;
+    padding: 0px;
+    &:before {
+      @include transformScale();
+      content: " ";
+      width: 40px;
+      height: 40px;
+      border-radius: 100%;
+      display: block;
+      background: linear-gradient(45deg, $iconColor, $accent);
+      transition: all $timing ease-out;
+    }
+
+    &:hover:before {
+      transform: scale(0);
+      transition: all $timing ease-in;
+    }
+
+    &:hover svg {
+      @include transformScale(2.2);
+      color: $white;
+      -webkit-text-fill-color: transparent;
+      transition: all $timing ease-in;
+    }
+  }
+}
+
+.select-center {
+  &:first-child {
+    margin-top: 10px !important;
+  }
+}
+
+.header {
+  position: relative;
 }
 
 .scroll-area {
