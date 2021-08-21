@@ -1,14 +1,17 @@
 <template>
   <div class="temporizador">
     <h3
-      :style="{ 'align-self': title && windowWidth >= 990 ? 'end' : 'center', 'mt-2': true }"
+      :style="{
+        'align-self': title && windowWidth >= 990 ? 'end' : 'center',
+        'mt-2': true,
+      }"
     >
       <slot></slot>
     </h3>
-    <hr>
+    <hr />
     <div class="inicio mt-5">
       <h3 v-if="title || windowWidth < 1030">Hora de inicio</h3>
-      <div class="mx-2  input-time">
+      <div class="mx-2 input-time">
         <v-dialog
           transition="dialog-bottom-transition"
           ref="dialog"
@@ -19,22 +22,21 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <div :class="{ 'centered-input': true, 'mt-2': true }">
-               <v-text-field
-              hide-details
-              @input="update"
-              v-model="time"
-              label="Seleccione una hora"
-              type="time"
-              step="1"
-            ></v-text-field>
-            <font-awesome-icon
-              icon="clock"
-              size="lg"
-              v-bind="attrs"
-              v-on="on"
-            />
+              <v-text-field
+                hide-details
+                @input="update"
+                v-model="time"
+                label="Seleccione una hora"
+                type="time"
+                step="1"
+              ></v-text-field>
+              <font-awesome-icon
+                icon="clock"
+                size="lg"
+                v-bind="attrs"
+                v-on="on"
+              />
             </div>
-           
           </template>
           <v-time-picker
             class="clockIcon"
@@ -67,22 +69,21 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <div :class="{ 'centered-input': true, 'mt-2': true }">
-               <v-text-field
-              hide-details
-              @input="update"
-              v-model="time1"
-              label="Seleccione una hora"
-              type="time"
-              step="1"
-            ></v-text-field>
-            <font-awesome-icon
-              icon="clock"
-              size="lg"
-              v-bind="attrs"
-              v-on="on"
-            />
+              <v-text-field
+                hide-details
+                @input="update"
+                v-model="time1"
+                label="Seleccione una hora"
+                type="time"
+                step="1"
+              ></v-text-field>
+              <font-awesome-icon
+                icon="clock"
+                size="lg"
+                v-bind="attrs"
+                v-on="on"
+              />
             </div>
-            
           </template>
           <v-time-picker
             class="clockIcon"
@@ -115,20 +116,20 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <div :class="{ 'centered-input': true, 'mt-2': true }">
-               <v-text-field
-              hide-details
-              @input="update"
-              v-model="time2"
-              label="Seleccione una hora"
-              type="time"
-              step="1"
-            ></v-text-field>
-            <font-awesome-icon
-              icon="clock"
-              size="lg"
-              v-bind="attrs"
-              v-on="on"
-            />
+              <v-text-field
+                hide-details
+                @input="update"
+                v-model="time2"
+                label="Seleccione una hora"
+                type="time"
+                step="1"
+              ></v-text-field>
+              <font-awesome-icon
+                icon="clock"
+                size="lg"
+                v-bind="attrs"
+                v-on="on"
+              />
             </div>
           </template>
           <v-time-picker
@@ -168,11 +169,11 @@ export default {
   },
   data() {
     return {
-      time: '',
+      time: "",
       modal: false,
-      time1: '',
+      time1: "",
       modal1: false,
-      time2: '',
+      time2: "",
       modal2: false,
       inicioHora: this.value.inicio[0],
       inicioMinutos: this.value.inicio[1],
@@ -196,7 +197,6 @@ export default {
       };
     },
   },
-
   methods: {
     update() {
       this.$emit("input", this.temporizador);
@@ -218,6 +218,13 @@ export default {
       this.getWindowWidth();
       this.getWindowHeight();
     });
+
+    if (this.inicioHora && this.inicioMinutos && this.inicioSegundos)
+      this.time = `${this.inicioHora}:${this.inicioMinutos}:${this.inicioSegundos}`;
+    if (this.duracionHora && this.duracionMinutos && this.duracionSegundos)
+      this.time1 = `${this.duracionHora}:${this.duracionMinutos}:${this.duracionSegundos}`;
+    if (this.postHora && this.postMinutos && this.postSegundos)
+      this.time2 = `${this.postHora}:${this.postMinutos}:${this.postSegundos}`;
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.getWindowWidth);
@@ -229,13 +236,18 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
-hr{
-    border: 0;
-    height: 1px;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.75),
+    rgba(0, 0, 0, 0)
+  );
 }
 
-.input-time{
+.input-time {
   width: 100%;
 }
 
@@ -246,14 +258,12 @@ hr{
 }
 
 .centered-input {
-   width: 100%;
-   margin: 0 20px;
-   margin-left: 30px;
-   input{
-     text-align: center;
-   }
-  
- 
+  width: 100%;
+  margin: 0 20px;
+  margin-left: 30px;
+  input {
+    text-align: center;
+  }
 }
 
 .temporizador {
@@ -293,9 +303,9 @@ hr{
     }
   }
 
-  &:hover{
+  &:hover {
     transform: translateY(-5px);
-  box-shadow: 0 4px 25px 0 rgba(34,41,47,.25);
+    box-shadow: 0 4px 25px 0 rgba(34, 41, 47, 0.25);
   }
 }
 

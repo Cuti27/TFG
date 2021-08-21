@@ -22,7 +22,6 @@
 </template>
 
 <script>
-//TODO: Definir si debemos poder poner muchas fuentes o únicamente 4
 import Vue from "vue";
 export default {
   props: {
@@ -30,20 +29,17 @@ export default {
       type: Array,
       required: true,
     },
+    value: Array,
   },
   data() {
     return {
       check: true,
-      selected: [],
+      selected: this.value,
     };
-  },
-  beforeMount() {
-    this.options.forEach(() => {
-      this.selected.push(false);
-    });
   },
   methods: {
     toggle(index) {
+      console.log("toggle");
       console.log(this.selected[index]);
       Vue.set(this.selected, index, !this.selected[index]);
       console.log(this.selected[index]);

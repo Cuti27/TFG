@@ -50,6 +50,9 @@ export default {
         obj[index] = !obj[index];
         commit("updateDayProgram", obj);
     },
+    updateAllDays({ commit }, days) {
+        commit("updateDayProgram", days);
+    },
 
     updateLogin({ commit }, data) {
         commit("updateLogin", data);
@@ -322,6 +325,8 @@ export default {
     },
 
     async setTempProgram({ commit }, program) {
+        console.log(program);
+        console.log("jajaxd");
         commit("setTempProgram", program);
     }
 };

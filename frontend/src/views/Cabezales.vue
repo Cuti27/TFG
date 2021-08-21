@@ -15,10 +15,12 @@ import { mapActions } from "vuex";
 export default {
   beforeMount() {
     this.start();
+    this.setTempProgram({});
   },
   methods: {
     ...mapActions({
       start: "getCabezales",
+      setTempProgram: "setTempProgram",
     }),
   },
   components: {

@@ -39,6 +39,6 @@ class CheckWaittingId extends Command
      */
     public function handle()
     {
-        waittingId::where('created_at', '<', Carbon::parse('-1 hours'))->delete();
+        waittingId::where('created_at', '<', Carbon::parse('-24 hours'))->delete();
     }
 }

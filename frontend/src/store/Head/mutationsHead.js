@@ -41,6 +41,7 @@ export default {
       delete element.sat;
       delete element.sun;
       element.sector = data.sector[index];
+      element.emitter = data.emitter[index];
     });
     state.programProfile = data.listPrograms;
   }

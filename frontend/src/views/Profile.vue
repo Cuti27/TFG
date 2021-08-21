@@ -138,7 +138,7 @@
                         stroke-linecap="round"
                       >
                         <template class="text-h5" v-slot:label="item">
-                          {{ item.value.toFixed(2) }}h
+                          {{ Number(item.value).toFixed(2) }}h
                         </template>
                       </v-sparkline>
                     </v-sheet>
@@ -270,6 +270,14 @@
                   ><br />
                   <div v-for="sector in selectedEvent.sector" :key="sector.id">
                     <span>({{ sector.id }}) {{ sector.name }}</span
+                    ><br />
+                  </div>
+                </v-col>
+                <v-col>
+                  <span><strong>Emisores:</strong></span
+                  ><br />
+                  <div v-for="emisor in selectedEvent.emitter" :key="emisor.id">
+                    <span>({{ emisor.id }}) {{ emisor.name }}</span
                     ><br />
                   </div>
                 </v-col>
@@ -598,7 +606,7 @@ export default {
   svg {
     color: $white;
     position: absolute;
-    top: calc(50% - 0.5em) !important;
+    top: calc(50% - 0.6em) !important;
     left: calc(50% - 0.5em) !important;
     transition: all $timing ease-out;
     fill: none;

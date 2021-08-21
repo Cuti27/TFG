@@ -38,12 +38,19 @@
           name="Dias"
           :options="['Manual', 'Automático']"
         ></select-button>
-        <day-selector :animation="true" :disabled="diasAutomatico"></day-selector>
+        <day-selector
+          :animation="true"
+          :disabled="diasAutomatico"
+        ></day-selector>
       </div>
 
       <!-- Selector de fuentes -->
       <div class="fuente">
-        <source-selector @toggle="updateEmitter" :options="computedEmitter">
+        <source-selector
+          :value="selectedEmitter"
+          @toggle="updateEmitter"
+          :options="computedEmitter"
+        >
           <h3>Selecciona una fuente</h3>
         </source-selector>
       </div>
@@ -53,6 +60,7 @@
         <h3 for="">Selecciona entre las opciones</h3>
         <!-- <section-selector></section-selector> -->
         <select-button
+          :sel="map"
           v-model="map"
           name="seccion"
           :options="['Mapa', 'Sectores']"
@@ -65,8 +73,9 @@
           v-else
           @toggle="updateSector"
           :options="computedSector"
+          :value="selectedSector"
         >
-          <h3>Selecciona Los sectores</h3>
+          <h3>Selecciona los sectores</h3>
         </source-selector>
       </div>
 
@@ -75,6 +84,7 @@
         <div>
           <h3 for="Emisor">Seleccionar tipo de emisor:</h3>
           <select-button
+            :sel="goteo"
             v-model="goteo"
             name="Emisor"
             :options="['Aspersion', 'Goteo']"
@@ -89,6 +99,7 @@
 
           <select-button
             xl
+            :sel="horaInicio"
             v-model="horaInicio"
             name="hora"
             :options="['Despues de programa', 'Mediante temporizador']"
@@ -97,7 +108,7 @@
 
         <div class="table" v-if="!horaInicio">
           <!-- use the modal component, pass in the prop -->
-          <table-program hideHeader customAction id="block">
+          <table-program :remove="id" hideHeader removeActivate customAction id="block">
             <v-btn>Usar</v-btn>
           </table-program>
         </div>
@@ -112,6 +123,7 @@
           <temporizador-menu
             @update="updateTemporizadores"
             :disabled="temporizador == 1"
+            :temporizadoresStart="temporizadoresStart"
           ></temporizador-menu>
         </div>
       </div>
@@ -144,7 +156,7 @@ import temporizadorMenu from "@/components/TemporizadorMenu";
 import headerCustom from "@/components/Header";
 import tableProgram from "@/components/vuetify/tableProgram";
 
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 
 export default {
   components: {
@@ -159,6 +171,7 @@ export default {
   },
   data() {
     return {
+      automatic: "",
       error: "",
       temporizadores: [],
       selectedEmitter: [],
@@ -169,7 +182,7 @@ export default {
       showModal: false, // Variable que indica si mostrar o no el modal
       programa: false,
       dias: false,
-      horaInicio: false,
+      horaInicio: 0,
       emisor: false,
       temporizador: 0,
       map: 0,
@@ -238,13 +251,65 @@ export default {
             "Permite acceder al programa de fertirrigación, que se asociará a este programa",
         },
       ],
+      id: "",
+      temporizadoresStart: undefined
     };
+  },
+  beforeMount() {
+    console.log("CREATED HOOK");
+    if (this.tempProgram != {}) {
+      this.id = this.tempProgram.id;
+      this.programa = this.tempProgram.active;
+      this.sectors.forEach((sector) => {
+        this.selectedSector.push(
+          this.tempProgram.sector.find(
+            (selectedSector) => sector.output.id == selectedSector.id
+          ) != undefined
+        );
+      });
+      this.emitter.forEach((emisor) => {
+        this.selectedEmitter.push(
+          this.tempProgram.emitter.find(
+            (selectedEmitter) => emisor.output.id == selectedEmitter.id
+          ) != undefined
+        );
+      });
+
+      this.updateAllDays(this.tempProgram.programDay);
+
+      this.map = 1;
+
+      this.temporizador = 1;
+
+      this.goteo = this.tempProgram.drip ? 1 : 0;
+
+      this.diasAutomatico = this.tempProgram.automaticDays;
+
+      this.id = this.tempProgram.id;
+
+      this.temporizadoresStart = this.tempProgram.timer.map(timer => {
+        return {
+          inicio: timer.timeStart.split(":"),
+          duracion: timer.duration.split(":"),
+          post: timer.postIrrigation.split(":"),
+        }
+      })
+    } else {
+      this.sectors.forEach(() => {
+        this.selectedSector.push(false);
+      });
+      this.emitter.forEach(() => {
+        this.selectedEmitter.push(false);
+      });
+      this.updateAllDays([false,false,false,false,false,false,false])
+    }
   },
   computed: {
     ...mapGetters(["emitter", "sectors", "programDays", "windowWidth"]),
     ...mapGetters({
       name: "programName", // Nombre del programa
     }),
+    ...mapState(["tempProgram"]),
     isActive() {
       return this.programa ? "Activado" : "Desactivado";
     },
@@ -275,8 +340,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["createProgram"]),
-    resetPage(){
+    ...mapActions(["createProgram", "updateAllDays"]),
+    resetPage() {
       this.$router.push("Programas");
     },
     goFertirrigacion() {
@@ -340,9 +405,9 @@ export default {
 
       let listTimer = this.selectedTimer.map((element) => {
         return {
-          timeStart: element.inicio,
-          duration: element.duracion,
-          postIrrigation: element.post,
+          timeStart: Array.isArray(element.inicio) ? `${element.inicio[0]}:${element.inicio[1]}:${element.inicio[2]}` : element.inicio,
+          duration: Array.isArray(element.duracion) ? `${element.duracion[0]}:${element.duracion[1]}:${element.duracion[2]}` : element.duracion,
+          postIrrigation: Array.isArray(element.post) ? `${element.post[0]}:${element.post[1]}:${element.post[2]}` : element.post,
         };
       });
       let programa = {
@@ -356,6 +421,8 @@ export default {
         drip: this.goteo == 1,
         timer: listTimer,
       };
+
+      if(this.id)programa.programId = this.id;
       console.log(programa);
       this.createProgram(programa);
     },
@@ -366,12 +433,12 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
-.table{
+.table {
   width: 100%;
   margin: 0px 10px;
 }
 
-#block{
+#block {
   display: block;
   width: 100%;
 }
@@ -595,20 +662,17 @@ h3 {
 @media (max-width: 768px) {
   .form {
     grid-template-areas:
-    "activo activo"
-    "dias dias"
-    "fuentes fuentes"
-    "secciones secciones"
-    "emisor emisor"
-    "hora hora"
-    "fertirrigacion fertirrigacion";
-
+      "activo activo"
+      "dias dias"
+      "fuentes fuentes"
+      "secciones secciones"
+      "emisor emisor"
+      "hora hora"
+      "fertirrigacion fertirrigacion";
   }
 }
 
 @media (max-width: 576px) {
-
-
   .guardar {
     right: 70px;
     a {
@@ -617,13 +681,12 @@ h3 {
   }
 
   .activo {
-     div:first-child {
-       max-width: 100% !important;
-       width: 100% !important;
-     }
+    div:first-child {
+      max-width: 100% !important;
+      width: 100% !important;
+    }
   }
 }
-
 
 @media (max-width: "480px") {
   .ayuda {

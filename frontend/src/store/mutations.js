@@ -14,7 +14,6 @@ export default {
     },
     updateDayProgram(state, array) {
         Vue.set(state.program, "days", array);
-        //! No se esto porque hay que ponerlo
         state.program = {...state.program };
     },
     updateLogin(state, data) {
@@ -54,6 +53,7 @@ export default {
             delete element.sat;
             delete element.sun;
             element.sector = value.sector[index];
+            element.emitter = value.emitter[index];
         });
         state.last_page = value.listPrograms.last_page;
         state.programas = value.listPrograms.data;

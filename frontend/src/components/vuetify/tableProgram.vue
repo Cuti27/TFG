@@ -76,7 +76,7 @@
 
     <v-data-table
       :headers="headers"
-      :items="programas"
+      :items="filterProgram"
       sort-by="calories"
       class="elevation-1"
       hide-default-footer
@@ -139,6 +139,11 @@
       <template v-slot:item.sector="{ item }">
         <span v-for="sector in item.sector" :key="'sector' + sector.id"
           >- {{ sector.name }}<br
+        /></span>
+      </template>
+      <template v-slot:item.emitter="{ item }">
+        <span v-for="emisor in item.emitter" :key="'emisor' + emisor.id"
+          >- {{ emisor.name }}<br
         /></span>
       </template>
       <template v-slot:item.activate="{ item }">
@@ -225,9 +230,9 @@ export default {
       { text: "Nombre", sortable: false, value: "name" },
       { text: "Hora inicio", sortable: false, value: "time" },
       { text: "Sectores", value: "sector", sortable: false },
+      { text: "Emisores", value: "emitter", sortable: false },
       { text: "Dias", value: "programDay", align: "center", sortable: false },
       { text: "Acciones", value: "actions", sortable: false },
-      { text: "Activado", value: "activate", sortable: false },
     ],
     editedIndex: -1,
     editedItem: {
@@ -291,6 +296,8 @@ export default {
   props: {
     hideHeader: Boolean,
     customAction: Boolean,
+    removeActivate: Boolean,
+    remove: [String,Number],
   },
 
   computed: {
@@ -310,6 +317,15 @@ export default {
     checkProgram(){
       return this.emitter.length != 0 && this.sectors.length != 0
     },
+    filterProgram(){
+      if(this.remove){
+        let removeIndex = this.programas.map((item) => { return item.id; }).indexOf(this.remove);
+        const filtredProgram = [...this.programas]
+        filtredProgram.splice(removeIndex, 1);
+        return filtredProgram;
+      }
+      return this.programas
+    }
   },
 
   watch: {
@@ -327,6 +343,8 @@ export default {
 
   created() {
     this.initialize();
+    if(!this.removeActivate) 
+      this.headers.push( { text: "Activado", value: "activate", sortable: false });
   },
   beforeMount(){
     this.loadEmitterSector()
@@ -416,6 +434,8 @@ export default {
         this.error = "Debe especificar un nombre";
       }
       this.close();
+      console.log("Set");
+      console.log(this.editedItem);
       this.setTempProgram(this.editedItem);
       this.$router.push("programs");
     },

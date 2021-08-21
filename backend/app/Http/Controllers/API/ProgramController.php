@@ -23,8 +23,7 @@ class ProgramController extends Controller
     public function createProgram(Request $request)
     {
         // Recuperamos y validamos el formulario
-        $fields = $request->validate([
-            'programId' => 'string',
+        $fields = $request->validate(['programId' => 'integer',
             'name' => 'required|string',
             'headId' => 'required',
             'programDays' => 'required | array',
@@ -73,7 +72,8 @@ class ProgramController extends Controller
         error_log(print_r($end, TRUE));
 
         // Recuperamos la lista de programas asociados, en los que algún día de la semana coincide con el de nuestro programa
-        $listPrograms = Programs::where('headId', $head->id)->where(function ($query) use ($fields) {
+        $query =
+        Programs::where('headId', $head->id)->where(function ($query) use ($fields) {
             $first = true;
             if ($fields['programDays'][0]) {
                 if ($first) {
@@ -117,7 +117,13 @@ class ProgramController extends Controller
                     $first = false;
                 } else $query->orWhere('sun', true);
             }
-        })->pluck('id');
+        });
+
+        if ($fields['programId']) {
+            $query = $query->where('id', '!=', $fields['programId']);
+        }
+
+        $listPrograms = $query->pluck('id');
 
         $creation = false;
 
@@ -222,8 +228,33 @@ class ProgramController extends Controller
         if ($creation) {
 
 
-            if (array_key_exists('id', $fields)) {
-                //TODO: Update
+            if (array_key_exists('programId', $fields)) {
+                $createdProgram = Programs::where('id', $fields['programId']);
+
+                Emitter::where('programId', $fields['programId'])->delete();
+                Sector::where('programId', $fields['programId'])->delete();
+                Timer::where('programId', $fields['programId'])->delete();
+
+                $createdProgram->update([
+                    'fertigationId' => null,
+                    'name' => $fields['name'],
+                    'userId' =>  $request->user()->id,
+                    'headId' => $fields['headId'],
+                    'active' => $fields['active'],
+                    'autoTimer' => $fields['autoTimer'],
+                    'afterProgram' => $fields['afterProgram'],
+                    'automaticDays' => $fields['automaticDays'],
+                    'drip' => $fields['drip'],
+                    'mon' => $fields['programDays'][0],
+                    'tue' => $fields['programDays'][1],
+                    'wed' => $fields['programDays'][2],
+                    'thu' => $fields['programDays'][3],
+                    'fri' => $fields['programDays'][4],
+                    'sat' => $fields['programDays'][5],
+                    'sun' => $fields['programDays'][6],
+                ]);
+
+                $createdProgram = Programs::where('id', $fields['programId'])->first();
             } else {
                 // Creamos el programa
                 $createdProgram = Programs::create([
@@ -244,6 +275,7 @@ class ProgramController extends Controller
                     'sat' => $fields['programDays'][5],
                     'sun' => $fields['programDays'][6],
                 ]);
+            }
 
                 // Creamos todos los emisores
                 $listCreatedEmitter = [];
@@ -293,7 +325,7 @@ class ProgramController extends Controller
                     'timer' => $listCreatedTimer,
                 ];
                 return response($response, 201);
-            }
+            
         }
 
 
@@ -320,6 +352,7 @@ class ProgramController extends Controller
         error_log("Listado de programas");
         $timer = array();
         $sector = array();
+        $emitter = array();
         foreach ($listPrograms as $value) {
             // error_log(print_r($value, TRUE));
             $result = Timer::where('programId', $value->id)->get();
@@ -331,6 +364,12 @@ class ProgramController extends Controller
 
             $result = DigitalOutput::whereIn('id', $result)->get();
             if ($result) $sector[] = $result;
+
+            $result = Emitter::where('programId', $value->id)->pluck("digitalOutputId");
+
+
+            $result = DigitalOutput::whereIn('id', $result)->get();
+            if ($result) $emitter[] = $result;
         }
 
         // Creamos la respuesta
@@ -338,7 +377,8 @@ class ProgramController extends Controller
             'count' => count($listPrograms),
             'listPrograms' => $listPrograms,
             'timer' => $timer,
-            'sector' => $sector
+            'sector' => $sector,
+            'emitter' => $emitter,
         ];
 
         return response($response, 200);
@@ -360,7 +400,9 @@ class ProgramController extends Controller
 
         $timer = array();
         $sector = array();
+        $emitter = array();
         foreach ($listPrograms as $value) {
+            // error_log(print_r($value, TRUE));
             $result = Timer::where('programId', $value->id)->get();
 
             if ($result) $timer[] = $result;
@@ -370,17 +412,24 @@ class ProgramController extends Controller
 
             $result = DigitalOutput::whereIn('id', $result)->get();
             if ($result) $sector[] = $result;
+
+            $result = Emitter::where('programId', $value->id)->pluck("digitalOutputId");
+
+
+            $result = DigitalOutput::whereIn('id', $result)->get();
+            if ($result) $emitter[] = $result;
         }
 
         // Creamos la respuesta
-        $result = [
+        $response = [
             'count' => count($listPrograms),
             'listPrograms' => $listPrograms,
             'timer' => $timer,
-            'sector' => $sector
+            'sector' => $sector,
+            'emitter' => $emitter,
         ];
 
-        return response($result, 200);
+        return response($response, 200);
     }
 
     /**

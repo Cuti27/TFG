@@ -44,10 +44,11 @@ export default {
       type: Boolean,
       required: true,
     },
+    temporizadoresStart: Array,
   },
   data() {
     return {
-      temporizadores: [
+      temporizadores: this.temporizadoresStart || [
         {
           inicio: "",
           duracion: "",
