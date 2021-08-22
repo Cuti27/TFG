@@ -450,62 +450,6 @@ export default {
   }
 }
 
-.ayuda {
-  display: inline-block;
-  margin: 0.15em;
-  position: absolute;
-  font-size: 1.2em;
-  $timing: 265ms;
-  $iconColor: $primary;
-  $accent: $primaryDark;
-  $bluefade: $secondary;
-
-  top: 190px;
-  right: 30px;
-  z-index: 9990;
-
-  @mixin transformScale($size: 1) {
-    transform: scale($size);
-    -ms-transform: scale($size);
-    -webkit-transform: scale($size);
-  }
-
-  svg {
-    color: $white;
-    position: absolute;
-    top: 6px;
-    left: 5px;
-    transition: all $timing ease-out;
-  }
-
-  a {
-    display: inline-block;
-    padding: 0px;
-    &:before {
-      @include transformScale();
-      content: " ";
-      width: 40px;
-      height: 40px;
-      border-radius: 100%;
-      display: block;
-      background: linear-gradient(45deg, $iconColor, $accent);
-      transition: all $timing ease-out;
-    }
-
-    &:hover:before {
-      transform: scale(0);
-      transition: all $timing ease-in;
-    }
-
-    &:hover svg {
-      @include transformScale(2.2);
-      color: $white;
-      -webkit-text-fill-color: transparent;
-      transition: all $timing ease-in;
-    }
-  }
-}
-
 h3 {
   margin-bottom: 5px;
 }

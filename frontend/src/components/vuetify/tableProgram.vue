@@ -120,7 +120,7 @@
                   color="blue darken-1"
                   text
                   @click="deleteItemConfirm"
-                  >Si</v-btn
+                  >Aceptar</v-btn
                 >
                 <v-spacer></v-spacer>
               </v-card-actions>

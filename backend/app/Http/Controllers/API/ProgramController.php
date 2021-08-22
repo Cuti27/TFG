@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\ClientHTTP;
 use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\DigitalOutput;
@@ -23,7 +24,8 @@ class ProgramController extends Controller
     public function createProgram(Request $request)
     {
         // Recuperamos y validamos el formulario
-        $fields = $request->validate(['programId' => 'integer',
+        $fields = $request->validate([
+            'programId' => 'integer',
             'name' => 'required|string',
             'headId' => 'required',
             'programDays' => 'required | array',
@@ -119,7 +121,7 @@ class ProgramController extends Controller
             }
         });
 
-        if ($fields['programId']) {
+        if (array_key_exists('programId', $fields)) {
             $query = $query->where('id', '!=', $fields['programId']);
         }
 
@@ -164,12 +166,26 @@ class ProgramController extends Controller
                             $startBetween = $timer->timeStart >= $start[$index] && $timer->timeStart <= $end[$index];
                             $endBetween = $timer->end_time >= $start[$index] && $timer->end_time <= $end[$index];
 
-                            $startBeforeButEndLater = $timer->timeStart < $start &&
+                            $startBeforeButEndLater = $timer->timeStart < $start[$index] &&
                                 $timer->end_time > $end[$index];
                             // En caso de que empiece o termina a la misma vez
                             if ($startBetween || $endBetween || $startBeforeButEndLater) {
                                 $programId = $timer->programId;
-                                $error = "El programa con id $programId, tiene el mismo emisor,y el temporizador que empieza $start[$index], coincide con el temporizador del otro programa que comienza $timer->timeStart. Por favor, seleccione uno distinto.";
+                                $error = "El programa con id $programId, tiene el mismo emisor,y el temporizador que empieza $start[$index] y termina $end[$index], coincide con el temporizador del otro programa que comienza $timer->timeStart y termina $timer->end_time.";
+
+                                if ($startBetween) {
+                                    $error = $error . " Por tanto, el temporizador creado empieza entre el inicio y finalización del otro programa";
+                                }
+                                if ($endBetween) {
+                                    $error = $error . " Por tanto, el temporizador creado termina entre el inicio y finalización del otro programa";
+                                }
+                                if ($startBeforeButEndLater) {
+                                    $error = $error . " Por tanto, el temporizador creado empieza antes del inicio pero termina despues de la finalización del otro programa";
+                                }
+
+                                $error = $error . " Por favor, seleccione uno distinto.";
+
+                                // $error = "El programa con id $programId, tiene el mismo emisor,y el temporizador que empieza $start[$index], coincide con el temporizador del otro programa que comienza $timer->timeStart. Por favor, seleccione uno distinto.";
                                 return response([
                                     'customError' => true,
                                     'message' => $error
@@ -277,55 +293,101 @@ class ProgramController extends Controller
                 ]);
             }
 
-                // Creamos todos los emisores
-                $listCreatedEmitter = [];
-                foreach ($fields['emitter'] as $emitter) {
-                    $listCreatedEmitter[] = Emitter::create([
-                        'programId' => $createdProgram->id,
-                        'digitalOutputId' => $emitter['id'],
-                    ]);
-                }
+            $listCreatedTimer = [];
+            foreach ($fields['timer'] as $timer) {
+                $listCreatedTimer[] = Timer::create([
+                    'programId' => $createdProgram->id,
+                    'timeStart' =>  date(
+                        'H:i:s',
+                        strtotime($timer['timeStart'])
+                    ),
+                    'duration' =>  date('H:i:s', strtotime($timer['duration'])),
+                    'postIrrigation' =>  date('H:i:s', strtotime($timer['postIrrigation'])),
+                ]);
+            }
 
+            // Buscamos los dispositivos que debemos informar
+            $listDevice = array();
+            $emitterToSend = array();
+            foreach ($fields['emitter'] as  $emitter) {
+                if (!isset($listDevice[$emitter['deviceId']]))
+                    $listDevice[$emitter['deviceId']] = $emitter;
+                $emitterToSend[$emitter['deviceId']][] = $emitter;
+            }
+            $sectorToSend = array();
+            foreach ($fields['sector'] as  $sector) {
+                if (!isset($listDevice[$sector['deviceId']]))
+                    $listDevice[$sector['deviceId']] = $sector;
+                $sectorToSend[$sector['deviceId']][] = $sector;
+            }
 
-                // Creamos todos los receptores
-                $listCreatedSector = [];
-                foreach ($fields['sector'] as $sector) {
+            // Informamos a cada dispositivo con que salidas debe activar
+            foreach ($listDevice as $device) {
 
-                    $listCreatedSector[] = Sector::create([
-                        'programId' => $createdProgram->id,
-                        'digitalOutputId' => $sector['id'],
-                    ]);
-                }
-
-
-                $listCreatedTimer = [];
-                foreach ($fields['timer'] as $timer) {
-                    $listCreatedTimer[] = Timer::create([
-                        'programId' => $createdProgram->id,
-                        'timeStart' =>  date(
-                            'H:i:s',
-                            strtotime($timer['timeStart'])
-                        ),
-                        'duration' =>  date('H:i:s', strtotime($timer['duration'])),
-                        'postIrrigation' =>  date('H:i:s', strtotime($timer['postIrrigation'])),
-                    ]);
-                }
-
-                $head->touch();
-
-                History::create([
-                    'userId' => $request->user()->id,
-                    'description' => "Creación del programa con nombre '$createdProgram->name' en el cabezal $head->name ($head->id)."
+                $response = (new ClientHTTP)("POST", "/programar", [
+                    'connect_timeout' => 90,
+                    'http_errors' => false,
+                    'form_params' => [
+                        'type' => array_key_exists('programId', $fields) ? 1 : 0, // 1 actualizar 0 crear
+                        'deviceId' => $device['deviceId'],
+                        'id' => $createdProgram->id, // Id del programa
+                        'name' => $createdProgram->name, // Nombre del programa
+                        'active' => $createdProgram->active, // Programa activo o inactivo
+                        'drip' => $createdProgram->drip, // Goteo
+                        'programDay' => $fields['programDays'], // Dias activo
+                        'emitter' => $emitterToSend[$device['deviceId']], // Emisores del dispositivo actual
+                        'sector' => $sectorToSend[$device['deviceId']], // Sector del dispositivo actual
+                        'timer' => $listCreatedTimer, // All timer a enviar
+                    ]
                 ]);
 
-                $response = [
-                    'program' => $createdProgram,
-                    'emitter' => $listCreatedEmitter,
-                    'sector' => $listCreatedSector,
-                    'timer' => $listCreatedTimer,
-                ];
-                return response($response, 201);
-            
+                if ($response->getStatusCode() != 200) {
+                    $createdProgram->delete();
+                    foreach ($listCreatedTimer as  $timer) {
+                        $timer->delete();
+                    }
+                    $error = "No hemos podido comunicarnos con el dispositivo $device->deviceId, intentelo más tarde";
+                    return response([
+                        'customError' => true,
+                        'message' => $error
+                    ], 400);
+                }
+            }
+
+            // Creamos todos los emisores
+            $listCreatedEmitter = [];
+            foreach ($fields['emitter'] as $emitter) {
+                $listCreatedEmitter[] = Emitter::create([
+                    'programId' => $createdProgram->id,
+                    'digitalOutputId' => $emitter['id'],
+                ]);
+            }
+
+
+            // Creamos todos los receptores
+            $listCreatedSector = [];
+            foreach ($fields['sector'] as $sector) {
+
+                $listCreatedSector[] = Sector::create([
+                    'programId' => $createdProgram->id,
+                    'digitalOutputId' => $sector['id'],
+                ]);
+            }
+
+            $head->touch();
+
+            History::create([
+                'userId' => $request->user()->id,
+                'description' => "Creación del programa con nombre '$createdProgram->name' en el cabezal $head->name ($head->id)."
+            ]);
+
+            $response = [
+                'program' => $createdProgram,
+                'emitter' => $listCreatedEmitter,
+                'sector' => $listCreatedSector,
+                'timer' => $listCreatedTimer,
+            ];
+            return response($response, 201);
         }
 
 

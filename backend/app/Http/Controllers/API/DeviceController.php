@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\ClientHTTP;
 use App\Http\Controllers\Controller;
 use App\Models\AgronicAccount;
 use App\Models\AnalogicalInput;
@@ -23,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Psr\Http\Message\ResponseInterface;
 
 class DeviceController extends Controller
 {
@@ -73,6 +75,21 @@ class DeviceController extends Controller
 
         error_log($waittingId);
         error_log($waittingId->id);
+
+        $response = (new ClientHTTP)("GET", "/identificador", [
+            'connect_timeout' => 90,
+'http_errors' => false,
+            'query' => [
+                'id' => $waittingId->id,
+            ]
+        ]);
+
+        if ($response->getStatusCode() != 200) {
+            return response([
+                'message' => 'Cant connect to device, check if connected',
+                'id' => $fields['id']
+            ], 400);
+        }
 
         $head = Head::where("userId", $request->user()->id)->where('id', $id)->first();
 

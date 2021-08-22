@@ -1,0 +1,966 @@
+[
+    {
+        "id": "44e897ca.3dda7",
+        "type": "switch",
+        "z": "471f0156.739d2",
+        "name": "",
+        "property": "check",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 450,
+        "y": 700,
+        "wires": [
+            [
+                "2f0639f4.55310e",
+                "4c42d287.b8df74"
+            ],
+            [
+                "2eb6c075.d0e028"
+            ]
+        ]
+    },
+    {
+        "id": "2f0639f4.55310e",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "4ebe0952.94405",
+        "type": "http in",
+        "z": "471f0156.739d2",
+        "name": "",
+        "url": "/identificador",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 700,
+        "wires": [
+            [
+                "23639937.758976"
+            ]
+        ]
+    },
+    {
+        "id": "2eb6c075.d0e028",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "msg.payload = {\n error: 1,\n message: \"No se ha proporcionado un identificador valido valido\"\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 600,
+        "y": 760,
+        "wires": [
+            [
+                "5abc7815.831978"
+            ]
+        ]
+    },
+    {
+        "id": "5abc7815.831978",
+        "type": "http response",
+        "z": "471f0156.739d2",
+        "name": "",
+        "statusCode": "404",
+        "headers": {},
+        "x": 900,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "23639937.758976",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "msg.check = (typeof msg.req.query !== 'undefined' && typeof msg.req.query.id !== 'undefined' && msg.req.query.id != \"\");\n\nif(msg.check && !flow.id.includes(msg.req.query.id))\n    flow.id = [...flow.id, msg.req.query.id]\nconsole.log(flow.id)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nflow.id = [];\n\nflow.set(\"waittingId\", [])\n\nflow.set(\"checkId\", {})",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 700,
+        "wires": [
+            [
+                "44e897ca.3dda7",
+                "20d80223.c00c6e"
+            ]
+        ]
+    },
+    {
+        "id": "20d80223.c00c6e",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "check",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "4c42d287.b8df74",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "let ans = false;\n\nlet id = msg.req.query.id;\n\nans = flow.get(\"waittingId\").includes(id);\n\nconsole.log('Intentamos')\nconsole.log(id)\nconsole.log(\"Respuesta\")\nconsole.log(ans);\nconsole.log(\"Estadp actual de waittingId\")\nconsole.log(flow.get(\"waittingId\"));\n\nif(ans){\n    console.log(\"Encontrado\")\n    msg.error = 0;\n    const index = flow.get(\"waittingId\").indexOf(id);\n    if (index > -1) {\n      flow.get(\"waittingId\").splice(index, 1);\n      console.log(\"Eliminado\")\n      console.log(flow.get(\"waittingId\"));\n    }\n}\nelse \n    msg.error = 1;\n\nif(typeof flow.get(\"checkId\")[id] === 'undefined' && !ans){\n    console.log(\"Creamos el contador\")\n    flow.get(\"checkId\")[id] = 5;\n    msg.error = -1;\n    console.log(flow.get(\"checkId\")[id])\n} else if(flow.get(\"checkId\")[id] > 0 && !ans){\n    console.log(\"Modificamos el contador\")\n    flow.get(\"checkId\")[id]--;\n    msg.error = -1;\n    console.log(flow.get(\"checkId\")[id])\n}\n\nif(msg.error)\n    msg.payload = {\n        error: 2,\n        message: \"No se ha proporcionado encontrar una repuesta vuelve a intentarlo\"\n    }\nelse\n    msg.payload = {\n        message: \"Identificador encontrado correctamente\"\n    }\n    \nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nlet debounceTime = 5000;\n\n// flow.debounce = function debounce(func, timeout = debounceTime){\n//   let timer;\n//   return (...args) => {\n//     clearTimeout(timer);\n//     timer = setTimeout(() => { func.apply(this, args); }, timeout);\n//   };\n// }\n\nflow.set(\"waittingId\", [])\n\nflow.set(\"checkId\", {})\n\nlet cont = 10;\n\n\nflow.checkIfCorrect = function checkIfCorrect(id){\n    let info = flow.waittingId.includes(id);\n    \n    if(cont > 0){\n        console.log(\"hacemos timeout\"+cont);\n        cont--;\n         setTimeout(flow.checkIfCorrect(id), 5000);\n        \n    } else {\n        cont = 10;\n        return info;\n    }\n};\n\nflow.debounce = function debounce(func, wait, immediate) {\n  var timeout;\n\n  return function executedFunction() {\n    var context = this;\n    var args = arguments;\n\t    \n    var later = function() {\n      timeout = null;\n      if (!immediate) func.apply(context, args);\n    };\n\n    var callNow = immediate && !timeout;\n\t\n    clearTimeout(timeout);\n\n    timeout = setTimeout(later, wait);\n\t\n    if (callNow) func.apply(context, args);\n  };\n};",
+        "finalize": "",
+        "x": 660,
+        "y": 620,
+        "wires": [
+            [
+                "aec82b7d.e2dfd"
+            ]
+        ]
+    },
+    {
+        "id": "aec82b7d.e2dfd",
+        "type": "switch",
+        "z": "471f0156.739d2",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 850,
+        "y": 620,
+        "wires": [
+            [
+                "2e128967.7897ee"
+            ],
+            [
+                "3beee7c4.4af2a"
+            ]
+        ]
+    },
+    {
+        "id": "96e674c6.89c37",
+        "type": "http response",
+        "z": "471f0156.739d2",
+        "name": "",
+        "statusCode": "400",
+        "headers": {},
+        "x": 1580,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "2e128967.7897ee",
+        "type": "http response",
+        "z": "471f0156.739d2",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 1580,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "bbbcf043.f69768",
+        "type": "inject",
+        "z": "471f0156.739d2",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "body",
+                "v": "{\"type\":1}",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "/genhidro/informacion_programador/3c0a41b2-7e1c-43db-a8f0-b93580f7fd91",
+        "payloadType": "date",
+        "x": 960,
+        "y": 100,
+        "wires": [
+            [
+                "c6e4296e.e0998"
+            ]
+        ]
+    },
+    {
+        "id": "c6e4296e.e0998",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "const id = msg.topic.split(\"/\").pop();\nif(id != \"\"){\n    if(msg.body.type == 1){\n        flow.set(\"waittingId\", [...flow.get(\"waittingId\"), id]);\n        console.log(\"Nodo externo\")\n        console.log(flow.get(\"waittingId\"));\n        return msg;\n    }\n}\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nflow.waittingId = [];",
+        "finalize": "",
+        "libs": [],
+        "x": 1300,
+        "y": 140,
+        "wires": [
+            [
+                "876522d196e417b5"
+            ]
+        ]
+    },
+    {
+        "id": "3beee7c4.4af2a",
+        "type": "delay",
+        "z": "471f0156.739d2",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 1060,
+        "y": 660,
+        "wires": [
+            [
+                "2c9b6b1b.b38224"
+            ]
+        ]
+    },
+    {
+        "id": "314f6f87.a7d6b",
+        "type": "switch",
+        "z": "471f0156.739d2",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 3,
+        "x": 1350,
+        "y": 740,
+        "wires": [
+            [
+                "2e128967.7897ee"
+            ],
+            [
+                "96e674c6.89c37"
+            ],
+            [
+                "3beee7c4.4af2a"
+            ]
+        ]
+    },
+    {
+        "id": "2c9b6b1b.b38224",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "let ans = false;\n\nlet id = msg.req.query.id;\n\nans = flow.get(\"waittingId\").includes(id);\n\nconsole.log('Intentamos')\nconsole.log(id)\nconsole.log(\"Respuesta\")\nconsole.log(ans);\n\nif(ans){\n    console.log(\"Encontrado\")\n    msg.error = 0;\n    const index = flow.get(\"waittingId\").indexOf(id);\n    if (index > -1) {\n      flow.get(\"waittingId\").splice(index, 1);\n      console.log(\"Eliminado\")\n      console.log(flow.get(\"waittingId\"));\n    }\n}\nelse \n    msg.error = 1;\n\nif(typeof flow.get(\"checkId\")[id] === 'undefined' && !ans){\n    console.log(\"Creamos el contador\")\n    flow.get(\"checkId\")[id] = 5;\n    msg.error = -1;\n    console.log(flow.get(\"checkId\")[id])\n} else if(flow.get(\"checkId\")[id] > 0 && !ans){\n    console.log(\"Modificamos el contador\")\n    flow.get(\"checkId\")[id]--;\n    msg.error = -1;\n    console.log(flow.get(\"checkId\")[id])\n}\n\nif(msg.error)\n    msg.payload = {\n        error: 2,\n        message: \"No se ha proporcionado encontrar una repuesta vuelve a intentarlo\"\n    }\nelse\n    msg.payload = {\n        message: \"Identificador encontrado correctamente\"\n    }\n    \nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nlet debounceTime = 5000;\n\n// flow.debounce = function debounce(func, timeout = debounceTime){\n//   let timer;\n//   return (...args) => {\n//     clearTimeout(timer);\n//     timer = setTimeout(() => { func.apply(this, args); }, timeout);\n//   };\n// }\n\nflow.waittingId = []\n\nflow.checkId = {};\n\nlet cont = 10;\n\n\nflow.checkIfCorrect = function checkIfCorrect(id){\n    let info = flow.waittingId.includes(id);\n    \n    if(cont > 0){\n        console.log(\"hacemos timeout\"+cont);\n        cont--;\n         setTimeout(flow.checkIfCorrect(id), 5000);\n        \n    } else {\n        cont = 10;\n        return info;\n    }\n};\n\nflow.debounce = function debounce(func, wait, immediate) {\n  var timeout;\n\n  return function executedFunction() {\n    var context = this;\n    var args = arguments;\n\t    \n    var later = function() {\n      timeout = null;\n      if (!immediate) func.apply(context, args);\n    };\n\n    var callNow = immediate && !timeout;\n\t\n    clearTimeout(timeout);\n\n    timeout = setTimeout(later, wait);\n\t\n    if (callNow) func.apply(context, args);\n  };\n};",
+        "finalize": "",
+        "x": 1220,
+        "y": 660,
+        "wires": [
+            [
+                "314f6f87.a7d6b"
+            ]
+        ]
+    },
+    {
+        "id": "f06b27f0.5c1a7",
+        "type": "comment",
+        "z": "471f0156.739d2",
+        "name": "Comprobamos que nos han mandado un Id",
+        "info": "",
+        "x": 310,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "4c03df60.2fe37",
+        "type": "comment",
+        "z": "471f0156.739d2",
+        "name": "Realizamos un timeout a la espera de recibir el id",
+        "info": "",
+        "x": 980,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "7d3f60d1.d08a",
+        "type": "http in",
+        "z": "471f0156.739d2",
+        "name": "",
+        "url": "/programar",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 1140,
+        "wires": [
+            [
+                "589be7fad331c3e0",
+                "6d3667be.b51d08"
+            ]
+        ]
+    },
+    {
+        "id": "6d3667be.b51d08",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "console.log(flow.get(\"property\"));\nconsole.log(flow.length);\nconsole.log(flow.fertirrigacion);\nconsole.log(flow.lineas);\nconsole.log(flow.temporizadores);\nconsole.log(\"-------------\")\nconsole.log(msg.payload)\nconsole.log(\"-------------\")\n\n\nlet contProperty = 0;\n\nlet property = [...flow.get(\"property\")];\n\nfunction checkAllBoolean(array) {\n    let b = true;\n    array.foreach(element => {\n        if(typeof element !== 'boolean'){\n            b = false;\n           return false;\n        }\n    })\n    return b\n}\n\n// Comprobar que existe un objeto\nif(typeof msg.payload !== 'undefined' && typeof msg.payload === 'object'){\n    // Comprobamos que tiene todos los campos necesarios\n    Object.keys(msg.payload).forEach(element => {\n        if(property.includes(element)){\n            contProperty++;\n            const index = property.indexOf(element);\n            if (index > -1) {\n              property.splice(index, 1);\n            }\n        }\n    })\n    if(flow.get(\"property\").length === contProperty && property.length === 0){\n        // Si coincide avanzamos\n        msg.topic = `/genhidro/programar/${msg.payload.deviceId}`\n        msg.error = 0;\n        return msg;\n    } else {\n        if(flow.get(\"property\").length === contProperty){\n            // Se esperaba encontrar alguna propiedad extra\n            msg.error = 1;\n            msg.payload = {\n                id: msg.payload.id,\n                error: 4,\n                message: \"No se encuentran todos los elementos esperados\",\n                property,\n                inicialProperty: flow.get(\"property\"),\n                contProperty,\n            }\n            return msg;\n        } else{\n            // No tenemos las mismas propiedades\n            console.log(\"Diferencia de propiedades esperadas \"+flow.get(\"property\").length+\" encontradas \"+contProperty)\n            msg.error = 1;\n            msg.payload = {\n                id: msg.payload.id,\n                error: 5,\n                message: \"Error interno\",\n                longMessage: \"Diferencia de propiedades esperadas \"+flow.get(\"property\").length+\" encontradas \"+contProperty,\n                property,\n                inicialProperty: flow.get(\"property\"),\n                contProperty,\n            }\n            return msg;\n        }\n        \n    }\n} else {\n    msg.error = 1;\n    msg.payload = {\n        id: msg.payload.id,\n        error: 6,\n        message: \"Debe mandar información en formato JSON sobre el programa\"\n    }\n    return msg;\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\n\nflow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\n\n// flow.length = [\"dias\",\"bombas\",\"sectores\",\"temporizadores\"]\n\n// flow.fertirrigacion = [\"pH\",\"phPreRie\",\n//         \"phRie\",\n//         \"phPost\",\n//         \"control\",\n//         \"linea de abonado\"];\n        \n// flow.lineas = [\"abono\",\"tipo\",\"value\",\"tiempo\"]\n// flow.temporizadores = [\"HoraI\",\"Duracion\"]\n\nflow.set(\"programas\", [])\nflow.set(\"erroresProgramas\", [])\nflow.set(\"checkProgramId\", {})\n// let a = {\n//      \"type\": 0,\n//     \"id\": 1234,\n//     \"programa\": 1234123,\n//     \"activado\": true,\n//     \"dias\": [true, true, true, true, true, false, false],\n//     \"bombas\": [false, false, true, true],\n//     \"sectores\": [false, false, true, false],\n//     \"temporizadores\": [{\n//             \"HoraI\": \"12:12\",\n//             \"Duracion\": \"12:12\"\n//         },\n//         {\n//             \"HoraI\": \"12:12:12\",\n//             \"Duracion\": \"12:12:12\"\n//         },\n//         {\n//             \"HoraI\": \"12:12\",\n//             \"Duracion\": \"12:12\"\n//         },\n//         {\n//             \"HoraI\": \"12:12\",\n//             \"Duracion\": \"12:12\"\n//         }\n//     ],\n//     \"fertirrigacion\": {\n//         \"pH\": 7,\n//         \"phPreRie\": true,\n//         \"phRie\": true,\n//         \"phPost\": true,\n//         \"control\": \"secuencial\",\n//         \"linea de abonado\": [\n//             {\n//                 \"abono\": 1,\n//                 \"tipo\": \"time\",\n//                 \"value\": \"10:10:10\",\n//                 \"tiempo\": \"00:15:15\"\n//             },\n//             {\n//                 \"abono\": 2,\n//                 \"tipo\": \"time\",\n//                 \"value\": \"10:10:10\",\n//                 \"tiempo\": \"00:15:15\"\n//             },\n//             {\n//                 \"abono\": 3,\n//                 \"tipo\": \"time\",\n//                 \"value\": \"10:10:10\",\n//                 \"tiempo\": \"00:15:15\"\n//             },\n//             {\n//                 \"abono\": 4,\n//                 \"tipo\": \"time\",\n//                 \"value\": \"10:10:10\",\n//                 \"tiempo\": \"00:15:15\"\n//             }\n//         ]\n//     }\n// }",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 1140,
+        "wires": [
+            [
+                "a9be8b25.3acd3"
+            ]
+        ]
+    },
+    {
+        "id": "a9be8b25.3acd3",
+        "type": "switch",
+        "z": "471f0156.739d2",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 490,
+        "y": 1140,
+        "wires": [
+            [
+                "843c9dbe.18b228",
+                "190607cd.4d666"
+            ],
+            [
+                "18492795.bc1018"
+            ]
+        ]
+    },
+    {
+        "id": "843c9dbe.18b228",
+        "type": "mqtt out",
+        "z": "471f0156.739d2",
+        "name": "Enviar programa",
+        "topic": "",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "faf9990bdc13c2c2",
+        "x": 780,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "18492795.bc1018",
+        "type": "switch",
+        "z": "471f0156.739d2",
+        "name": "",
+        "property": "payload.error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "5",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "4",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "6",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 590,
+        "y": 1360,
+        "wires": [
+            [
+                "7de068d6.571ac"
+            ],
+            [
+                "a598027d.ef7068"
+            ],
+            [
+                "a598027d.ef7068"
+            ]
+        ]
+    },
+    {
+        "id": "7de068d6.571ac",
+        "type": "http response",
+        "z": "471f0156.739d2",
+        "name": "Error 500",
+        "statusCode": "500",
+        "headers": {},
+        "x": 800,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "a598027d.ef7068",
+        "type": "http response",
+        "z": "471f0156.739d2",
+        "name": "Error 400",
+        "statusCode": "400",
+        "headers": {},
+        "x": 800,
+        "y": 1400,
+        "wires": []
+    },
+    {
+        "id": "190607cd.4d666",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "let programas = flow.get(\"programas\");\n\nlet id = msg.payload.id;\n\nlet ans = programas.includes(id);\n\nif(ans){\n    console.log(\"Encontrado\")\n    msg.error = 0;\n    const index = flow.get(\"programas\").indexOf(id);\n    if (index > -1) {\n      flow.get(\"programas\").splice(index, 1);\n      console.log(\"Eliminado\")\n      console.log(flow.get(\"programas\"));\n    }\n}\nelse \n    msg.error = 1;\n    \n    \nif(msg.error)\n    msg.payload = {\n        id: msg.payload.id,\n        error: 7,\n        message: \"No hemos podido recibir respuesta del dispositivo\"\n    }\nelse\n    msg.payload = {\n        message: \"Programa correctamente guardado\"\n    }\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 1040,
+        "wires": [
+            [
+                "dbc7fffa.3e51b8"
+            ]
+        ]
+    },
+    {
+        "id": "dbc7fffa.3e51b8",
+        "type": "switch",
+        "z": "471f0156.739d2",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 810,
+        "y": 1040,
+        "wires": [
+            [
+                "2af03811.a4c4a"
+            ],
+            [
+                "74ea9776.c0b7a8"
+            ]
+        ]
+    },
+    {
+        "id": "2af03811.a4c4a",
+        "type": "http response",
+        "z": "471f0156.739d2",
+        "name": "Programa enviado correctamente",
+        "statusCode": "200",
+        "headers": {},
+        "x": 1140,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "74ea9776.c0b7a8",
+        "type": "delay",
+        "z": "471f0156.739d2",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "10",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "x": 1160,
+        "y": 1160,
+        "wires": [
+            [
+                "61e2bbee.767594"
+            ]
+        ]
+    },
+    {
+        "id": "61e2bbee.767594",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "let programas = flow.get(\"programas\");\n\nlet id = msg.payload.id;\n\nlet ans = programas.includes(id);\n\nconsole.log(\"-------------\")\nconsole.log(\"Vamos a ver si encontramos el id \"+id+\" en\")\nconsole.log(id)\nconsole.log(programas)\nconsole.log(ans)\n\nif(ans){\n    console.log(\"Encontrado\")\n    msg.error = 0;\n    let programasList = flow.get(\"programas\");\n    const index = programasList.indexOf(id);\n    if (index > -1) {\n      \n      programasList.splice(index, 1);\n      flow.set(\"programas\",programasList);\n      let checkProgramId = flow.get(\"checkProgramId\")\n      delete checkProgramId[id];\n      flow.set(\"checkProgramId\", checkProgramId);\n      console.log(\"Eliminado\")\n      console.log(flow.get(\"programas\"));\n    }\n}\nelse \n    msg.error = 1;\n    \n\nif(msg.error)\n    msg.payload = {\n        id: msg.payload.id,\n        error: 7,\n        message: \"No hemos podido recibir respuesta del dispositivo\"\n    }\nelse\n    msg.payload = {\n        message: \"Programa correctamente guardado\"\n    }\nlet erroresProgramas = flow.get(\"erroresProgramas\") \nif(typeof erroresProgramas.find(element => element.id == id) !== 'undefined'){\n    //TODO: Hacer analisis de los errores recibidos\n    \n    console.log(\"Error encontrado el programa con id \"+ erroresProgramas.find(element => element.id == id))\n    msg.error = 2;\n    msg.payload = {\n        id: msg.payload.id,\n        error: 8,\n        message: \"Cargar mensaje especifico del error\"\n    }\n}\n\nif(typeof flow.get(\"checkProgramId\")[id] === 'undefined' && !ans){\n    console.log(\"Creamos el contador\")\n    flow.get(\"checkProgramId\")[id] = 5;\n    msg.error = -1;\n    console.log(flow.get(\"checkProgramId\")[id])\n} else if(flow.get(\"checkProgramId\")[id] > 0 && !ans){\n    console.log(\"Modificamos el contador\")\n    flow.get(\"checkProgramId\")[id]--;\n    msg.error = -1;\n    console.log(flow.get(\"checkProgramId\")[id])\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 1040,
+        "wires": [
+            [
+                "a01c0e40.3e9938",
+                "6ee973b7.ebf07c"
+            ]
+        ]
+    },
+    {
+        "id": "a01c0e40.3e9938",
+        "type": "switch",
+        "z": "471f0156.739d2",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 4,
+        "x": 1310,
+        "y": 1040,
+        "wires": [
+            [
+                "2af03811.a4c4a"
+            ],
+            [
+                "cf9a0583.1a4c5",
+                "e6025679.4453f"
+            ],
+            [
+                "e6025679.4453f"
+            ],
+            [
+                "74ea9776.c0b7a8"
+            ]
+        ]
+    },
+    {
+        "id": "e6025679.4453f",
+        "type": "http response",
+        "z": "471f0156.739d2",
+        "name": "No hemos conseguido enviar el programa",
+        "statusCode": "400",
+        "headers": {},
+        "x": 1600,
+        "y": 1040,
+        "wires": []
+    },
+    {
+        "id": "fe856032.91c1a",
+        "type": "inject",
+        "z": "471f0156.739d2",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "body",
+                "v": "{\"type\":1}",
+                "vt": "json"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "/genhidro/informacion_programador/17",
+        "payloadType": "date",
+        "x": 260,
+        "y": 120,
+        "wires": [
+            [
+                "52691c49.038f94"
+            ]
+        ]
+    },
+    {
+        "id": "52691c49.038f94",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "const id = msg.payload.id;\nconsole.log(\"----------------\");\nconsole.log(id);\nconsole.log(msg.payload);\nconsole.log(flow.get(\"programas\"));\n\nif(id != \"\" && msg.payload){\n    if(msg.payload.type == 1 || msg.payload.type == 0 ){\n        flow.set(\"programas\", [...flow.get(\"programas\"), id]);\n        console.log(\"Nodo externo\")\n        console.log(flow.get(\"programas\"));\n        return msg;\n    }\n}\nconsole.log(\"----------------\");\nconsole.log(\"----------------\");\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nflow.waittingId = [];",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 180,
+        "wires": [
+            [
+                "d7e81613b95c80dd"
+            ]
+        ]
+    },
+    {
+        "id": "cf9a0583.1a4c5",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1570,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "6ee973b7.ebf07c",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1090,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "1f5a34fc4206e774",
+        "type": "mqtt in",
+        "z": "471f0156.739d2",
+        "name": "",
+        "topic": "/genhidro/informacion_programador/#",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "faf9990bdc13c2c2",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 1010,
+        "y": 200,
+        "wires": [
+            [
+                "c6e4296e.e0998"
+            ]
+        ]
+    },
+    {
+        "id": "589be7fad331c3e0",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 390,
+        "y": 1440,
+        "wires": []
+    },
+    {
+        "id": "243fdff5ccc1da6c",
+        "type": "inject",
+        "z": "471f0156.739d2",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 1400,
+        "wires": [
+            [
+                "589be7fad331c3e0"
+            ]
+        ]
+    },
+    {
+        "id": "8de2cb9ac2bf6972",
+        "type": "mqtt in",
+        "z": "471f0156.739d2",
+        "name": "",
+        "topic": "/genhidro/programar/#",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "faf9990bdc13c2c2",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 200,
+        "y": 240,
+        "wires": [
+            [
+                "52691c49.038f94",
+                "fb82576d3938c12b"
+            ]
+        ]
+    },
+    {
+        "id": "d7e81613b95c80dd",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "876522d196e417b5",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1520,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "fb82576d3938c12b",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "1181d7a24b5322d1",
+        "type": "comment",
+        "z": "471f0156.739d2",
+        "name": "Imita los dispositivos que deben aceptar el programa",
+        "info": "",
+        "x": 470,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "858a1337c6c3d937",
+        "type": "comment",
+        "z": "471f0156.739d2",
+        "name": "Comprobamos que tenemos todos los campos requeridos",
+        "info": "",
+        "x": 250,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "4104af4b2783bec7",
+        "type": "comment",
+        "z": "471f0156.739d2",
+        "name": "Si hay error",
+        "info": "",
+        "x": 640,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "f7a9bad54ad5eb56",
+        "type": "comment",
+        "z": "471f0156.739d2",
+        "name": "Enviamos el programa",
+        "info": "",
+        "x": 770,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "2358377aea503297",
+        "type": "comment",
+        "z": "471f0156.739d2",
+        "name": "Esperar hasta que lo recibamos o hasta el timeout",
+        "info": "",
+        "x": 1150,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "faf9990bdc13c2c2",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "josemiguel.myqnapcloud.com",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    }
+]
