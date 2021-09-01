@@ -3,23 +3,13 @@
     <section class="banner">
       <div class="content">
         <h1>Genhidro</h1>
+        <!-- 764 -->
         <p class="major">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente unde
-          adipisci perspiciatis hic, et tempore rem magnam ut, distinctio
-          dolorum reprehenderit autem, consectetur eaque corporis voluptas
-          minima eius magni temporibus! Corporis qui quidem alias dignissimos.
-          Voluptatum odio possimus quia. Qui minima harum distinctio voluptatem
-          laborum, quae suscipit quisquam perferendis obcaecati repellendus
-          cumque nesciunt, ea facere, blanditiis animi ex enim. Quas. Quis amet,
-          vitae iure in nobis laboriosam magni, mollitia officiis provident
-          atque quibusdam aliquid quod quo aut eveniet repellendus harum iste
-          fugiat eligendi quisquam. Ab harum quaerat aperiam eum adipisci!
+          Genhidro es un proyecto desarrollado bajo el marco de la Agricultura 4.0, en referencia a la a la cuarta revolución industrial, propulsada por el uso del internet de las cosas y la computación en la nube. En concreto en esta web podemos gestionar todo el tema relacionado con la programación de riego en distintos dispositivos. A su vez la página web es capaz de realizar un estudio del riego, esta preparada para usar algoritmos para decidir automáticamente los horarios más adecuados dependiendo del tipo de cultivo en especifico, y las necesidades especificas de la finca con la que se esta trabajando. 
         </p>
+        <!-- 252 -->
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
-          dolores officiis corporis recusandae! Vel eaque, consequuntur nihil
-          magnam enim quia unde tempora maiores iusto! Illum numquam nostrum vel
-          voluptate ipsa?
+          Para comenzar a utilizar la página web, debes dirigirte a la parte inferior izquierda, donde encontrarás donde poder registrarse en caso de que no se disponga de unas credenciales de acceso. Una vez que se tiene acceso, puede iniciar sesión desde cualquier dispositivo haciendo uso del botón de iniciar sesión.
         </p>
       </div>
       <div class="image">
@@ -31,11 +21,9 @@
     <section class="section1 reverse">
       <div class="content">
         <h2>Programación Riego</h2>
+        <!-- 252 -->
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
-          dolores officiis corporis recusandae! Vel eaque, consequuntur nihil
-          magnam enim quia unde tempora maiores iusto! Illum numquam nostrum vel
-          voluptate ipsa?
+          Esta herramienta es capaz de realizar una programación avanzada del riego, con multiples emisores, y multiples sectores a regar. A su vez permite crear múltiples temporizadores, para ajustarse a las necesidades especificas de la finca.
         </p>
       </div>
       <div class="image">
@@ -47,14 +35,11 @@
       <div class="content">
         <h2>Fertirrigación</h2>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio
-          dolores officiis corporis recusandae! Vel eaque, consequuntur nihil
-          magnam enim quia unde tempora maiores iusto! Illum numquam nostrum vel
-          voluptate ipsa?
+          (PROXIMAMENTE) Esta herramiente permite a su vez, realizar una gestión de la fertirrigación de distintos programas de riego, ajustandose a los distintos tipos de abonado y al tiempo proporcionado en el programa al que esta asociado.
         </p>
       </div>
       <div class="image">
-        <img src="../assets/Home2.jpg" alt="" />
+        <img src="../assets/Home3.jpg" alt="" />
       </div>
     </section>
   </div>

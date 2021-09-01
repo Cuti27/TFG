@@ -16,10 +16,10 @@ class CreateDeviceTable extends Migration
         Schema::create('device', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('name')->nullable();
-            $table->foreignId('userId')->constrained('users');
+            $table->foreignId('userId')->constrained('users')->onDelete('cascade');
             $table->foreignId('type')->constrained('type_device');
             $table->foreignId('headId')->constrained('head')->onDelete('cascade');
-            $table->foreignId('agronicId')->nullable()->unsigned()->on('agronic_info');
+            $table->foreignId('agronicId')->nullable()->unsigned()->on('agronic_info')->onDelete('cascade');
             $table->timestamps();
         });
     }

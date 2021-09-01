@@ -168,7 +168,9 @@
             />
           </v-btn>
         </div>
-        <slot v-else></slot>
+        <div v-else>
+           <v-btn @click='$emit("timerUse", item)'>Usar</v-btn>
+        </div>
       </template>
       <template v-slot:no-data>
         <v-btn color="primary" @click="initialize"> Recargar </v-btn>
@@ -385,7 +387,6 @@ export default {
     initialize() {
       this.listProgram();
     },
-
     editItem(item) {
       console.log(item);
       this.editedIndex = this.programas.indexOf(item);

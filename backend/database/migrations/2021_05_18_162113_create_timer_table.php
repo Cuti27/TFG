@@ -18,7 +18,7 @@ class CreateTimerTable extends Migration
             $table->string('timeStart');
             $table->string('duration');
             $table->string('postIrrigation');
-            $table->foreignId('programId')->constrained('programs');
+            $table->foreignId('programId')->constrained('programs')->onDelete('cascade');
             $table->timestamps();
         });
     }

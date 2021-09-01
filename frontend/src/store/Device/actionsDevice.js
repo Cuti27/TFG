@@ -22,7 +22,7 @@ function getCookie(name) {
 const doCall = async (request, auth = null) => {
     return await axios.get(request, auth).catch((err) => {
         if (err.response) {
-            console.log("Error en la llamda a: " + request);
+            console.log("Error en la llamada a: " + request);
             console.log(err.response.data);
             console.log(err.response.status);
             console.log(err.response.headers);
@@ -40,7 +40,7 @@ export default {
             .post(request, data, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -158,7 +158,7 @@ export default {
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     console.log(err.response.headers);
@@ -188,7 +188,7 @@ export default {
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -217,7 +217,7 @@ export default {
         toDelete.data = { id };
         await axios.delete(request, toDelete).catch((err) => {
             if (err.response) {
-                console.log("Error en la llamda a: " + request);
+                console.log("Error en la llamada a: " + request);
                 console.log(err.response.data);
                 console.log(err.response.status);
                 if (err.response.status == 401) {
@@ -244,7 +244,7 @@ export default {
             .post(request, data, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -278,7 +278,7 @@ export default {
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -309,7 +309,7 @@ export default {
             .post(request, data, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -362,7 +362,7 @@ export default {
             .post(request, dataSend, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -370,7 +370,7 @@ export default {
                         router.push("Home");
                     }
                     console.log(err.response.headers);
-                    commit("addGlobalError", "Debes seleccionar uno en el seleccionable e indicar un nombre");
+                    commit("addGlobalError", err.response.data.error? err.response.data.error : "Debes seleccionar uno en el seleccionable e indicar un nombre");
                     commit("removeIsLoading");
                     return null;
                 }
@@ -412,7 +412,7 @@ export default {
             .post(request, dataSend, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -463,7 +463,7 @@ export default {
             .post(request, dataSend, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -514,7 +514,7 @@ export default {
             .post(request, dataSend, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -546,7 +546,7 @@ export default {
         const request = "http://josemiguel.myqnapcloud.com:41063/api/device/" + id;
         await axios.delete(request, await addAuthHeader(state.auth)).catch((err) => {
             if (err.response) {
-                console.log("Error en la llamda a: " + request);
+                console.log("Error en la llamada a: " + request);
                 console.log(err.response.data);
                 console.log(err.response.status);
                 if (err.response.status == 401) {

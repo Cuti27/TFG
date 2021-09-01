@@ -16,7 +16,7 @@ class CreateHeadTable extends Migration
         Schema::create('head', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('userId')->constrained('users');
+            $table->foreignId('userId')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

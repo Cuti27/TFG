@@ -15,7 +15,7 @@ class CreateWaittingIdsTable extends Migration
     {
         Schema::create('waitting_ids', function (Blueprint $table) {
             $table->uuid('id')->toString()->primary();
-            $table->foreignId('userId')->constrained('users');
+            $table->foreignId('userId')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -17,7 +17,7 @@ class CreateHumidityTable extends Migration
             $table->id();
             $table->dateTime("date");
             $table->string("value");
-            $table->foreignId('analogicalInputId')->constrained('analogical_input');
+            $table->foreignId('analogicalInputId')->constrained('analogical_input')->onDelete('cascade');
             $table->timestamps();
         });
     }

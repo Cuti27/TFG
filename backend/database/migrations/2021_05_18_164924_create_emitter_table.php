@@ -15,8 +15,8 @@ class CreateEmitterTable extends Migration
     {
         Schema::create('emitter', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('programId')->constrained('programs');
-            $table->foreignId('digitalOutputId')->constrained('digital_output');
+            $table->foreignId('programId')->constrained('programs')->onDelete('cascade');
+            $table->foreignId('digitalOutputId')->constrained('digital_output')->onDelete('cascade');
             $table->timestamps();
         });
     }

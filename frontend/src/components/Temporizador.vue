@@ -169,21 +169,12 @@ export default {
   },
   data() {
     return {
-      time: "",
+      time: this.value.inicio,
       modal: false,
-      time1: "",
+      time1: this.value.duracion,
       modal1: false,
-      time2: "",
+      time2: this.value.post,
       modal2: false,
-      inicioHora: this.value.inicio[0],
-      inicioMinutos: this.value.inicio[1],
-      inicioSegundos: this.value.inicio[2],
-      duracionHora: this.value.duracion[0],
-      duracionMinutos: this.value.duracion[1],
-      duracionSegundos: this.value.duracion[2],
-      postHora: this.value.post[0],
-      postMinutos: this.value.post[1],
-      postSegundos: this.value.post[2],
       windowWidth: 0,
       windowHeight: 0,
     };
@@ -218,13 +209,6 @@ export default {
       this.getWindowWidth();
       this.getWindowHeight();
     });
-
-    if (this.inicioHora && this.inicioMinutos && this.inicioSegundos)
-      this.time = `${this.inicioHora}:${this.inicioMinutos}:${this.inicioSegundos}`;
-    if (this.duracionHora && this.duracionMinutos && this.duracionSegundos)
-      this.time1 = `${this.duracionHora}:${this.duracionMinutos}:${this.duracionSegundos}`;
-    if (this.postHora && this.postMinutos && this.postSegundos)
-      this.time2 = `${this.postHora}:${this.postMinutos}:${this.postSegundos}`;
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.getWindowWidth);

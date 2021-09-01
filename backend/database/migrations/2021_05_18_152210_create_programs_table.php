@@ -19,7 +19,7 @@ class CreateProgramsTable extends Migration
             $table->boolean('active');
             $table->boolean('automaticDays');
             $table->boolean('drip');
-            $table->foreignId('userId')->constrained('users');
+            $table->foreignId('userId')->constrained('users')->onDelete('cascade');
             $table->foreignId('fertigationId')->nullable()->constrained('fertigation');
             $table->boolean('afterProgram');
             $table->boolean('autoTimer');
@@ -30,7 +30,7 @@ class CreateProgramsTable extends Migration
             $table->boolean('fri');
             $table->boolean('sat');
             $table->boolean('sun');
-            $table->foreignId('headId')->constrained('head');
+            $table->foreignId('headId')->constrained('head')->onDelete('cascade');
             $table->timestamps();
         });
     }

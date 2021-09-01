@@ -367,7 +367,40 @@ class DeviceController extends Controller
             ], 400);
         }
 
-        // TODO: hacer eliminación de objetos
+        $listIdDigitalOutput = DigitalOutput::where('deviceId', $device->id)->pluck('id');
+
+        $emitterList = Emitter::whereIn('digitalOutputId', $listIdDigitalOutput)->get();
+        $emitterType = TypeDigitalOutput::where('type', 'Bomba')->first();
+        foreach ($emitterList as $emitter){
+            foreach ($fields['listDigitalOutput'] as $digitalOutput){
+                if($digitalOutput['id'] == $emitter->digitalOutputId){
+                    if($digitalOutput['type'] != $emitterType->id){
+                        return response([
+                            'message' => 'The device exist as emitter of a program, delete it before',
+                            'error' => 'La salida '.$digitalOutput['output'].' del dispositivo es un emisor del programa '.$emitter->programId.', eliminalo antes de editar este dispositivo'
+                        ], 400);
+                    }
+                    break;
+                }
+            }
+        }
+
+        $sectorList = Sector::whereIn('digitalOutputId', $listIdDigitalOutput)->get();
+        $sectorType = TypeDigitalOutput::where('type', 'Sector')->first();
+        foreach ($sectorList as $sector){
+            foreach ($fields['listDigitalOutput'] as $digitalOutput){
+                if($digitalOutput['id'] == $sector->digitalOutputId){
+                    if($digitalOutput['type'] != $sectorType->id){
+                        return response([
+                            'message' => 'The device exist as sector of a program, delete it before',
+                            'error' => 'La salida '.$digitalOutput['output'].' del dispositivo es un secto del programa '.$sectorType->programId.', eliminalo antes de editar este dispositivo'
+                        ], 400);
+                    }
+                    break;
+                }
+            }
+        }
+
         $output = [];
         foreach ($fields['listDigitalOutput'] as $valor) {
             error_log(print_r($valor, TRUE));
@@ -395,15 +428,6 @@ class DeviceController extends Controller
         }
 
         // TODO: Eliminar el programa ya que debe ir enlazado al head, y el porgrama tiene que tener otra cosa que una sector/bomba y programa
-
-        // $listDigitalOutput =  DigitalOutput::createMany(collect($fields['listDigitalOutput'])->map(function ($value) {
-        //     return [
-        //         'type' => $value->type,
-        //         'deviceId' => $value->deviceId,
-        //         'output' => $value->output,
-        //     ];
-        // }));
-
         $listDigitalOutput = DigitalOutput::where('deviceId', $fields["idDevice"])->get();
 
         if (count($output) != count($listDigitalOutput)) {

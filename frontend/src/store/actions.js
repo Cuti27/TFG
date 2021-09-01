@@ -74,7 +74,7 @@ export default {
             .post(request, data, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -106,7 +106,7 @@ export default {
             .post(request, {}, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -127,7 +127,7 @@ export default {
         const request = "http://josemiguel.myqnapcloud.com:41063/api/register";
         let response = await axios.post(request, data).catch((err) => {
             if (err.response) {
-                console.log("Error en la llamda a: " + request);
+                console.log("Error en la llamada a: " + request);
                 console.log(err.response.data);
                 console.log(err.response.status);
                 if (err.response.status == 401) {
@@ -180,7 +180,7 @@ export default {
                     if (err.response.data.customError) {
                         commit("addGlobalError", err.response.data.message);
                     } else {
-                        console.log("Error en la llamda a: " + request);
+                        console.log("Error en la llamada a: " + request);
                         console.log(err.response.data);
                         console.log(err.response.status);
                         if (err.response.status == 401) {
@@ -193,8 +193,8 @@ export default {
                     return null;
                 }
             });
-
-        // TODO: guardar programa
+        
+        router.push('Programas');
         commit("updateComunicationSuccess", "Programa creado correctamente");
         commit("removeIsLoading");
     },
@@ -211,7 +211,7 @@ export default {
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -269,7 +269,7 @@ export default {
                     if (err.response.data.customError) {
                         commit("addGlobalError", err.response.data.message);
                     } else {
-                        console.log("Error en la llamda a: " + request);
+                        console.log("Error en la llamada a: " + request);
                         console.log(err.response.data);
                         console.log(err.response.status);
                         if (err.response.status == 401) {
@@ -305,7 +305,7 @@ export default {
             .catch((err) => {
                 if (err.response) {
 
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {

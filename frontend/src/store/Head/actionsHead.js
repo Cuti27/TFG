@@ -27,7 +27,7 @@ export default {
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     console.log(err.response.headers);
@@ -56,7 +56,7 @@ export default {
             .post(request, data, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -89,7 +89,7 @@ export default {
             .post(request, data, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     console.log(err.response.headers);
@@ -115,7 +115,7 @@ export default {
             .delete(request, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     console.log(err.response.headers);
@@ -146,7 +146,7 @@ export default {
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -178,7 +178,7 @@ export default {
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -210,7 +210,7 @@ export default {
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {
@@ -239,7 +239,7 @@ export default {
             .get(request, await addAuthHeader(state.auth))
             .catch((err) => {
                 if (err.response) {
-                    console.log("Error en la llamda a: " + request);
+                    console.log("Error en la llamada a: " + request);
                     console.log(err.response.data);
                     console.log(err.response.status);
                     if (err.response.status == 401) {

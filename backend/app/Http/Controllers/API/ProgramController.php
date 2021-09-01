@@ -12,6 +12,7 @@ use App\Models\History;
 use App\Models\Programs;
 use App\Models\Sector;
 use App\Models\Timer;
+use Hamcrest\Core\IsNull;
 use Illuminate\Http\Request;
 
 class ProgramController extends Controller
@@ -75,51 +76,51 @@ class ProgramController extends Controller
 
         // Recuperamos la lista de programas asociados, en los que algún día de la semana coincide con el de nuestro programa
         $query =
-        Programs::where('headId', $head->id)->where(function ($query) use ($fields) {
-            $first = true;
-            if ($fields['programDays'][0]) {
-                if ($first) {
-                    $query->where('mon', true);
-                    $first = false;
+            Programs::where('headId', $head->id)->where(function ($query) use ($fields) {
+                $first = true;
+                if ($fields['programDays'][0]) {
+                    if ($first) {
+                        $query->where('mon', true);
+                        $first = false;
+                    }
                 }
-            }
-            if ($fields['programDays'][1]) {
-                if ($first) {
-                    $query->where('tue', true);
-                    $first = false;
-                } else $query->orWhere('tue', true);
-            }
-            if ($fields['programDays'][2]) {
-                if ($first) {
-                    $query->where('wed', true);
-                    $first = false;
-                } else $query->orWhere('wed', true);
-            }
-            if ($fields['programDays'][3]) {
-                if ($first) {
-                    $query->where('thu', true);
-                    $first = false;
-                } else $query->orWhere('thu', true);
-            }
-            if ($fields['programDays'][4]) {
-                if ($first) {
-                    $query->where('fri', true);
-                    $first = false;
-                } else $query->orWhere('fri', true);
-            }
-            if ($fields['programDays'][5]) {
-                if ($first) {
-                    $query->where('sat', true);
-                    $first = false;
-                } else $query->orWhere('sat', true);
-            }
-            if ($fields['programDays'][6]) {
-                if ($first) {
-                    $query->where('sun', true);
-                    $first = false;
-                } else $query->orWhere('sun', true);
-            }
-        });
+                if ($fields['programDays'][1]) {
+                    if ($first) {
+                        $query->where('tue', true);
+                        $first = false;
+                    } else $query->orWhere('tue', true);
+                }
+                if ($fields['programDays'][2]) {
+                    if ($first) {
+                        $query->where('wed', true);
+                        $first = false;
+                    } else $query->orWhere('wed', true);
+                }
+                if ($fields['programDays'][3]) {
+                    if ($first) {
+                        $query->where('thu', true);
+                        $first = false;
+                    } else $query->orWhere('thu', true);
+                }
+                if ($fields['programDays'][4]) {
+                    if ($first) {
+                        $query->where('fri', true);
+                        $first = false;
+                    } else $query->orWhere('fri', true);
+                }
+                if ($fields['programDays'][5]) {
+                    if ($first) {
+                        $query->where('sat', true);
+                        $first = false;
+                    } else $query->orWhere('sat', true);
+                }
+                if ($fields['programDays'][6]) {
+                    if ($first) {
+                        $query->where('sun', true);
+                        $first = false;
+                    } else $query->orWhere('sun', true);
+                }
+            });
 
         if (array_key_exists('programId', $fields)) {
             $query = $query->where('id', '!=', $fields['programId']);
@@ -216,15 +217,29 @@ class ProgramController extends Controller
                     // Recorremos todos los timer encontrados, y todos los timer enviados, para ver si existe alguna incompatibilidad
                     foreach ($listTimer as $timer) {
                         foreach (range(0, count($start) - 1) as $index) {
-                            $startBetween = $timer->timeStart > $start[$index] && $timer->timeStart < $end[$index];
-                            $endBetween = $timer->end_time > $start[$index] && $timer->end_time < $end[$index];
+                            $startBetween = $timer->timeStart >= $start[$index] && $timer->timeStart <= $end[$index];
+                            $endBetween = $timer->end_time >= $start[$index] && $timer->end_time <= $end[$index];
 
-                            $startBeforeButEndLater = $timer->timeStart < $start &&
+                            $startBeforeButEndLater = $timer->timeStart < $start[$index] &&
                                 $timer->end_time > $end[$index];
                             // En caso de que empiece o termina a la misma vez
                             if ($startBetween || $endBetween || $startBeforeButEndLater) {
                                 $programId = $timer->programId;
-                                $error = "El programa con id $programId, programId, tiene el mismo sector,y el temporizador que empieza a las $start[$index] coincide con el temporizador del otro programa que comienza $timer->timeStart. Por favor, seleccione uno distinto.";
+                                $error = "El programa con id $programId, tiene el mismo emisor,y el temporizador que empieza $start[$index] y termina $end[$index], coincide con el temporizador del otro programa que comienza $timer->timeStart y termina $timer->end_time.";
+
+
+                                if ($startBetween) {
+                                    $error = $error . " Por tanto, el temporizador creado empieza entre el inicio y finalización del otro programa";
+                                }
+                                if ($endBetween) {
+                                    $error = $error . " Por tanto, el temporizador creado termina entre el inicio y finalización del otro programa";
+                                }
+                                if ($startBeforeButEndLater) {
+                                    $error = $error . " Por tanto, el temporizador creado empieza antes del inicio pero termina despues de la finalización del otro programa";
+                                }
+
+                                $error = $error . " Por favor, seleccione uno distinto.";
+
                                 return response([
                                     'customError' => true,
                                     'message' => $error
@@ -515,6 +530,57 @@ class ProgramController extends Controller
             return response([
                 'message' => 'Bad params'
             ], 400);
+        }
+
+        $listEmitterOutputId = Emitter::where('programId', $program->id)->pluck('digitalOutputId');
+        $listSectorOutputId = Sector::where('programId', $program->id)->pluck('digitalOutputId');
+
+        $listEmitterId = DigitalOutput::whereIn('id', $listEmitterOutputId)->pluck('id');
+        $listSectorId = DigitalOutput::whereIn('id', $listSectorOutputId)->pluck('id');
+
+        $listAllDevices = array_merge($listEmitterId, $listSectorId);
+
+        $correctDelete = [];
+        // Check connection
+        foreach ($listAllDevices as $actualDevice) {
+            $response = (new ClientHTTP)("POST", "/programar", [
+                'connect_timeout' => 90,
+                'http_errors' => false,
+                'form_params' => [
+                    'type' => 3, // 1 actualizar 0 crear
+                    'deviceId' => $actualDevice,
+                    'id' => $program->id,
+                ]
+            ]);
+
+            if ($response->getStatusCode() != 200) {
+
+                $error = "No hemos podido comunicarnos con el dispositivo $actualDevice, intentelo más tarde";
+                return response([
+                    'customError' => true,
+                    'message' => $error
+                ], 400);
+            } else {
+                $correctDelete[] = $actualDevice;
+            }
+        }
+        // Delete
+        if(count($correctDelete) == count($listAllDevices)){
+            foreach ($listAllDevices as $actualDevice) {
+                $response = null;
+                while(is_null($response) || $response->getStatusCode() != 200){
+                    $response = (new ClientHTTP)("POST", "/confirmar", [
+                        'connect_timeout' => 90,
+                        'http_errors' => false,
+                        'form_params' => [
+                            'type' => 4,
+                            'deviceId' => $actualDevice,
+                            'id' => $program->id,
+                        ]
+                    ]);
+                }
+
+            }
         }
 
         Sector::where('programId', $program->id)->delete();

@@ -1,5 +1,44 @@
 [
     {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Ejemplo de dispositivo",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "471f0156.739d2",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "faf9990bdc13c2c2",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "josemiguel.myqnapcloud.com",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
         "id": "44e897ca.3dda7",
         "type": "switch",
         "z": "471f0156.739d2",
@@ -100,7 +139,7 @@
         "func": "msg.check = (typeof msg.req.query !== 'undefined' && typeof msg.req.query.id !== 'undefined' && msg.req.query.id != \"\");\n\nif(msg.check && !flow.id.includes(msg.req.query.id))\n    flow.id = [...flow.id, msg.req.query.id]\nconsole.log(flow.id)\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nflow.id = [];\n\nflow.set(\"waittingId\", [])\n\nflow.set(\"checkId\", {})",
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nif(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", {})\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
         "finalize": "",
         "libs": [],
         "x": 300,
@@ -185,8 +224,8 @@
         "name": "",
         "statusCode": "400",
         "headers": {},
-        "x": 1580,
-        "y": 680,
+        "x": 1620,
+        "y": 720,
         "wires": []
     },
     {
@@ -238,17 +277,18 @@
         "type": "function",
         "z": "471f0156.739d2",
         "name": "",
-        "func": "const id = msg.topic.split(\"/\").pop();\nif(id != \"\"){\n    if(msg.body.type == 1){\n        flow.set(\"waittingId\", [...flow.get(\"waittingId\"), id]);\n        console.log(\"Nodo externo\")\n        console.log(flow.get(\"waittingId\"));\n        return msg;\n    }\n}\n\n",
+        "func": "const id = msg.topic.split(\"/\").pop();\nconsole.log(\"---------------------------------\")\nconsole.log(\"Vamos a registrar un dispositivo\")\nif(id != \"\"){\n    console.log(id);\n    console.log(msg.payload);\n    if(msg.payload.type == 2 || JSON.parse(msg.payload).type == 2){\n        flow.set(\"waittingId\", [...flow.get(\"waittingId\"), id]);\n        console.log(\"Nodo externo\")\n        console.log(flow.get(\"waittingId\"));\n        return msg;\n    } else if((msg.payload.type == 5 || JSON.parse(msg.payload).type == 5) && msg.payload.date && msg.payload.value && msg.payload.analogicalInputId){\n        msg.topic=\"INSERT INTO humidity (`date`, `value`, `analogicalInputId`) VALUES (?, ?, ?);\"\n        let newPayload = [msg.payload.date, msg.payload.value, msg.payload.analogicalInputId]\n        msg.payload = newPayload;\n        msg.db = true;\n        return msg;\n    }\n}\n\n",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nflow.waittingId = [];",
+        "initialize": "if(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", {})\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
         "finalize": "",
         "libs": [],
         "x": 1300,
         "y": 140,
         "wires": [
             [
-                "876522d196e417b5"
+                "876522d196e417b5",
+                "862f741503a6ab9e"
             ]
         ]
     },
@@ -324,6 +364,7 @@
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nlet debounceTime = 5000;\n\n// flow.debounce = function debounce(func, timeout = debounceTime){\n//   let timer;\n//   return (...args) => {\n//     clearTimeout(timer);\n//     timer = setTimeout(() => { func.apply(this, args); }, timeout);\n//   };\n// }\n\nflow.waittingId = []\n\nflow.checkId = {};\n\nlet cont = 10;\n\n\nflow.checkIfCorrect = function checkIfCorrect(id){\n    let info = flow.waittingId.includes(id);\n    \n    if(cont > 0){\n        console.log(\"hacemos timeout\"+cont);\n        cont--;\n         setTimeout(flow.checkIfCorrect(id), 5000);\n        \n    } else {\n        cont = 10;\n        return info;\n    }\n};\n\nflow.debounce = function debounce(func, wait, immediate) {\n  var timeout;\n\n  return function executedFunction() {\n    var context = this;\n    var args = arguments;\n\t    \n    var later = function() {\n      timeout = null;\n      if (!immediate) func.apply(context, args);\n    };\n\n    var callNow = immediate && !timeout;\n\t\n    clearTimeout(timeout);\n\n    timeout = setTimeout(later, wait);\n\t\n    if (callNow) func.apply(context, args);\n  };\n};",
         "finalize": "",
+        "libs": [],
         "x": 1220,
         "y": 660,
         "wires": [
@@ -340,6 +381,16 @@
         "info": "",
         "x": 310,
         "y": 640,
+        "wires": []
+    },
+    {
+        "id": "f182e49b.0e87f",
+        "type": "comment",
+        "z": "471f0156.739d2",
+        "name": "Confirma la recepcion de un Id",
+        "info": "",
+        "x": 1010,
+        "y": 40,
         "wires": []
     },
     {
@@ -378,7 +429,7 @@
         "func": "console.log(flow.get(\"property\"));\nconsole.log(flow.length);\nconsole.log(flow.fertirrigacion);\nconsole.log(flow.lineas);\nconsole.log(flow.temporizadores);\nconsole.log(\"-------------\")\nconsole.log(msg.payload)\nconsole.log(\"-------------\")\n\n\nlet contProperty = 0;\n\nlet property = [...flow.get(\"property\")];\n\nfunction checkAllBoolean(array) {\n    let b = true;\n    array.foreach(element => {\n        if(typeof element !== 'boolean'){\n            b = false;\n           return false;\n        }\n    })\n    return b\n}\n\n// Comprobar que existe un objeto\nif(typeof msg.payload !== 'undefined' && typeof msg.payload === 'object'){\n    // Comprobamos que tiene todos los campos necesarios\n    Object.keys(msg.payload).forEach(element => {\n        if(property.includes(element)){\n            contProperty++;\n            const index = property.indexOf(element);\n            if (index > -1) {\n              property.splice(index, 1);\n            }\n        }\n    })\n    if(flow.get(\"property\").length === contProperty && property.length === 0){\n        // Si coincide avanzamos\n        msg.topic = `/genhidro/programar/${msg.payload.deviceId}`\n        msg.error = 0;\n        return msg;\n    } else {\n        if(flow.get(\"property\").length === contProperty){\n            // Se esperaba encontrar alguna propiedad extra\n            msg.error = 1;\n            msg.payload = {\n                id: msg.payload.id,\n                error: 4,\n                message: \"No se encuentran todos los elementos esperados\",\n                property,\n                inicialProperty: flow.get(\"property\"),\n                contProperty,\n            }\n            return msg;\n        } else{\n            // No tenemos las mismas propiedades\n            console.log(\"Diferencia de propiedades esperadas \"+flow.get(\"property\").length+\" encontradas \"+contProperty)\n            msg.error = 1;\n            msg.payload = {\n                id: msg.payload.id,\n                error: 5,\n                message: \"Error interno\",\n                longMessage: \"Diferencia de propiedades esperadas \"+flow.get(\"property\").length+\" encontradas \"+contProperty,\n                property,\n                inicialProperty: flow.get(\"property\"),\n                contProperty,\n            }\n            return msg;\n        }\n        \n    }\n} else {\n    msg.error = 1;\n    msg.payload = {\n        id: msg.payload.id,\n        error: 6,\n        message: \"Debe mandar información en formato JSON sobre el programa\"\n    }\n    return msg;\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\n\nflow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\n\n// flow.length = [\"dias\",\"bombas\",\"sectores\",\"temporizadores\"]\n\n// flow.fertirrigacion = [\"pH\",\"phPreRie\",\n//         \"phRie\",\n//         \"phPost\",\n//         \"control\",\n//         \"linea de abonado\"];\n        \n// flow.lineas = [\"abono\",\"tipo\",\"value\",\"tiempo\"]\n// flow.temporizadores = [\"HoraI\",\"Duracion\"]\n\nflow.set(\"programas\", [])\nflow.set(\"erroresProgramas\", [])\nflow.set(\"checkProgramId\", {})\n// let a = {\n//      \"type\": 0,\n//     \"id\": 1234,\n//     \"programa\": 1234123,\n//     \"activado\": true,\n//     \"dias\": [true, true, true, true, true, false, false],\n//     \"bombas\": [false, false, true, true],\n//     \"sectores\": [false, false, true, false],\n//     \"temporizadores\": [{\n//             \"HoraI\": \"12:12\",\n//             \"Duracion\": \"12:12\"\n//         },\n//         {\n//             \"HoraI\": \"12:12:12\",\n//             \"Duracion\": \"12:12:12\"\n//         },\n//         {\n//             \"HoraI\": \"12:12\",\n//             \"Duracion\": \"12:12\"\n//         },\n//         {\n//             \"HoraI\": \"12:12\",\n//             \"Duracion\": \"12:12\"\n//         }\n//     ],\n//     \"fertirrigacion\": {\n//         \"pH\": 7,\n//         \"phPreRie\": true,\n//         \"phRie\": true,\n//         \"phPost\": true,\n//         \"control\": \"secuencial\",\n//         \"linea de abonado\": [\n//             {\n//                 \"abono\": 1,\n//                 \"tipo\": \"time\",\n//                 \"value\": \"10:10:10\",\n//                 \"tiempo\": \"00:15:15\"\n//             },\n//             {\n//                 \"abono\": 2,\n//                 \"tipo\": \"time\",\n//                 \"value\": \"10:10:10\",\n//                 \"tiempo\": \"00:15:15\"\n//             },\n//             {\n//                 \"abono\": 3,\n//                 \"tipo\": \"time\",\n//                 \"value\": \"10:10:10\",\n//                 \"tiempo\": \"00:15:15\"\n//             },\n//             {\n//                 \"abono\": 4,\n//                 \"tipo\": \"time\",\n//                 \"value\": \"10:10:10\",\n//                 \"tiempo\": \"00:15:15\"\n//             }\n//         ]\n//     }\n// }",
+        "initialize": "if(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", {})\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
         "finalize": "",
         "libs": [],
         "x": 320,
@@ -706,10 +757,10 @@
         "type": "function",
         "z": "471f0156.739d2",
         "name": "",
-        "func": "const id = msg.payload.id;\nconsole.log(\"----------------\");\nconsole.log(id);\nconsole.log(msg.payload);\nconsole.log(flow.get(\"programas\"));\n\nif(id != \"\" && msg.payload){\n    if(msg.payload.type == 1 || msg.payload.type == 0 ){\n        flow.set(\"programas\", [...flow.get(\"programas\"), id]);\n        console.log(\"Nodo externo\")\n        console.log(flow.get(\"programas\"));\n        return msg;\n    }\n}\nconsole.log(\"----------------\");\nconsole.log(\"----------------\");\n",
+        "func": "const id = msg.payload.id;\nconsole.log(\"----------------\");\nconsole.log(id);\nconsole.log(msg.payload);\nconsole.log(flow.get(\"programas\"));\n\nif(id != \"\" && msg.payload){\n    if(msg.payload.type == 1 || msg.payload.type == 0 ){\n        flow.set(\"programas\", [...flow.get(\"programas\"), id]);\n        console.log(\"Nodo externo\")\n        console.log(flow.get(\"programas\"));\n        return msg;\n    }\n    if(msg.payload.type == 3 || JSON.parse(msg.payload).type == 3){\n        flow.set(\"deleteProgramas\", [...flow.get(\"deleteProgramas\"), id]);\n        return msg;\n        \n    }\n}\nconsole.log(\"----------------\");\nconsole.log(\"----------------\");\n",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nflow.waittingId = [];",
+        "initialize": "if(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", {})\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
         "finalize": "",
         "libs": [],
         "x": 480,
@@ -764,11 +815,12 @@
         "nl": false,
         "rap": true,
         "rh": 0,
-        "x": 1010,
+        "x": 990,
         "y": 200,
         "wires": [
             [
-                "c6e4296e.e0998"
+                "c6e4296e.e0998",
+                "99c207e76f465193"
             ]
         ]
     },
@@ -867,8 +919,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1520,
-        "y": 160,
+        "x": 1570,
+        "y": 60,
         "wires": []
     },
     {
@@ -892,9 +944,9 @@
         "id": "1181d7a24b5322d1",
         "type": "comment",
         "z": "471f0156.739d2",
-        "name": "Imita los dispositivos que deben aceptar el programa",
+        "name": "Confirma recepción del programa",
         "info": "",
-        "x": 470,
+        "x": 410,
         "y": 60,
         "wires": []
     },
@@ -939,28 +991,548 @@
         "wires": []
     },
     {
-        "id": "faf9990bdc13c2c2",
-        "type": "mqtt-broker",
+        "id": "a17cd90d98e06b95",
+        "type": "mqtt in",
+        "z": "f6f2187d.f17ca8",
         "name": "",
-        "broker": "josemiguel.myqnapcloud.com",
-        "port": "1883",
-        "clientid": "",
-        "usetls": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": "",
-        "willMsg": {},
-        "sessionExpiry": ""
+        "topic": "/genhidro/programar/#",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "faf9990bdc13c2c2",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 260,
+        "y": 300,
+        "wires": [
+            [
+                "e5ee3c288da4f64b",
+                "2d08dbaa7d55b6a0"
+            ]
+        ]
+    },
+    {
+        "id": "e5ee3c288da4f64b",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "func": "let id = msg.topic.split(\"/\")\nmsg.payload.sendByMy = true;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 300,
+        "wires": [
+            [
+                "66697f2cc06d2ade",
+                "386145b089107270"
+            ]
+        ]
+    },
+    {
+        "id": "5604b1a1aa104fad",
+        "type": "mqtt out",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "faf9990bdc13c2c2",
+        "x": 930,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "66697f2cc06d2ade",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "2b0592f40ac6784d",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "Imita el funcionamiento de un arduino, eliminar fuera de pruebas",
+        "info": "",
+        "x": 520,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "2d08dbaa7d55b6a0",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "a7334c5bb6a40c3f",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 270,
+        "y": 600,
+        "wires": [
+            [
+                "607e5d57eb8ca864"
+            ]
+        ]
+    },
+    {
+        "id": "607e5d57eb8ca864",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "func": "// Modificar este ID\nlet id = \"ced6f3c5-904b-4987-ab6b-3a56f0877797\";\n\nmsg.payload = {type: 2};\nmsg.topic = `/genhidro/informacion_programador/${id}`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 600,
+        "wires": [
+            [
+                "d62d2ff2fe49fcb1"
+            ]
+        ]
+    },
+    {
+        "id": "d62d2ff2fe49fcb1",
+        "type": "mqtt out",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "faf9990bdc13c2c2",
+        "x": 730,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "99c207e76f465193",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1310,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "386145b089107270",
+        "type": "switch",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "property": "payload.sendByMy",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 750,
+        "y": 340,
+        "wires": [
+            [
+                "8b1e6b4bb0de0950"
+            ],
+            [
+                "5604b1a1aa104fad"
+            ]
+        ]
+    },
+    {
+        "id": "8b1e6b4bb0de0950",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "7422250ea321dcf8",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "Cambiar el id de esta funcion (primera línea) para registrar un dispositivo",
+        "info": "",
+        "x": 500,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "0038170a21835003",
+        "type": "http in",
+        "z": "471f0156.739d2",
+        "name": "",
+        "url": "/eliminarPrograma",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 150,
+        "y": 1720,
+        "wires": [
+            [
+                "0a1279efc89368e8"
+            ]
+        ]
+    },
+    {
+        "id": "0a1279efc89368e8",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "if( typeof msg.payload !== 'undefined' && typeof msg.payload === 'object' && msg.payload.id && msg.payload.deviceId){\n    msg.topic = `/genhidro/eliminar/programar/${msg.payload.deviceId}`\n    msg.payload.type = 3;\n} else {\n    msg.error = true;\n    msg.payload = {\n                id: msg.payload.id,\n                error: 9,\n                message: \"No se encuentran todos los elementos esperados\",\n            }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nif(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", {})\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 1720,
+        "wires": [
+            [
+                "28879f1aac5acc8e"
+            ]
+        ]
+    },
+    {
+        "id": "28879f1aac5acc8e",
+        "type": "switch",
+        "z": "471f0156.739d2",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 690,
+        "y": 1720,
+        "wires": [
+            [
+                "80148ac858d06fb5",
+                "14c9ca495fb2b8d4"
+            ],
+            [
+                "adb1230b122acaf2"
+            ]
+        ]
+    },
+    {
+        "id": "80148ac858d06fb5",
+        "type": "mqtt out",
+        "z": "471f0156.739d2",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "faf9990bdc13c2c2",
+        "x": 950,
+        "y": 1760,
+        "wires": []
+    },
+    {
+        "id": "adb1230b122acaf2",
+        "type": "http response",
+        "z": "471f0156.739d2",
+        "name": "Error 400",
+        "statusCode": "400",
+        "headers": {},
+        "x": 900,
+        "y": 1840,
+        "wires": []
+    },
+    {
+        "id": "14c9ca495fb2b8d4",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "let deleteProgramas = flow.get(\"deleteProgramas\");\n\nlet id = msg.payload.id;\n\nlet ans = deleteProgramas.includes(id);\n\nif(ans){\n    console.log(\"Encontrado\")\n    msg.error = 0;\n    const index = flow.get(\"deleteProgramas\").indexOf(id);\n    if (index > -1) {\n      flow.get(\"deleteProgramas\").splice(index, 1);\n      console.log(\"Eliminado\")\n      console.log(flow.get(\"deleteProgramas\"));\n    }\n}\nelse \n    msg.error = 1;\n    \n    \nif(msg.error)\n    msg.payload = {\n        id: msg.payload.id,\n        error: 7,\n        message: \"No hemos podido recibir respuesta del dispositivo\"\n    }\nelse\n    msg.payload = {\n        message: \"Programa correctamente guardado\"\n    }\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 1660,
+        "wires": [
+            [
+                "20d91cc49cdf70f6"
+            ]
+        ]
+    },
+    {
+        "id": "20d91cc49cdf70f6",
+        "type": "switch",
+        "z": "471f0156.739d2",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1130,
+        "y": 1660,
+        "wires": [
+            [
+                "f6d20733e088781a"
+            ],
+            [
+                "14a7e63f1699311d"
+            ]
+        ]
+    },
+    {
+        "id": "14a7e63f1699311d",
+        "type": "delay",
+        "z": "471f0156.739d2",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "10",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "x": 1360,
+        "y": 1720,
+        "wires": [
+            [
+                "9efc3c3fcf85e04f"
+            ]
+        ]
+    },
+    {
+        "id": "f6d20733e088781a",
+        "type": "http response",
+        "z": "471f0156.739d2",
+        "name": "Programa eliminado correctamente",
+        "statusCode": "200",
+        "headers": {},
+        "x": 1440,
+        "y": 1560,
+        "wires": []
+    },
+    {
+        "id": "9efc3c3fcf85e04f",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "let deleteProgramas = flow.get(\"deleteProgramas\");\n\nlet id = msg.payload.id;\n\nlet ans = deleteProgramas.includes(id);\n\nif(ans){\n    console.log(\"Encontrado\")\n    msg.error = 0;\n    let programasList = flow.get(\"deleteProgramas\");\n    const index = programasList.indexOf(id);\n    if (index > -1) {\n      \n      programasList.splice(index, 1);\n      flow.set(\"deleteProgramas\",programasList);\n      let checkProgramId = flow.get(\"checkProgramId\")\n      delete checkProgramId[id];\n      flow.set(\"checkProgramId\", checkProgramId);\n      console.log(\"Eliminado\")\n      console.log(flow.get(\"deleteProgramas\"));\n    }\n    \n}\nelse \n    msg.error = 1;\n    \n\nif(msg.error)\n    msg.payload = {\n        id: msg.payload.id,\n        error: 7,\n        message: \"No hemos podido recibir respuesta del dispositivo\"\n    }\nelse\n    msg.payload = {\n        message: \"Programa correctamente eliminado\"\n    }\nlet erroresProgramas = flow.get(\"erroresProgramas\") \nif(typeof erroresProgramas.find(element => element.id == id) !== 'undefined'){\n    //TODO: Hacer analisis de los errores recibidos\n    \n    console.log(\"Error encontrado el programa con id \"+ erroresProgramas.find(element => element.id == id))\n    msg.error = 2;\n    msg.payload = {\n        id: msg.payload.id,\n        error: 8,\n        message: \"Cargar mensaje especifico del error\"\n    }\n}\n\nif(typeof flow.get(\"checkProgramId\")[id] === 'undefined' && !ans){\n    console.log(\"Creamos el contador\")\n    flow.get(\"checkProgramId\")[id] = 5;\n    msg.error = -1;\n    console.log(flow.get(\"checkProgramId\")[id])\n} else if(flow.get(\"checkProgramId\")[id] > 0 && !ans){\n    console.log(\"Modificamos el contador\")\n    flow.get(\"checkProgramId\")[id]--;\n    msg.error = -1;\n    console.log(flow.get(\"checkProgramId\")[id])\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1610,
+        "y": 1720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c4df0a142cefcfa5",
+        "type": "switch",
+        "z": "471f0156.739d2",
+        "name": "",
+        "property": "error",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "0",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "num"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 4,
+        "x": 1830,
+        "y": 1700,
+        "wires": [
+            [
+                "f6d20733e088781a"
+            ],
+            [
+                "a8e903bbd0ffabd4",
+                "dd7af8494e6f49e1"
+            ],
+            [
+                "a8e903bbd0ffabd4"
+            ],
+            [
+                "14a7e63f1699311d"
+            ]
+        ]
+    },
+    {
+        "id": "a8e903bbd0ffabd4",
+        "type": "http response",
+        "z": "471f0156.739d2",
+        "name": "No hemos conseguido eliminar el programa",
+        "statusCode": "400",
+        "headers": {},
+        "x": 2130,
+        "y": 1700,
+        "wires": []
+    },
+    {
+        "id": "dd7af8494e6f49e1",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2070,
+        "y": 1620,
+        "wires": []
+    },
+    {
+        "id": "862f741503a6ab9e",
+        "type": "switch",
+        "z": "471f0156.739d2",
+        "name": "",
+        "property": "db",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1600,
+        "y": 180,
+        "wires": [
+            [
+                "1cb4e0bfd52cfa70"
+            ]
+        ]
+    },
+    {
+        "id": "1cb4e0bfd52cfa70",
+        "type": "mysql",
+        "z": "471f0156.739d2",
+        "mydb": "",
+        "name": "",
+        "x": 1820,
+        "y": 180,
+        "wires": [
+            []
+        ]
     }
 ]

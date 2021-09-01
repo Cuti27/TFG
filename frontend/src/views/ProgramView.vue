@@ -108,8 +108,7 @@
 
         <div class="table" v-if="!horaInicio">
           <!-- use the modal component, pass in the prop -->
-          <table-program :remove="id" hideHeader removeActivate customAction id="block">
-            <v-btn>Usar</v-btn>
+          <table-program @timerUse="createTimerByProgram" :remove="id" hideHeader removeActivate customAction id="block">
           </table-program>
         </div>
         <div class="temporizadores" v-else>
@@ -124,6 +123,7 @@
             @update="updateTemporizadores"
             :disabled="temporizador == 1"
             :temporizadoresStart="temporizadoresStart"
+            v-model="selectedTimer"
           ></temporizador-menu>
         </div>
       </div>
@@ -256,22 +256,26 @@ export default {
     };
   },
   beforeMount() {
-    console.log("CREATED HOOK");
-    if (this.tempProgram != {}) {
+
+    if (this.tempProgram != {} && this.tempProgram.name != "") {
       this.id = this.tempProgram.id;
       this.programa = this.tempProgram.active;
       this.sectors.forEach((sector) => {
         this.selectedSector.push(
+          this.tempProgram.sector ?
           this.tempProgram.sector.find(
             (selectedSector) => sector.output.id == selectedSector.id
           ) != undefined
+          : false
         );
       });
       this.emitter.forEach((emisor) => {
         this.selectedEmitter.push(
+          this.tempProgram.emitter ?
           this.tempProgram.emitter.find(
             (selectedEmitter) => emisor.output.id == selectedEmitter.id
           ) != undefined
+          : false
         );
       });
 
@@ -341,6 +345,31 @@ export default {
   },
   methods: {
     ...mapActions(["createProgram", "updateAllDays"]),
+    createTimerByProgram(program){
+      this.horaInicio = 1;
+      this.selectedTimer = []
+      program.timer.forEach((timer, index) => {
+        const inicio = timer.timeStart.split(":");
+        const duracion = timer.duration.split(":");
+        const post = timer.postIrrigation.split(":");
+        let segInicial = (parseInt(inicio[2]) + parseInt(duracion[2]) + parseInt(post[2]) + 1);
+        let minInicial = (parseInt(inicio[1]) + parseInt(duracion[1]) + parseInt(post[1]));
+        let hInicial = (parseInt(inicio[0]) + parseInt(duracion[0]) + parseInt(post[0]));
+        let segExtra = segInicial/60;
+        let seg = Math.floor(segInicial%60);
+        let minInicial2 = minInicial + segExtra;
+        let minExtra = minInicial2/60;
+        let min = Math.floor(minInicial2%60);
+        let h = Math.floor((hInicial + minExtra)%24);
+        this.selectedTimer[index] = {
+          inicio: `${h < 10 ? '0'+h : h}:${min < 10 ? '0'+min : min}:${seg < 10 ? '0'+seg : seg}`,
+          duracion: timer.duration,
+          post: timer.postIrrigation,
+        };
+      });
+      console.log("=====================");
+      console.log(program);
+    },
     resetPage() {
       this.$router.push("Programas");
     },

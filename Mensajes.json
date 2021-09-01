@@ -335,3 +335,74 @@ Programador riego - > mosquitto mqtt - > node - red - > mysql
         },
     ],
 }
+
+
+
+
+[{"inicio":"00:00:00","duracion":"00:01:01","post":"00:00:00"}]
+
+{
+    "id": 3,
+    "name": "Programa",
+    "active": true,
+    "automaticDays": false,
+    "drip": true,
+    "userId": 1,
+    "fertigationId": null,
+    "afterProgram": false,
+    "autoTimer": false,
+    "headId": 1,
+    "timer": [
+        {
+            "id": 3,
+            "timeStart": "12:00:00",
+            "duration": "01:00:30",
+            "postIrrigation": "00:00:15",
+            "programId": 3
+        },
+        {
+            "id": 4,
+            "timeStart": "16:00:00",
+            "duration": "16:30:00",
+            "postIrrigation": "00:06:32",
+            "programId": 3
+        }
+    ],
+    "programDay": [
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false
+    ],
+    "sector": [
+        {
+            "id": 14,
+            "output": "1",
+            "type": 3,
+            "deviceId": "cb4272a1-b94a-464e-a8b9-1e3f93086cdd",
+            "description": null,
+            "name": "Secundaria"
+        },
+        {
+            "id": 16,
+            "output": "3",
+            "type": 2,
+            "deviceId": "cb4272a1-b94a-464e-a8b9-1e3f93086cdd",
+            "description": null,
+            "name": "3"
+        }
+    ],
+    "emitter": [
+        {
+            "id": 17,
+            "output": "4",
+            "type": 3,
+            "deviceId": "cb4272a1-b94a-464e-a8b9-1e3f93086cdd",
+            "description": null,
+            "name": "Principal"
+        }
+    ]
+}

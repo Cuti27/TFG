@@ -45,10 +45,11 @@ export default {
       required: true,
     },
     temporizadoresStart: Array,
+    value: Array
   },
   data() {
     return {
-      temporizadores: this.temporizadoresStart || [
+      temporizadores: this.temporizadoresStart || this.value || [
         {
           inicio: "",
           duracion: "",
@@ -61,7 +62,7 @@ export default {
   },
   watch: {
     temporizadores() {
-      this.$emit("update", this.temporizadores);
+      this.$emit("input", this.temporizadores);
     },
   },
   methods: {
