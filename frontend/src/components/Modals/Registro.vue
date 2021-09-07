@@ -14,7 +14,7 @@
           placeholder="Repita la contraseña"
         ></custom-input>
         <login-button id="login" @click="$emit('login')"
-          >Ya tienes cuenta?</login-button
+          >¿Ya tienes cuenta?</login-button
         >
         <div class="submit-container">
           <login-button @click.prevent="close()">Cancelar</login-button>

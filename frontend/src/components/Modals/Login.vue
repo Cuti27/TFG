@@ -21,7 +21,7 @@
       <form action="" class="login-form">
         <custom-input type="text" placeholder="Username"></custom-input>
         <custom-input type="password" placeholder="Contraseña"></custom-input>
-        <login-button id="recuperar">Has olvidado la contraseña?</login-button>
+        <login-button id="recuperar">¿Has olvidado la contraseña?</login-button>
         <login-button @click="$emit('registro')" id="registro"
           >Registrate</login-button
         >

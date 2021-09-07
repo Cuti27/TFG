@@ -1,5 +1,13 @@
 <template>
-  <div :style="{width: width,height: height, 'max-width': width, 'max-height': height}" class="selector">
+  <div
+    :style="{
+      width: width,
+      height: height,
+      'max-width': width,
+      'max-height': height,
+    }"
+    class="selector"
+  >
     <div class="arrow izquierda">
       <font-awesome-icon
         :class="{ button: !button }"
@@ -46,12 +54,12 @@ export default {
     },
     width: {
       type: Number,
-      default: 380
+      default: 380,
     },
     height: {
       type: Number,
-      default: 50
-    }
+      default: 50,
+    },
   },
   data() {
     return {

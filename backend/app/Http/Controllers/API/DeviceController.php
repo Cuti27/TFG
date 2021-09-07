@@ -75,10 +75,18 @@ class DeviceController extends Controller
 
         error_log($waittingId);
         error_log($waittingId->id);
+        
+        $type = TypeDevice::where("id", $fields['type'])->first();
 
+        if (!$type) {
+            return response([
+                'message' => 'Bad type of device'
+            ], 400);
+        }
+
+        
         $response = (new ClientHTTP)("GET", "/identificador", [
-            'connect_timeout' => 90,
-'http_errors' => false,
+            'connect_timeout' => 25,
             'query' => [
                 'id' => $waittingId->id,
             ]
@@ -99,13 +107,6 @@ class DeviceController extends Controller
             ], 400);
         }
 
-        $type = TypeDevice::where("id", $fields['type'])->first();
-
-        if (!$type) {
-            return response([
-                'message' => 'Bad type of device'
-            ], 400);
-        }
 
         error_log($fields['name']);
 
@@ -307,14 +308,11 @@ class DeviceController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function getDevice(Request $request)
+    public function getDevice(Request $request, $id)
     {
-        // Recuperamos y validamos el formulario
-        $fields = $request->validate([
-            'id' => 'required|string',
-        ]);
 
-        $device = Device::where('userId', $request->user()->id)->where('id', $fields["id"])->first();
+
+        $device = Device::where('userId', $request->user()->id)->where('id', $id)->first();
 
         if (!$device) {
             return response([
@@ -322,10 +320,10 @@ class DeviceController extends Controller
             ], 400);
         }
 
-        $digitalInput = DigitalInput::where('deviceId', $fields["id"])->get();
-        $digitalOutput = DigitalOutput::where('deviceId', $fields["id"])->get();
-        $analogicalInput = AnalogicalInput::where('deviceId', $fields["id"])->get();
-        $analogicalOutput = AnalogicalOutput::where('deviceId', $fields["id"])->get();
+        $digitalInput = DigitalInput::where('deviceId', $id)->get();
+        $digitalOutput = DigitalOutput::where('deviceId', $id)->get();
+        $analogicalInput = AnalogicalInput::where('deviceId', $id)->get();
+        $analogicalOutput = AnalogicalOutput::where('deviceId', $id)->get();
 
         // Creamos la respuesta
         $response = [
@@ -427,7 +425,6 @@ class DeviceController extends Controller
             }
         }
 
-        // TODO: Eliminar el programa ya que debe ir enlazado al head, y el porgrama tiene que tener otra cosa que una sector/bomba y programa
         $listDigitalOutput = DigitalOutput::where('deviceId', $fields["idDevice"])->get();
 
         if (count($output) != count($listDigitalOutput)) {

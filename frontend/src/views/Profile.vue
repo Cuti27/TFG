@@ -89,7 +89,9 @@
               </template>
 
               <template slot="append-outer">
-                <v-btn id="allProgramBtn" @click="fetchAllProgram">Todos los programas</v-btn>
+                <v-btn id="allProgramBtn" @click="fetchAllProgram"
+                  >Todos los programas</v-btn
+                >
               </template>
             </v-select>
             <h5 v-if="selectedCabezal2" class="mt-2">

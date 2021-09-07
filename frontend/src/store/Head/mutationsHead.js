@@ -44,5 +44,5 @@ export default {
       element.emitter = data.emitter[index];
     });
     state.programProfile = data.listPrograms;
-  }
+  },
 };

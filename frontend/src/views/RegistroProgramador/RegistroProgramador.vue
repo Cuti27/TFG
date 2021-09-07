@@ -94,7 +94,7 @@
               >
                 <v-card>
                   <v-card-title>
-                    <span>Seguro que quiere borrar el dispositivo?</span>
+                    <span>¿Seguro que quiere borrar el dispositivo?</span>
                     <v-spacer></v-spacer>
                   </v-card-title>
                   <v-card-text>
@@ -183,7 +183,9 @@
       </div>
     </div>
     <div class="retroceder mt-5">
-      <submit-button id="retrocederBtn" @click="resetPage()">Retroceder</submit-button>
+      <submit-button id="retrocederBtn" @click="resetPage()"
+        >Retroceder</submit-button
+      >
     </div>
     <v-tour name="registro" :steps="steps2" :options="myOptions"></v-tour>
   </div>
@@ -302,8 +304,7 @@ export default {
           header: {
             title: "Información programador",
           },
-          content:
-            "Información relacionado con el programador actual",
+          content: "Información relacionado con el programador actual",
         },
         {
           target: `#digitalOutput`,
@@ -342,8 +343,7 @@ export default {
           header: {
             title: "Retroceder",
           },
-          content:
-            "Permite volver a la ventana anterior",
+          content: "Permite volver a la ventana anterior",
         },
       ],
     };
@@ -420,7 +420,7 @@ export default {
     async selected() {
       this.dialog = false;
       if (this.radioGroup != "") {
-        await this.getAllInfoDevice({ id: this.radioGroup });
+        await this.getAllInfoDevice(this.radioGroup);
         this.nombre = this.configureDevice.name;
         this.id = this.configureDevice.id;
         this.tipoProgramador = this.configureDevice.type - 1;

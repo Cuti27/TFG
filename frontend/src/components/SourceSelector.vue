@@ -5,7 +5,6 @@
     </div>
     <div class="sources">
       <div
-        
         v-for="(item, index) in options"
         :key="item + index"
         @click.prevent="toggle(index)"
@@ -52,13 +51,12 @@ export default {
 <style lang="scss" scoped>
 @import "@/css/colorSchema.scss";
 
-.sourceItem{
+.sourceItem {
   transition: all 0.5s ease;
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 25px 0 rgba(34,41,47,.25);
+    box-shadow: 0 4px 25px 0 rgba(34, 41, 47, 0.25);
   }
-  
 }
 
 input,

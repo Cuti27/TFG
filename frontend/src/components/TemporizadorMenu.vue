@@ -45,17 +45,18 @@ export default {
       required: true,
     },
     temporizadoresStart: Array,
-    value: Array
+    value: Array,
   },
   data() {
     return {
-      temporizadores: this.temporizadoresStart || this.value || [
-        {
-          inicio: "",
-          duracion: "",
-          post: "",
-        },
-      ],
+      temporizadores: this.temporizadoresStart ||
+        this.value || [
+          {
+            inicio: "",
+            duracion: "",
+            post: "",
+          },
+        ],
       success: false,
       removing: -100,
     };

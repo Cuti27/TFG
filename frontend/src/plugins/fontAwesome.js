@@ -28,6 +28,7 @@ import {
   faTimesCircle,
   faExclamationTriangle,
   faCopy,
+  faTint,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faCircle, faCheckCircle } from "@fortawesome/fontawesome-free-regular";
@@ -63,7 +64,8 @@ library.add(
   faCheckCircle,
   faTimesCircle,
   faExclamationTriangle,
-  faCopy
+  faCopy,
+  faTint
 );
 
 export default FontAwesomeIcon;

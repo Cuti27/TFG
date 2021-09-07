@@ -69,11 +69,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/device', [DeviceController::class, 'listDevice']);
 
-    Route::get('/device/{id}', [DeviceController::class, 'listDeviceHead']);
+    Route::get('/head/{id}/devices', [DeviceController::class, 'listDeviceHead']);
 
     Route::get('/deviceId', [DeviceController::class, 'listIdDevice']);
 
-    Route::post('/device', [DeviceController::class, 'getDevice']);
+    Route::get('/device/{id}', [DeviceController::class, 'getDevice']);
 
     Route::delete('/deviceId', [DeviceController::class, 'deleteIdDevice']);
 

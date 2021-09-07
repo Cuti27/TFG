@@ -187,7 +187,11 @@ export default {
         },
       ];
 
-      if (this.$route.name != "Cabezales" && this.$route.name != "Home" && this.$route.name != "Profile") {
+      if (
+        this.$route.name != "Cabezales" &&
+        this.$route.name != "Home" &&
+        this.$route.name != "Profile"
+      ) {
         menu.push({
           href: { name: "Programas" },
           title: "Programas",
@@ -199,14 +203,14 @@ export default {
           },
         });
         if (this.$route.name != "Programas") {
-          if (this.$route.name == "Registrar programador") {
+          if (this.$route.name == "Dispositivos") {
             menu.push({
-              href: { name: "Registrar programador" },
-              title: "Registrar programador",
+              href: { name: "Dispositivos" },
+              title: "Dispositivos",
               icon: {
                 element: "font-awesome-icon",
                 attributes: {
-                  icon: "clock",
+                  icon: "tint",
                 },
               },
             });
@@ -327,7 +331,7 @@ export default {
     this.getTypeDevice();
     this.fetchUser();
 
-    if (performance.navigation.type == 1){
+    if (performance.navigation.type == 1) {
       this.$router.push("Cabezales");
     }
   },

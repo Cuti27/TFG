@@ -72,7 +72,7 @@
             max-width="500px"
           >
             <v-card>
-              <v-card-title class="headline">Estas seguro?</v-card-title>
+              <v-card-title class="headline">¿Estas seguro?</v-card-title>
               <v-card-text
                 ><b
                   >Estas seguro que quieres eliminar este cabezal?</b

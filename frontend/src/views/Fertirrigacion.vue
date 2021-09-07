@@ -296,8 +296,7 @@ export default {
           header: {
             title: "Selector pH",
           },
-          content:
-            "Permite establecer el valor del pH",
+          content: "Permite establecer el valor del pH",
         },
         {
           target: ".phPre",
@@ -328,10 +327,8 @@ export default {
           header: {
             title: "Selección línea de abonado",
           },
-          content:
-            "Selecciona la línea de abonado a configurar",
+          content: "Selecciona la línea de abonado a configurar",
         },
-        
       ],
     };
   },

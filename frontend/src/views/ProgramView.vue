@@ -108,7 +108,14 @@
 
         <div class="table" v-if="!horaInicio">
           <!-- use the modal component, pass in the prop -->
-          <table-program @timerUse="createTimerByProgram" :remove="id" hideHeader removeActivate customAction id="block">
+          <table-program
+            @timerUse="createTimerByProgram"
+            :remove="id"
+            hideHeader
+            removeActivate
+            customAction
+            id="block"
+          >
           </table-program>
         </div>
         <div class="temporizadores" v-else>
@@ -252,30 +259,29 @@ export default {
         },
       ],
       id: "",
-      temporizadoresStart: undefined
+      temporizadoresStart: undefined,
     };
   },
   beforeMount() {
-
     if (this.tempProgram != {} && this.tempProgram.name != "") {
       this.id = this.tempProgram.id;
       this.programa = this.tempProgram.active;
       this.sectors.forEach((sector) => {
         this.selectedSector.push(
-          this.tempProgram.sector ?
-          this.tempProgram.sector.find(
-            (selectedSector) => sector.output.id == selectedSector.id
-          ) != undefined
-          : false
+          this.tempProgram.sector
+            ? this.tempProgram.sector.find(
+                (selectedSector) => sector.output.id == selectedSector.id
+              ) != undefined
+            : false
         );
       });
       this.emitter.forEach((emisor) => {
         this.selectedEmitter.push(
-          this.tempProgram.emitter ?
-          this.tempProgram.emitter.find(
-            (selectedEmitter) => emisor.output.id == selectedEmitter.id
-          ) != undefined
-          : false
+          this.tempProgram.emitter
+            ? this.tempProgram.emitter.find(
+                (selectedEmitter) => emisor.output.id == selectedEmitter.id
+              ) != undefined
+            : false
         );
       });
 
@@ -291,13 +297,13 @@ export default {
 
       this.id = this.tempProgram.id;
 
-      this.temporizadoresStart = this.tempProgram.timer.map(timer => {
+      this.temporizadoresStart = this.tempProgram.timer.map((timer) => {
         return {
           inicio: timer.timeStart.split(":"),
           duracion: timer.duration.split(":"),
           post: timer.postIrrigation.split(":"),
-        }
-      })
+        };
+      });
     } else {
       this.sectors.forEach(() => {
         this.selectedSector.push(false);
@@ -305,7 +311,7 @@ export default {
       this.emitter.forEach(() => {
         this.selectedEmitter.push(false);
       });
-      this.updateAllDays([false,false,false,false,false,false,false])
+      this.updateAllDays([false, false, false, false, false, false, false]);
     }
   },
   computed: {
@@ -345,24 +351,29 @@ export default {
   },
   methods: {
     ...mapActions(["createProgram", "updateAllDays"]),
-    createTimerByProgram(program){
+    createTimerByProgram(program) {
       this.horaInicio = 1;
-      this.selectedTimer = []
+      this.selectedTimer = [];
       program.timer.forEach((timer, index) => {
         const inicio = timer.timeStart.split(":");
         const duracion = timer.duration.split(":");
         const post = timer.postIrrigation.split(":");
-        let segInicial = (parseInt(inicio[2]) + parseInt(duracion[2]) + parseInt(post[2]) + 1);
-        let minInicial = (parseInt(inicio[1]) + parseInt(duracion[1]) + parseInt(post[1]));
-        let hInicial = (parseInt(inicio[0]) + parseInt(duracion[0]) + parseInt(post[0]));
-        let segExtra = segInicial/60;
-        let seg = Math.floor(segInicial%60);
+        let segInicial =
+          parseInt(inicio[2]) + parseInt(duracion[2]) + parseInt(post[2]) + 1;
+        let minInicial =
+          parseInt(inicio[1]) + parseInt(duracion[1]) + parseInt(post[1]);
+        let hInicial =
+          parseInt(inicio[0]) + parseInt(duracion[0]) + parseInt(post[0]);
+        let segExtra = segInicial / 60;
+        let seg = Math.floor(segInicial % 60);
         let minInicial2 = minInicial + segExtra;
-        let minExtra = minInicial2/60;
-        let min = Math.floor(minInicial2%60);
-        let h = Math.floor((hInicial + minExtra)%24);
+        let minExtra = minInicial2 / 60;
+        let min = Math.floor(minInicial2 % 60);
+        let h = Math.floor((hInicial + minExtra) % 24);
         this.selectedTimer[index] = {
-          inicio: `${h < 10 ? '0'+h : h}:${min < 10 ? '0'+min : min}:${seg < 10 ? '0'+seg : seg}`,
+          inicio: `${h < 10 ? "0" + h : h}:${min < 10 ? "0" + min : min}:${
+            seg < 10 ? "0" + seg : seg
+          }`,
           duracion: timer.duration,
           post: timer.postIrrigation,
         };
@@ -420,6 +431,8 @@ export default {
         ) &&
           this.temporizador == 0) ||
         this.selectedTimer == 0;
+
+        const atLeastOneTimer = this.selectedTimer.length > 0;
       if (!selectedDay) {
         this.error = "Debe seleccionar al menos un día de la semana";
       } else if (!atLeatSelectedEmitter) {
@@ -430,13 +443,20 @@ export default {
       } else if (aNullInManualTimer && this.horaInicio) {
         this.error =
           "Si selecciona un temporizador manual debe rellenar correctamente todos los campos de todos los temporizadores";
-      }
-
-      let listTimer = this.selectedTimer.map((element) => {
+      } else if(!atLeastOneTimer){
+        this.error = 'Debe crear al menos un temporizador'
+      } else {
+        let listTimer = this.selectedTimer.map((element) => {
         return {
-          timeStart: Array.isArray(element.inicio) ? `${element.inicio[0]}:${element.inicio[1]}:${element.inicio[2]}` : element.inicio,
-          duration: Array.isArray(element.duracion) ? `${element.duracion[0]}:${element.duracion[1]}:${element.duracion[2]}` : element.duracion,
-          postIrrigation: Array.isArray(element.post) ? `${element.post[0]}:${element.post[1]}:${element.post[2]}` : element.post,
+          timeStart: Array.isArray(element.inicio)
+            ? `${element.inicio[0]}:${element.inicio[1]}:${element.inicio[2]}`
+            : element.inicio,
+          duration: Array.isArray(element.duracion)
+            ? `${element.duracion[0]}:${element.duracion[1]}:${element.duracion[2]}`
+            : element.duracion,
+          postIrrigation: Array.isArray(element.post)
+            ? `${element.post[0]}:${element.post[1]}:${element.post[2]}`
+            : element.post,
         };
       });
       let programa = {
@@ -451,9 +471,12 @@ export default {
         timer: listTimer,
       };
 
-      if(this.id)programa.programId = this.id;
+      if (this.id) programa.programId = this.id;
       console.log(programa);
       this.createProgram(programa);
+      }
+
+      
     },
   },
 };

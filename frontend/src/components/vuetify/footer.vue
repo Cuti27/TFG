@@ -66,7 +66,7 @@ export default {
 $color-pack: false;
 
 @import "@/css/colorSchema.scss";
-#footer{
+#footer {
   margin: 24px 12px 0px 12px;
   max-width: 1980px;
   width: -webkit-calc(100% - 70px);
@@ -80,11 +80,11 @@ $color-pack: false;
   width: calc(100% - 290px) !important;
   margin-left: 220px;
 }
-@media (max-width: "480px"){
-  #footer{
-  width: -webkit-calc(100% - 24px) !important;
-  width: -moz-calc(100% - 24px) !important;
-  width: calc(100% - 24px) !important;
-}
+@media (max-width: "480px") {
+  #footer {
+    width: -webkit-calc(100% - 24px) !important;
+    width: -moz-calc(100% - 24px) !important;
+    width: calc(100% - 24px) !important;
+  }
 }
 </style>

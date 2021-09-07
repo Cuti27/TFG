@@ -336,12 +336,13 @@ class ProgramController extends Controller
                 $sectorToSend[$sector['deviceId']][] = $sector;
             }
 
+            $correctSend = [];
+
             // Informamos a cada dispositivo con que salidas debe activar
             foreach ($listDevice as $device) {
 
                 $response = (new ClientHTTP)("POST", "/programar", [
-                    'connect_timeout' => 90,
-                    'http_errors' => false,
+                    'connect_timeout' => 50,
                     'form_params' => [
                         'type' => array_key_exists('programId', $fields) ? 1 : 0, // 1 actualizar 0 crear
                         'deviceId' => $device['deviceId'],
@@ -356,7 +357,45 @@ class ProgramController extends Controller
                     ]
                 ]);
 
-                if ($response->getStatusCode() != 200) {
+                if ($response->getStatusCode() == 200) {
+                    $correctSend[] = $device;
+                }
+            }
+
+            // Delete
+            if (count($correctSend) != count($listDevice)) {
+                $correctDelete = [];
+                foreach ($correctSend as $actualDevice) {
+                    $response = (new ClientHTTP)("delete", "/programa", [
+                        'connect_timeout' => 50,
+                        'form_params' => [
+                            'type' => 3, // 1 actualizar 0 crear
+                            'deviceId' => $actualDevice,
+                            'id' => $createdProgram->id,
+                        ]
+                    ]);
+
+                    if ($response->getStatusCode() == 200) {
+                        $correctDelete[] = $actualDevice;
+                    }
+                }
+                // Delete
+                if (count($correctDelete) != count($correctSend)) {
+                    foreach ($correctSend as $correctDelete) {
+                        $response = null;
+                        while (is_null($response) || $response->getStatusCode() != 200) {
+                            $response = (new ClientHTTP)("POST", "/confirmar", [
+                                'connect_timeout' => 10,
+                                
+                                'form_params' => [
+                                    'type' => 4,
+                                    'deviceId' => $actualDevice,
+                                    'id' => $createdProgram->id,
+                                ]
+                            ]);
+                        }
+                    }
+
                     $createdProgram->delete();
                     foreach ($listCreatedTimer as  $timer) {
                         $timer->delete();
@@ -367,6 +406,12 @@ class ProgramController extends Controller
                         'message' => $error
                     ], 400);
                 }
+
+                $error = "No hemos podido comunicarnos con el dispositivo $device->deviceId, intentelo más tarde";
+                    return response([
+                        'customError' => true,
+                        'message' => $error
+                    ], 400);
             }
 
             // Creamos todos los emisores
@@ -535,17 +580,17 @@ class ProgramController extends Controller
         $listEmitterOutputId = Emitter::where('programId', $program->id)->pluck('digitalOutputId');
         $listSectorOutputId = Sector::where('programId', $program->id)->pluck('digitalOutputId');
 
-        $listEmitterId = DigitalOutput::whereIn('id', $listEmitterOutputId)->pluck('id');
-        $listSectorId = DigitalOutput::whereIn('id', $listSectorOutputId)->pluck('id');
+        $listEmitterId = DigitalOutput::whereIn('id', $listEmitterOutputId)->pluck('deviceId')->toArray();
+        $listSectorId = DigitalOutput::whereIn('id', $listSectorOutputId)->pluck('deviceId')->toArray();
 
         $listAllDevices = array_merge($listEmitterId, $listSectorId);
 
         $correctDelete = [];
         // Check connection
         foreach ($listAllDevices as $actualDevice) {
-            $response = (new ClientHTTP)("POST", "/programar", [
-                'connect_timeout' => 90,
-                'http_errors' => false,
+            $response = (new ClientHTTP)("delete", "/programa", [
+                'connect_timeout' => 50,
+                
                 'form_params' => [
                     'type' => 3, // 1 actualizar 0 crear
                     'deviceId' => $actualDevice,
@@ -553,25 +598,18 @@ class ProgramController extends Controller
                 ]
             ]);
 
-            if ($response->getStatusCode() != 200) {
-
-                $error = "No hemos podido comunicarnos con el dispositivo $actualDevice, intentelo más tarde";
-                return response([
-                    'customError' => true,
-                    'message' => $error
-                ], 400);
-            } else {
+            if ($response->getStatusCode() == 200) {
                 $correctDelete[] = $actualDevice;
             }
         }
         // Delete
-        if(count($correctDelete) == count($listAllDevices)){
+        if (count($correctDelete) != count($listAllDevices)) {
             foreach ($listAllDevices as $actualDevice) {
                 $response = null;
-                while(is_null($response) || $response->getStatusCode() != 200){
+                while (is_null($response) || $response->getStatusCode() != 200) {
                     $response = (new ClientHTTP)("POST", "/confirmar", [
-                        'connect_timeout' => 90,
-                        'http_errors' => false,
+                        'connect_timeout' => 10,
+                        
                         'form_params' => [
                             'type' => 4,
                             'deviceId' => $actualDevice,
@@ -579,8 +617,13 @@ class ProgramController extends Controller
                         ]
                     ]);
                 }
-
             }
+
+            $error = "No hemos podido comunicarnos con el dispositivo $actualDevice, intentelo más tarde";
+            return response([
+                'customError' => true,
+                'message' => $error
+            ], 400);
         }
 
         Sector::where('programId', $program->id)->delete();

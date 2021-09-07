@@ -9,8 +9,10 @@
     <table-program></table-program>
 
     <div class="retroceder mt-5">
-        <submit-button class="ma-2" @click="resetPage()">Retroceder</submit-button>
-      </div>
+      <submit-button class="ma-2" @click="resetPage()"
+        >Retroceder</submit-button
+      >
+    </div>
   </div>
 </template>
 
@@ -24,7 +26,7 @@ export default {
   components: {
     headerCustom,
     tableProgram,
-    SubmitButton
+    SubmitButton,
   },
   data() {
     return {
@@ -35,10 +37,10 @@ export default {
     ...mapGetters(["selectedHead"]),
   },
   methods: {
-    resetPage(){
+    resetPage() {
       this.$router.push("Cabezales");
-    }
-  }
+    },
+  },
 };
 </script>
 

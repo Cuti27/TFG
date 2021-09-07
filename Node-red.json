@@ -39,6 +39,41 @@
         "sessionExpiry": ""
     },
     {
+        "id": "cc385c8d25dfd1cf",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "josemiguel.myqnapcloud.com",
+        "port": "41062",
+        "db": "tfg",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "d8ab591e3414d3bd",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
         "id": "44e897ca.3dda7",
         "type": "switch",
         "z": "471f0156.739d2",
@@ -112,6 +147,7 @@
         "noerr": 0,
         "initialize": "",
         "finalize": "",
+        "libs": [],
         "x": 600,
         "y": 760,
         "wires": [
@@ -136,10 +172,10 @@
         "type": "function",
         "z": "471f0156.739d2",
         "name": "",
-        "func": "msg.check = (typeof msg.req.query !== 'undefined' && typeof msg.req.query.id !== 'undefined' && msg.req.query.id != \"\");\n\nif(msg.check && !flow.id.includes(msg.req.query.id))\n    flow.id = [...flow.id, msg.req.query.id]\nconsole.log(flow.id)\nreturn msg;",
+        "func": "msg.check = (typeof msg.req.query !== 'undefined' && typeof msg.req.query.id !== 'undefined' && msg.req.query.id != \"\");\n\nlet flowId = flow.get('id');\n\nif(msg.check && !flowId.includes(msg.req.query.id)){\n    flowId = [...flowId, msg.req.query.id]    \n    flow.set('id',flowId)\n}\n    \nconsole.log(flow.id)\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nif(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", {})\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
+        "initialize": "if(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", [])\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
         "finalize": "",
         "libs": [],
         "x": 300,
@@ -178,6 +214,7 @@
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is deployed.\nlet debounceTime = 5000;\n\n// flow.debounce = function debounce(func, timeout = debounceTime){\n//   let timer;\n//   return (...args) => {\n//     clearTimeout(timer);\n//     timer = setTimeout(() => { func.apply(this, args); }, timeout);\n//   };\n// }\n\nflow.set(\"waittingId\", [])\n\nflow.set(\"checkId\", {})\n\nlet cont = 10;\n\n\nflow.checkIfCorrect = function checkIfCorrect(id){\n    let info = flow.waittingId.includes(id);\n    \n    if(cont > 0){\n        console.log(\"hacemos timeout\"+cont);\n        cont--;\n         setTimeout(flow.checkIfCorrect(id), 5000);\n        \n    } else {\n        cont = 10;\n        return info;\n    }\n};\n\nflow.debounce = function debounce(func, wait, immediate) {\n  var timeout;\n\n  return function executedFunction() {\n    var context = this;\n    var args = arguments;\n\t    \n    var later = function() {\n      timeout = null;\n      if (!immediate) func.apply(context, args);\n    };\n\n    var callNow = immediate && !timeout;\n\t\n    clearTimeout(timeout);\n\n    timeout = setTimeout(later, wait);\n\t\n    if (callNow) func.apply(context, args);\n  };\n};",
         "finalize": "",
+        "libs": [],
         "x": 660,
         "y": 620,
         "wires": [
@@ -277,10 +314,10 @@
         "type": "function",
         "z": "471f0156.739d2",
         "name": "",
-        "func": "const id = msg.topic.split(\"/\").pop();\nconsole.log(\"---------------------------------\")\nconsole.log(\"Vamos a registrar un dispositivo\")\nif(id != \"\"){\n    console.log(id);\n    console.log(msg.payload);\n    if(msg.payload.type == 2 || JSON.parse(msg.payload).type == 2){\n        flow.set(\"waittingId\", [...flow.get(\"waittingId\"), id]);\n        console.log(\"Nodo externo\")\n        console.log(flow.get(\"waittingId\"));\n        return msg;\n    } else if((msg.payload.type == 5 || JSON.parse(msg.payload).type == 5) && msg.payload.date && msg.payload.value && msg.payload.analogicalInputId){\n        msg.topic=\"INSERT INTO humidity (`date`, `value`, `analogicalInputId`) VALUES (?, ?, ?);\"\n        let newPayload = [msg.payload.date, msg.payload.value, msg.payload.analogicalInputId]\n        msg.payload = newPayload;\n        msg.db = true;\n        return msg;\n    }\n}\n\n",
+        "func": "const id = msg.topic.split(\"/\").pop();\nconsole.log(\"---------------------------------\")\nconsole.log(\"Vamos a registrar un dispositivo\")\nif(id != \"\"){\n    console.log(id);\n    console.log(msg.payload);\n    if(msg.payload.type == 2 || JSON.parse(msg.payload).type == 2){\n        if(flow.get(\"waittingId\").indexOf(id) == -1)\n            flow.set(\"waittingId\", [...flow.get(\"waittingId\"), id]);\n        console.log(\"Nodo externo\")\n        console.log(flow.get(\"waittingId\"));\n        return msg;\n    } else if((msg.payload.type == 5 || JSON.parse(msg.payload).type == 5) && msg.payload.date && msg.payload.value && msg.payload.analogicalInputId){\n        msg.topic=\"INSERT INTO humidity (`date`, `value`, `analogicalInputId`) VALUES (?, ?, ?);\"\n        let newPayload = [msg.payload.date, msg.payload.value, msg.payload.analogicalInputId]\n        msg.payload = newPayload;\n        msg.db = true;\n        return msg;\n    }\n}\n\n",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "if(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", {})\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
+        "initialize": "if(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", [])\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
         "finalize": "",
         "libs": [],
         "x": 1300,
@@ -416,8 +453,8 @@
         "y": 1140,
         "wires": [
             [
-                "589be7fad331c3e0",
-                "6d3667be.b51d08"
+                "6d3667be.b51d08",
+                "589be7fad331c3e0"
             ]
         ]
     },
@@ -429,7 +466,7 @@
         "func": "console.log(flow.get(\"property\"));\nconsole.log(flow.length);\nconsole.log(flow.fertirrigacion);\nconsole.log(flow.lineas);\nconsole.log(flow.temporizadores);\nconsole.log(\"-------------\")\nconsole.log(msg.payload)\nconsole.log(\"-------------\")\n\n\nlet contProperty = 0;\n\nlet property = [...flow.get(\"property\")];\n\nfunction checkAllBoolean(array) {\n    let b = true;\n    array.foreach(element => {\n        if(typeof element !== 'boolean'){\n            b = false;\n           return false;\n        }\n    })\n    return b\n}\n\n// Comprobar que existe un objeto\nif(typeof msg.payload !== 'undefined' && typeof msg.payload === 'object'){\n    // Comprobamos que tiene todos los campos necesarios\n    Object.keys(msg.payload).forEach(element => {\n        if(property.includes(element)){\n            contProperty++;\n            const index = property.indexOf(element);\n            if (index > -1) {\n              property.splice(index, 1);\n            }\n        }\n    })\n    if(flow.get(\"property\").length === contProperty && property.length === 0){\n        // Si coincide avanzamos\n        msg.topic = `/genhidro/programar/${msg.payload.deviceId}`\n        msg.error = 0;\n        return msg;\n    } else {\n        if(flow.get(\"property\").length === contProperty){\n            // Se esperaba encontrar alguna propiedad extra\n            msg.error = 1;\n            msg.payload = {\n                id: msg.payload.id,\n                error: 4,\n                message: \"No se encuentran todos los elementos esperados\",\n                property,\n                inicialProperty: flow.get(\"property\"),\n                contProperty,\n            }\n            return msg;\n        } else{\n            // No tenemos las mismas propiedades\n            console.log(\"Diferencia de propiedades esperadas \"+flow.get(\"property\").length+\" encontradas \"+contProperty)\n            msg.error = 1;\n            msg.payload = {\n                id: msg.payload.id,\n                error: 5,\n                message: \"Error interno\",\n                longMessage: \"Diferencia de propiedades esperadas \"+flow.get(\"property\").length+\" encontradas \"+contProperty,\n                property,\n                inicialProperty: flow.get(\"property\"),\n                contProperty,\n            }\n            return msg;\n        }\n        \n    }\n} else {\n    msg.error = 1;\n    msg.payload = {\n        id: msg.payload.id,\n        error: 6,\n        message: \"Debe mandar información en formato JSON sobre el programa\"\n    }\n    return msg;\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "if(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", {})\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nif(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", [])\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
         "finalize": "",
         "libs": [],
         "x": 320,
@@ -481,14 +518,14 @@
         "name": "Enviar programa",
         "topic": "",
         "qos": "",
-        "retain": "true",
+        "retain": "false",
         "respTopic": "",
         "contentType": "",
         "userProps": "",
         "correl": "",
         "expiry": "",
         "broker": "faf9990bdc13c2c2",
-        "x": 780,
+        "x": 890,
         "y": 1220,
         "wires": []
     },
@@ -563,7 +600,7 @@
         "func": "let programas = flow.get(\"programas\");\n\nlet id = msg.payload.id;\n\nlet ans = programas.includes(id);\n\nif(ans){\n    console.log(\"Encontrado\")\n    msg.error = 0;\n    const index = flow.get(\"programas\").indexOf(id);\n    if (index > -1) {\n      flow.get(\"programas\").splice(index, 1);\n      console.log(\"Eliminado\")\n      console.log(flow.get(\"programas\"));\n    }\n}\nelse \n    msg.error = 1;\n    \n    \nif(msg.error)\n    msg.payload = {\n        id: msg.payload.id,\n        error: 7,\n        message: \"No hemos podido recibir respuesta del dispositivo\"\n    }\nelse\n    msg.payload = {\n        message: \"Programa correctamente guardado\"\n    }\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nif(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", [])\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
         "finalize": "",
         "libs": [],
         "x": 640,
@@ -636,7 +673,8 @@
         "y": 1160,
         "wires": [
             [
-                "61e2bbee.767594"
+                "61e2bbee.767594",
+                "843c9dbe.18b228"
             ]
         ]
     },
@@ -648,7 +686,7 @@
         "func": "let programas = flow.get(\"programas\");\n\nlet id = msg.payload.id;\n\nlet ans = programas.includes(id);\n\nconsole.log(\"-------------\")\nconsole.log(\"Vamos a ver si encontramos el id \"+id+\" en\")\nconsole.log(id)\nconsole.log(programas)\nconsole.log(ans)\n\nif(ans){\n    console.log(\"Encontrado\")\n    msg.error = 0;\n    let programasList = flow.get(\"programas\");\n    const index = programasList.indexOf(id);\n    if (index > -1) {\n      \n      programasList.splice(index, 1);\n      flow.set(\"programas\",programasList);\n      let checkProgramId = flow.get(\"checkProgramId\")\n      delete checkProgramId[id];\n      flow.set(\"checkProgramId\", checkProgramId);\n      console.log(\"Eliminado\")\n      console.log(flow.get(\"programas\"));\n    }\n}\nelse \n    msg.error = 1;\n    \n\nif(msg.error)\n    msg.payload = {\n        id: msg.payload.id,\n        error: 7,\n        message: \"No hemos podido recibir respuesta del dispositivo\"\n    }\nelse\n    msg.payload = {\n        message: \"Programa correctamente guardado\"\n    }\nlet erroresProgramas = flow.get(\"erroresProgramas\") \nif(typeof erroresProgramas.find(element => element.id == id) !== 'undefined'){\n    //TODO: Hacer analisis de los errores recibidos\n    \n    console.log(\"Error encontrado el programa con id \"+ erroresProgramas.find(element => element.id == id))\n    msg.error = 2;\n    msg.payload = {\n        id: msg.payload.id,\n        error: 8,\n        message: \"Cargar mensaje especifico del error\"\n    }\n}\n\nif(typeof flow.get(\"checkProgramId\")[id] === 'undefined' && !ans){\n    console.log(\"Creamos el contador\")\n    flow.get(\"checkProgramId\")[id] = 5;\n    msg.error = -1;\n    console.log(flow.get(\"checkProgramId\")[id])\n} else if(flow.get(\"checkProgramId\")[id] > 0 && !ans){\n    console.log(\"Modificamos el contador\")\n    flow.get(\"checkProgramId\")[id]--;\n    msg.error = -1;\n    console.log(flow.get(\"checkProgramId\")[id])\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nif(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", [])\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
         "finalize": "",
         "libs": [],
         "x": 1060,
@@ -744,7 +782,7 @@
         "onceDelay": 0.1,
         "topic": "/genhidro/informacion_programador/17",
         "payloadType": "date",
-        "x": 260,
+        "x": 460,
         "y": 120,
         "wires": [
             [
@@ -757,10 +795,10 @@
         "type": "function",
         "z": "471f0156.739d2",
         "name": "",
-        "func": "const id = msg.payload.id;\nconsole.log(\"----------------\");\nconsole.log(id);\nconsole.log(msg.payload);\nconsole.log(flow.get(\"programas\"));\n\nif(id != \"\" && msg.payload){\n    if(msg.payload.type == 1 || msg.payload.type == 0 ){\n        flow.set(\"programas\", [...flow.get(\"programas\"), id]);\n        console.log(\"Nodo externo\")\n        console.log(flow.get(\"programas\"));\n        return msg;\n    }\n    if(msg.payload.type == 3 || JSON.parse(msg.payload).type == 3){\n        flow.set(\"deleteProgramas\", [...flow.get(\"deleteProgramas\"), id]);\n        return msg;\n        \n    }\n}\nconsole.log(\"----------------\");\nconsole.log(\"----------------\");\n",
+        "func": "const id = msg.payload.id;\nconsole.log(\"----------------\");\nconsole.log(id);\nconsole.log(msg.payload);\nconsole.log(flow.get(\"programas\"));\n\nif(id != \"\" && msg.payload && msg.sendByMy){\n    if(msg.payload.type == 1 || msg.payload.type == 0 ){\n        if(flow.get(\"programas\").indexOf(id) == -1)\n            flow.set(\"programas\", [...flow.get(\"programas\"), id]);\n        console.log(\"Nodo externo\")\n        console.log(flow.get(\"programas\"));\n        return msg;\n    }\n    if(msg.payload.type == 3 || JSON.parse(msg.payload).type == 3){\n        if(flow.get(\"deleteProgramas\").indexOf(id) == -1)\n            flow.set(\"deleteProgramas\", [...flow.get(\"deleteProgramas\"), id]);\n        console.log(\"<----------\")\n        console.log(flow.get(\"deleteProgramas\"))\n        return msg;\n        \n    }\n}\nconsole.log(\"----------------\");\nconsole.log(\"----------------\");\n",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "if(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", {})\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
+        "initialize": "if(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", [])\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
         "finalize": "",
         "libs": [],
         "x": 480,
@@ -823,23 +861,6 @@
                 "99c207e76f465193"
             ]
         ]
-    },
-    {
-        "id": "589be7fad331c3e0",
-        "type": "debug",
-        "z": "471f0156.739d2",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 390,
-        "y": 1440,
-        "wires": []
     },
     {
         "id": "243fdff5ccc1da6c",
@@ -928,7 +949,7 @@
         "type": "debug",
         "z": "471f0156.739d2",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1016,7 +1037,7 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "",
-        "func": "let id = msg.topic.split(\"/\")\nmsg.payload.sendByMy = true;\nreturn msg;",
+        "func": "let id = msg.topic.split(\"/\")\nif(msg.payload.sendByMy)\n    msg.noSend = true;\nmsg.payload.sendByMy = true;\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1038,15 +1059,15 @@
         "name": "",
         "topic": "",
         "qos": "",
-        "retain": "",
+        "retain": "false",
         "respTopic": "",
         "contentType": "",
         "userProps": "",
         "correl": "",
         "expiry": "",
         "broker": "faf9990bdc13c2c2",
-        "x": 930,
-        "y": 380,
+        "x": 990,
+        "y": 360,
         "wires": []
     },
     {
@@ -1054,7 +1075,7 @@
         "type": "debug",
         "z": "f6f2187d.f17ca8",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1080,7 +1101,7 @@
         "type": "debug",
         "z": "f6f2187d.f17ca8",
         "name": "",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -1124,7 +1145,7 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "",
-        "func": "// Modificar este ID\nlet id = \"ced6f3c5-904b-4987-ab6b-3a56f0877797\";\n\nmsg.payload = {type: 2};\nmsg.topic = `/genhidro/informacion_programador/${id}`\nreturn msg;",
+        "func": "// Modificar este ID\nlet id = \"4fd924e6-6799-465c-a0ca-ae94452de8a2\";\n\nmsg.payload = {type: 2};\nmsg.topic = `/genhidro/informacion_programador/${id}`\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1145,7 +1166,7 @@
         "name": "",
         "topic": "",
         "qos": "",
-        "retain": "",
+        "retain": "false",
         "respTopic": "",
         "contentType": "",
         "userProps": "",
@@ -1177,7 +1198,7 @@
         "type": "switch",
         "z": "f6f2187d.f17ca8",
         "name": "",
-        "property": "payload.sendByMy",
+        "property": "payload.noSend",
         "propertyType": "msg",
         "rules": [
             {
@@ -1197,6 +1218,7 @@
                 "8b1e6b4bb0de0950"
             ],
             [
+                "4c2ac81a5c0a498c",
                 "5604b1a1aa104fad"
             ]
         ]
@@ -1233,15 +1255,16 @@
         "type": "http in",
         "z": "471f0156.739d2",
         "name": "",
-        "url": "/eliminarPrograma",
-        "method": "post",
+        "url": "/programa",
+        "method": "delete",
         "upload": false,
         "swaggerDoc": "",
-        "x": 150,
+        "x": 130,
         "y": 1720,
         "wires": [
             [
-                "0a1279efc89368e8"
+                "0a1279efc89368e8",
+                "515ade0d0d1debe6"
             ]
         ]
     },
@@ -1250,17 +1273,18 @@
         "type": "function",
         "z": "471f0156.739d2",
         "name": "",
-        "func": "if( typeof msg.payload !== 'undefined' && typeof msg.payload === 'object' && msg.payload.id && msg.payload.deviceId){\n    msg.topic = `/genhidro/eliminar/programar/${msg.payload.deviceId}`\n    msg.payload.type = 3;\n} else {\n    msg.error = true;\n    msg.payload = {\n                id: msg.payload.id,\n                error: 9,\n                message: \"No se encuentran todos los elementos esperados\",\n            }\n}\n\nreturn msg;",
+        "func": "console.log(typeof msg.payload !== 'undefined')\nconsole.log(typeof msg.payload === 'object')\nconsole.log(msg.payload.id)\nconsole.log(msg.payload.deviceId)\nif( typeof msg.payload === 'object' && msg.payload.id && msg.payload.deviceId){\n    msg.topic = `/genhidro/eliminar/programar/${msg.payload.deviceId}`\n    msg.payload.type = 3;\n    msg.error = false;\n} else {\n    msg.error = true;\n    msg.payload = {\n                id: msg.payload.id,\n                error: 9,\n                message: \"No se encuentran todos los elementos esperados\",\n            }\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nif(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", {})\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nif(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", [])\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])\n    \nconsole.log(flow.get(\"deleteProgramas\"))",
         "finalize": "",
         "libs": [],
         "x": 450,
         "y": 1720,
         "wires": [
             [
-                "28879f1aac5acc8e"
+                "28879f1aac5acc8e",
+                "dfc3bd392ce5744d"
             ]
         ]
     },
@@ -1273,7 +1297,7 @@
         "propertyType": "msg",
         "rules": [
             {
-                "t": "true"
+                "t": "false"
             },
             {
                 "t": "else"
@@ -1287,10 +1311,12 @@
         "wires": [
             [
                 "80148ac858d06fb5",
-                "14c9ca495fb2b8d4"
+                "14c9ca495fb2b8d4",
+                "018f63f3c2742ad7"
             ],
             [
-                "adb1230b122acaf2"
+                "adb1230b122acaf2",
+                "9365e014338a835c"
             ]
         ]
     },
@@ -1301,7 +1327,7 @@
         "name": "",
         "topic": "",
         "qos": "",
-        "retain": "true",
+        "retain": "false",
         "respTopic": "",
         "contentType": "",
         "userProps": "",
@@ -1328,10 +1354,10 @@
         "type": "function",
         "z": "471f0156.739d2",
         "name": "",
-        "func": "let deleteProgramas = flow.get(\"deleteProgramas\");\n\nlet id = msg.payload.id;\n\nlet ans = deleteProgramas.includes(id);\n\nif(ans){\n    console.log(\"Encontrado\")\n    msg.error = 0;\n    const index = flow.get(\"deleteProgramas\").indexOf(id);\n    if (index > -1) {\n      flow.get(\"deleteProgramas\").splice(index, 1);\n      console.log(\"Eliminado\")\n      console.log(flow.get(\"deleteProgramas\"));\n    }\n}\nelse \n    msg.error = 1;\n    \n    \nif(msg.error)\n    msg.payload = {\n        id: msg.payload.id,\n        error: 7,\n        message: \"No hemos podido recibir respuesta del dispositivo\"\n    }\nelse\n    msg.payload = {\n        message: \"Programa correctamente guardado\"\n    }\n\nreturn msg;",
+        "func": "let deleteProgramas = flow.get(\"deleteProgramas\");\n\nconsole.log(deleteProgramas)\n\nlet id = msg.payload.id;\n\nlet ans = deleteProgramas.includes(id);\n\nif(ans){\n    console.log(\"Encontrado\")\n    msg.error = 0;\n    const index = flow.get(\"deleteProgramas\").indexOf(id);\n    if (index > -1) {\n      flow.get(\"deleteProgramas\").splice(index, 1);\n      console.log(\"Eliminado\")\n      console.log(flow.get(\"deleteProgramas\"));\n    }\n}\nelse \n    msg.error = 1;\n    \n    \nif(msg.error)\n    msg.payload = {\n        id: msg.payload.id,\n        error: 7,\n        message: \"No hemos podido recibir respuesta del dispositivo\"\n    }\nelse\n    msg.payload = {\n        message: \"Programa correctamente eliminado\"\n    }\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nif(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined \n||(  Object.entries(flow.get(\"deleteProgramas\")) != undefined \n    && Object.entries(flow.get(\"deleteProgramas\")).length === 0))\n    flow.set(\"deleteProgramas\", [])\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])\n    \nconsole.log(\"========================\")\nconsole.log(\"========================\")\nconsole.log(flow.get(\"deleteProgramas\"))\nconsole.log(\"========================\")\nconsole.log(\"========================\")",
         "finalize": "",
         "libs": [],
         "x": 920,
@@ -1393,7 +1419,9 @@
         "y": 1720,
         "wires": [
             [
-                "9efc3c3fcf85e04f"
+                "9efc3c3fcf85e04f",
+                "20cba92b3c65d12a",
+                "80148ac858d06fb5"
             ]
         ]
     },
@@ -1416,13 +1444,15 @@
         "func": "let deleteProgramas = flow.get(\"deleteProgramas\");\n\nlet id = msg.payload.id;\n\nlet ans = deleteProgramas.includes(id);\n\nif(ans){\n    console.log(\"Encontrado\")\n    msg.error = 0;\n    let programasList = flow.get(\"deleteProgramas\");\n    const index = programasList.indexOf(id);\n    if (index > -1) {\n      \n      programasList.splice(index, 1);\n      flow.set(\"deleteProgramas\",programasList);\n      let checkProgramId = flow.get(\"checkProgramId\")\n      delete checkProgramId[id];\n      flow.set(\"checkProgramId\", checkProgramId);\n      console.log(\"Eliminado\")\n      console.log(flow.get(\"deleteProgramas\"));\n    }\n    \n}\nelse \n    msg.error = 1;\n    \n\nif(msg.error)\n    msg.payload = {\n        id: msg.payload.id,\n        error: 7,\n        message: \"No hemos podido recibir respuesta del dispositivo\"\n    }\nelse\n    msg.payload = {\n        message: \"Programa correctamente eliminado\"\n    }\nlet erroresProgramas = flow.get(\"erroresProgramas\") \nif(typeof erroresProgramas.find(element => element.id == id) !== 'undefined'){\n    //TODO: Hacer analisis de los errores recibidos\n    \n    console.log(\"Error encontrado el programa con id \"+ erroresProgramas.find(element => element.id == id))\n    msg.error = 2;\n    msg.payload = {\n        id: msg.payload.id,\n        error: 8,\n        message: \"Cargar mensaje especifico del error\"\n    }\n}\n\nif(typeof flow.get(\"checkProgramId\")[id] === 'undefined' && !ans){\n    console.log(\"Creamos el contador\")\n    flow.get(\"checkProgramId\")[id] = 5;\n    msg.error = -1;\n    console.log(flow.get(\"checkProgramId\")[id])\n} else if(flow.get(\"checkProgramId\")[id] > 0 && !ans){\n    console.log(\"Modificamos el contador\")\n    flow.get(\"checkProgramId\")[id]--;\n    msg.error = -1;\n    console.log(flow.get(\"checkProgramId\")[id])\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "initialize": "",
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nif(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", {})\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
         "finalize": "",
         "libs": [],
-        "x": 1610,
-        "y": 1720,
+        "x": 1600,
+        "y": 1680,
         "wires": [
-            []
+            [
+                "c4df0a142cefcfa5"
+            ]
         ]
     },
     {
@@ -1455,7 +1485,7 @@
         "checkall": "false",
         "repair": false,
         "outputs": 4,
-        "x": 1830,
+        "x": 1870,
         "y": 1700,
         "wires": [
             [
@@ -1527,12 +1557,270 @@
         "id": "1cb4e0bfd52cfa70",
         "type": "mysql",
         "z": "471f0156.739d2",
-        "mydb": "",
+        "mydb": "cc385c8d25dfd1cf",
         "name": "",
         "x": 1820,
         "y": 180,
         "wires": [
             []
         ]
+    },
+    {
+        "id": "3e2c143e67171d1e",
+        "type": "http in",
+        "z": "471f0156.739d2",
+        "name": "",
+        "url": "/confirmar",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 1980,
+        "wires": [
+            [
+                "7cc40272b7e0fa5c"
+            ]
+        ]
+    },
+    {
+        "id": "7cc40272b7e0fa5c",
+        "type": "function",
+        "z": "471f0156.739d2",
+        "name": "",
+        "func": "if( typeof msg.payload !== 'undefined' && typeof msg.payload === 'object' && msg.payload.id && msg.payload.deviceId){\n    msg.topic = `/genhidro/eliminar/programar/${msg.payload.deviceId}`\n    msg.payload.type = 4;\n    msg.payload.delete = true;\n} else {\n    msg.error = true;\n    msg.payload = {\n                id: msg.payload.id,\n                error: 9,\n                message: \"No se encuentran todos los elementos esperados\",\n            }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "if(flow.get(\"property\") == undefined)\n    flow.set(\"property\",[\"type\",\"id\", 'deviceId',\"name\",\"active\",\"drip\", \n        \"programDay\", \"emitter\", \"sector\", \"timer\"]);\nif(flow.get(\"programas\") == undefined)\n    flow.set(\"programas\", [])\nif(flow.get(\"erroresProgramas\") == undefined)\n    flow.set(\"erroresProgramas\", [])\nif(flow.get(\"checkProgramId\") == undefined)\n    flow.set(\"checkProgramId\", {})\nif(flow.get(\"deleteProgramas\") == undefined)\n    flow.set(\"deleteProgramas\", [])\nif(flow.get(\"waittingId\") == undefined)\n    flow.set(\"waittingId\", {})\nif(flow.get(\"checkId\") == undefined)\n    flow.set(\"checkId\", {})\nif(flow.get(\"id\") == undefined)\n    flow.set(\"id\", [])",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1980,
+        "wires": [
+            [
+                "a212b8dece30df16",
+                "3733cc0703e27328"
+            ]
+        ]
+    },
+    {
+        "id": "a212b8dece30df16",
+        "type": "mqtt out",
+        "z": "471f0156.739d2",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "faf9990bdc13c2c2",
+        "x": 670,
+        "y": 1880,
+        "wires": []
+    },
+    {
+        "id": "3733cc0703e27328",
+        "type": "http response",
+        "z": "471f0156.739d2",
+        "name": "Programa eliminado correctamente",
+        "statusCode": "200",
+        "headers": {},
+        "x": 720,
+        "y": 2040,
+        "wires": []
+    },
+    {
+        "id": "589be7fad331c3e0",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 390,
+        "y": 1440,
+        "wires": []
+    },
+    {
+        "id": "515ade0d0d1debe6",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "Comienzo borrado",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 330,
+        "y": 1620,
+        "wires": []
+    },
+    {
+        "id": "018f63f3c2742ad7",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "Enviamos borrado",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 950,
+        "y": 1560,
+        "wires": []
+    },
+    {
+        "id": "9365e014338a835c",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "Error 400 - borrado",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 1900,
+        "wires": []
+    },
+    {
+        "id": "20cba92b3c65d12a",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1560,
+        "y": 1800,
+        "wires": []
+    },
+    {
+        "id": "d8f2e7e4da6c283a",
+        "type": "mqtt in",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "topic": "/genhidro/eliminar/programar/#",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "faf9990bdc13c2c2",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 230,
+        "y": 380,
+        "wires": [
+            [
+                "af70b04927eebb40",
+                "e5ee3c288da4f64b"
+            ]
+        ]
+    },
+    {
+        "id": "af70b04927eebb40",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "070a3b2185df3312",
+        "type": "mqtt in",
+        "z": "471f0156.739d2",
+        "name": "",
+        "topic": "/genhidro/eliminar/programar/#",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "faf9990bdc13c2c2",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "52691c49.038f94",
+                "48f0815a0e5f4bee"
+            ]
+        ]
+    },
+    {
+        "id": "48f0815a0e5f4bee",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "Eliminar",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 280,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "4c2ac81a5c0a498c",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 930,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "dfc3bd392ce5744d",
+        "type": "debug",
+        "z": "471f0156.739d2",
+        "name": "Comienzo borrado 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 1620,
+        "wires": []
     }
 ]

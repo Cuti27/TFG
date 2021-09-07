@@ -17,7 +17,8 @@
 {
     "id": 1234567,
     "tipo": 2,
-    "datos": [{
+    "datos": [
+        {
             "fecha": "12/12/2000 12:12:12",
             "valor": "95%"
         },
@@ -58,7 +59,8 @@
         true,
         false
     ],
-    "temporizadores": [{
+    "temporizadores": [
+        {
             "HoraI": "12:12",
             "Duracion": "12:12"
         },
@@ -81,7 +83,8 @@
         "phRie": true,
         "phPost": true,
         "control": "secuencial",
-        "linea de abonado": [{
+        "linea de abonado": [
+            {
                 "abono": 1,
                 "tipo": "time",
                 "value": "10:10:10",
@@ -125,7 +128,8 @@ Programador riego - > mosquitto mqtt - > node - red - > mysql
         false,
         false
     ],
-    "emitter": [{
+    "emitter": [
+        {
             "id": 7,
             "output": "3",
             "type": 3,
@@ -142,7 +146,8 @@ Programador riego - > mosquitto mqtt - > node - red - > mysql
             "name": "Bomba 2"
         }
     ],
-    "sector": [{
+    "sector": [
+        {
             "id": 5,
             "output": "1",
             "type": 2,
@@ -339,70 +344,55 @@ Programador riego - > mosquitto mqtt - > node - red - > mysql
 
 
 
-[{"inicio":"00:00:00","duracion":"00:01:01","post":"00:00:00"}]
+[
+    {
+        "inicio": "00:00:00",
+        "duracion": "00:01:01",
+        "post": "00:00:00"
+    }
+]
 
 {
-    "id": 3,
-    "name": "Programa",
-    "active": true,
-    "automaticDays": false,
-    "drip": true,
-    "userId": 1,
-    "fertigationId": null,
-    "afterProgram": false,
-    "autoTimer": false,
-    "headId": 1,
-    "timer": [
+    "device": {
+        "id": "5e74c309-a81d-4136-8e61-0beb37882618",
+        "name": "Esp32",
+        "userId": 2,
+        "type": 1,
+        "headId": 4,
+        "agronicId": null
+    },
+    "listDigitalOutput": [
         {
-            "id": 3,
-            "timeStart": "12:00:00",
-            "duration": "01:00:30",
-            "postIrrigation": "00:00:15",
-            "programId": 3
+            "id": 11,
+            "output": "1",
+            "type": 2,
+            "deviceId": "5e74c309-a81d-4136-8e61-0beb37882618",
+            "description": null,
+            "name": "Sector norte"
         },
         {
-            "id": 4,
-            "timeStart": "16:00:00",
-            "duration": "16:30:00",
-            "postIrrigation": "00:06:32",
-            "programId": 3
-        }
-    ],
-    "programDay": [
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        false
-    ],
-    "sector": [
+            "id": 12,
+            "output": "2",
+            "type": 2,
+            "deviceId": "5e74c309-a81d-4136-8e61-0beb37882618",
+            "description": null,
+            "name": "Sector sur"
+        },
+        {
+            "id": 13,
+            "output": "3",
+            "type": 3,
+            "deviceId": "5e74c309-a81d-4136-8e61-0beb37882618",
+            "description": null,
+            "name": "Bomba principal"
+        },
         {
             "id": 14,
-            "output": "1",
-            "type": 3,
-            "deviceId": "cb4272a1-b94a-464e-a8b9-1e3f93086cdd",
-            "description": null,
-            "name": "Secundaria"
-        },
-        {
-            "id": 16,
-            "output": "3",
-            "type": 2,
-            "deviceId": "cb4272a1-b94a-464e-a8b9-1e3f93086cdd",
-            "description": null,
-            "name": "3"
-        }
-    ],
-    "emitter": [
-        {
-            "id": 17,
             "output": "4",
-            "type": 3,
-            "deviceId": "cb4272a1-b94a-464e-a8b9-1e3f93086cdd",
+            "type": 1,
+            "deviceId": "5e74c309-a81d-4136-8e61-0beb37882618",
             "description": null,
-            "name": "Principal"
+            "name": "p"
         }
     ]
 }

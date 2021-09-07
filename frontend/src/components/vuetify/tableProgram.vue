@@ -45,9 +45,9 @@
                     label="Nombre"
                   ></v-text-field>
                   <b v-else>
-                  En este cabezal no hay suficientes emisores o sectores,
-                  asegurate de que al menos tenga un emisor y un sector
-                </b>
+                    En este cabezal no hay suficientes emisores o sectores,
+                    asegurate de que al menos tenga un emisor y un sector
+                  </b>
                 </v-col>
               </v-row>
             </v-container>
@@ -59,7 +59,9 @@
             <v-btn v-if="nameProgram" color="blue darken-1" text @click="save">
               Acceder
             </v-btn>
-            <v-btn v-else-if="checkProgram" disabled color="blue darken-1" text> Acceder </v-btn>
+            <v-btn v-else-if="checkProgram" disabled color="blue darken-1" text>
+              Acceder
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -104,22 +106,16 @@
             max-width="500px"
           >
             <v-card>
-              <v-card-title class="headline">Estas seguro?</v-card-title>
+              <v-card-title class="headline">¿Estas seguro?</v-card-title>
               <v-card-text>
-                <b>
-                  Estas seguro que quieres eliminar este programa?
-                </b>
-                
+                <b> ¿Estas seguro que quieres eliminar este programa? </b>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeDelete"
                   >Cancelar</v-btn
                 >
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="deleteItemConfirm"
+                <v-btn color="blue darken-1" text @click="deleteItemConfirm"
                   >Aceptar</v-btn
                 >
                 <v-spacer></v-spacer>
@@ -157,7 +153,11 @@
       <template v-slot:item.actions="{ item }">
         <div v-if="!customAction">
           <v-btn elevation="2" icon
-            ><font-awesome-icon id="EditarBtnId" class="btn" @click="editItem(item)" icon="edit"
+            ><font-awesome-icon
+              id="EditarBtnId"
+              class="btn"
+              @click="editItem(item)"
+              icon="edit"
           /></v-btn>
           <v-btn elevation="2" icon>
             <font-awesome-icon
@@ -169,7 +169,7 @@
           </v-btn>
         </div>
         <div v-else>
-           <v-btn @click='$emit("timerUse", item)'>Usar</v-btn>
+          <v-btn @click="$emit('timerUse', item)">Usar</v-btn>
         </div>
       </template>
       <template v-slot:no-data>
@@ -186,9 +186,10 @@
     </div>
     <v-dialog v-model="dialogChange" width="500">
       <v-card>
-        <v-card-title class="text-h5 grey lighten-2"> Seguro? </v-card-title>
-        <v-card-text>
-          Estas seguro de querer desactivar el programa?
+        <v-card-title class="text-h5"> Seguro? </v-card-title>
+        <v-card-text class="mt-2">
+          Estas seguro de querer
+          {{ itemChange.active ? "activar" : "desactivar" }} el programa?
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -279,12 +280,13 @@ export default {
         content:
           "Permite activar o desactivar un programa, sin necesidad de acceder a la información del mismo",
       },
-       {
+      {
         target: "#EditarBtnId",
         header: {
           title: "Editar el programa actual",
         },
-        content: "Poniendo en primer lugar el nombre y despues modificando lo que se quiera en el formulario",
+        content:
+          "Poniendo en primer lugar el nombre y despues modificando lo que se quiera en el formulario",
       },
       {
         target: "#EliminarBtnId",
@@ -299,7 +301,7 @@ export default {
     hideHeader: Boolean,
     customAction: Boolean,
     removeActivate: Boolean,
-    remove: [String,Number],
+    remove: [String, Number],
   },
 
   computed: {
@@ -316,18 +318,22 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "Nuevo programa" : "Editar el programa";
     },
-    checkProgram(){
-      return this.emitter.length != 0 && this.sectors.length != 0
+    checkProgram() {
+      return this.emitter.length != 0 && this.sectors.length != 0;
     },
-    filterProgram(){
-      if(this.remove){
-        let removeIndex = this.programas.map((item) => { return item.id; }).indexOf(this.remove);
-        const filtredProgram = [...this.programas]
+    filterProgram() {
+      if (this.remove) {
+        let removeIndex = this.programas
+          .map((item) => {
+            return item.id;
+          })
+          .indexOf(this.remove);
+        const filtredProgram = [...this.programas];
         filtredProgram.splice(removeIndex, 1);
         return filtredProgram;
       }
-      return this.programas
-    }
+      return this.programas;
+    },
   },
 
   watch: {
@@ -345,11 +351,15 @@ export default {
 
   created() {
     this.initialize();
-    if(!this.removeActivate) 
-      this.headers.push( { text: "Activado", value: "activate", sortable: false });
+    if (!this.removeActivate)
+      this.headers.push({
+        text: "Activado",
+        value: "activate",
+        sortable: false,
+      });
   },
-  beforeMount(){
-    this.loadEmitterSector()
+  beforeMount() {
+    this.loadEmitterSector();
   },
 
   methods: {
@@ -363,7 +373,7 @@ export default {
       "loadUpdateName",
       "resetConfigureDevice",
       "changeProgram",
-      "setTempProgram"
+      "setTempProgram",
     ]),
     activateDialog(item) {
       this.dialogChange = true;

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateMessageTable extends Migration
@@ -18,6 +19,10 @@ class CreateMessageTable extends Migration
             $table->timestamps();
             $table->dateTime('time');
             $table->string('body');
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            $table->string('deviceId');
+            $table->foreign('deviceId')->references('id')->on('device')->onDelete('cascade');
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         });
     }
 

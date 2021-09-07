@@ -44,7 +44,7 @@
               @click:append="show1 = !show1"
             ></v-text-field>
             <v-btn class="mt-2" id="recuperar"
-              >Has olvidado la contraseña?</v-btn
+              >¿Has olvidado la contraseña?</v-btn
             >
             <v-spacer></v-spacer>
             <v-btn class="mt-2" @click="doRegistro()" id="registro"

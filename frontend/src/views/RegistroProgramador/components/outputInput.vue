@@ -2,21 +2,18 @@
   <form>
     <table :ref="`table_${title}`" :class="{ style: checkStyle() }">
       <caption>
-      <div class="center">
-        {{
-          title
-        }}
-        <div >
-          <span class="input-number-decrement" @click="disminuir()">–</span
-          ><input
-            class="input-number"
-            type="text"
-            v-model="copy"
-            min="0"
-          /><span class="input-number-increment" @click="aumentar()">+</span>
+        <div class="center">
+          {{ title }}
+          <div>
+            <span class="input-number-decrement" @click="disminuir()">–</span
+            ><input
+              class="input-number"
+              type="text"
+              v-model="copy"
+              min="0"
+            /><span class="input-number-increment" @click="aumentar()">+</span>
+          </div>
         </div>
-      </div>
-        
       </caption>
       <thead>
         <tr>
@@ -33,7 +30,6 @@
         >
           <td :data-label="type">{{ n }}</td>
           <td data-label="Selecciona uno">
-            <br>
             <custom-select
               class="select"
               button
@@ -60,7 +56,9 @@
         </tr>
         <tr v-if="showSave">
           <td></td>
-          <td><v-btn @click="actualizar()">Guardar</v-btn></td>
+          <td :colSpan="nombre ? 2 : 1">
+            <v-btn @click="actualizar()">Guardar</v-btn>
+          </td>
           <td></td>
         </tr>
       </tbody>
@@ -114,14 +112,17 @@ export default {
       return false;
     },
     aumentar() {
-      this.selected.push({ type: 1, description: "" });
+      if(this.vuexSelect == "digitalOutput" || this.vuexSelect == "analogicalOutput")
+        this.selected.push({ type: 1, description: "", output: this.selected ? this.selected.length + 1 : 0 });
+      else
+        this.selected.push({ type: 1, description: "", input: this.selected ? this.selected.length + 1 : 0 });
     },
     disminuir() {
       if (this.numValues >= 1) {
         this.selected.pop();
       }
     },
-    actualizar() {
+    async actualizar() {
       if (this.nombre) this.selected.name = this.name;
       this.$emit("update", this.selected);
     },
@@ -153,57 +154,39 @@ export default {
       return this.selected.length;
     },
     showSave() {
-      console.log("Comprobacion");
-      if (this.nombre) console.log("yo");
-      console.log(this.selected);
-      console.log(this.startSelect);
-      console.log(this.selected.length);
-      console.log(this.startSelect.length);
-      console.log(this.selected.length != this.startSelect.length);
-
+      console.log("inputOutput");
       if (this.selected.length != this.startSelect.length) return true;
-      console.log("Esto si");
       if (this.selected.length == 0 && this.startSelect.lenght == 0)
         return false;
-      console.log("what");
-      for (let element of this.selected) {
-        let check = false;
-        for (let element2 of this.startSelect) {
-          let firstIsNullOrEmpty =
-            element.description == null || element.description == "";
-          let secondIsNullOrEmpty =
-            element2.description == null || element2.description == "";
-          if (
-            element.type == element2.type &&
-            element.description == element.description &&
-            (firstIsNullOrEmpty == secondIsNullOrEmpty ||
-              element.description == element2.description)
-          ) {
-            if (this.nombre) {
-              if (element.name == element2.name) {
-                console.log("Iguales");
-                console.log(element);
-                console.log(element2);
-                check = true;
-                break;
-              }
-            } else {
-              console.log("Iguales");
-              console.log(element);
-              console.log(element2);
-              check = true;
-              break;
-            }
-          }
+
+      console.log('go every');
+      return !this.selected.every(element => {
+        console.log(element);
+        let outputInput = this.startSelect.find(element2 => element2.output ? element.output == element2.output : element.input == element2.input);
+        console.log(outputInput);
+
+        const firstIsNullOrEmpty = element.description == null || element.description == "";
+        console.log(firstIsNullOrEmpty);
+
+        const secondIsNullOrEmpty = outputInput.description == null || outputInput.description == "";
+        console.log(secondIsNullOrEmpty);
+
+        const sameDescription = firstIsNullOrEmpty == secondIsNullOrEmpty || element.description == outputInput.description;
+        console.log(sameDescription);
+
+        const sameType = element.type == outputInput.type;
+        console.log(sameType);
+
+        const sameName = this.nombre ? element.name == outputInput.name : true;
+        console.log(sameName);
+
+        console.log(`Not equals? ${!sameDescription || !sameType || !sameName}`);
+        if(!sameDescription || !sameType || !sameName){
+          return false;
         }
 
-        if (!check && this.startSelect.length > 0) {
-          console.log("No iguales");
-          console.log(element);
-          return true;
-        }
-      }
-      return false;
+        return true;
+      })
     },
   },
 
