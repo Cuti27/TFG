@@ -169,11 +169,11 @@ export default {
   },
   data() {
     return {
-      time: this.value.inicio,
+      time: `${this.value.inicio[0]}:${this.value.inicio[1]}:${this.value.inicio[2]}`,
       modal: false,
-      time1: this.value.duracion,
+      time1: `${this.value.duracion[0]}:${this.value.duracion[1]}:${this.value.duracion[2]}`,
       modal1: false,
-      time2: this.value.post,
+      time2:`${this.value.post[0]}:${this.value.post[1]}:${this.value.post[2]}`,
       modal2: false,
       windowWidth: 0,
       windowHeight: 0,

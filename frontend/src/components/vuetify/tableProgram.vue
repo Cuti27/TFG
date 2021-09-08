@@ -186,9 +186,9 @@
     </div>
     <v-dialog v-model="dialogChange" width="500">
       <v-card>
-        <v-card-title class="text-h5"> Seguro? </v-card-title>
+        <v-card-title class="text-h5"> ¿Seguro? </v-card-title>
         <v-card-text class="mt-2">
-          Estas seguro de querer
+         ¿Estas seguro de querer
           {{ itemChange.active ? "activar" : "desactivar" }} el programa?
         </v-card-text>
         <v-divider></v-divider>

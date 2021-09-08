@@ -169,9 +169,12 @@ export default {
     data.name = state.programName;
 
     data.headId = state.selectedHead.id;
-    await axios
+    let response = await axios
       .post(request, data, await addAuthHeader(state.auth))
       .catch((err) => {
+        console.log("=============");
+      console.log(err.response);
+      console.log("=============");
         if (err.response) {
           if (err.response.data.customError) {
             commit("addGlobalError", err.response.data.message);
@@ -190,8 +193,10 @@ export default {
         }
       });
 
-    router.push("Programas");
-    commit("updateComunicationSuccess", "Programa creado correctamente");
+      if(!response.data.customError){
+        router.push("Programas");
+        commit("updateComunicationSuccess", "Programa creado correctamente");
+      }
     commit("removeIsLoading");
   },
 
@@ -259,6 +264,9 @@ export default {
 
     const request = "http://josemiguel.myqnapcloud.com:41063/api/program";
     let response = await axios.delete(request, msg).catch((err) => {
+      console.log("=============");
+      console.log(err.response);
+      console.log("=============");
       if (err.response) {
         if (err.response.data.customError) {
           commit("addGlobalError", err.response.data.message);
@@ -281,8 +289,10 @@ export default {
     console.log(response.data);
 
     // Actualizamos el estado
+    if(!response.data.customError){
+      commit("updateComunicationSuccess", "Programa borrado correctamente");
+    }
     dispatch("listProgram");
-    commit("updateComunicationSuccess", "Programa borrado correctamente");
     commit("removeIsLoading");
   },
 
@@ -297,23 +307,27 @@ export default {
       "http://josemiguel.myqnapcloud.com:41063/api/program/" + id + "/activate";
     await axios.get(request, await addAuthHeader(state.auth)).catch((err) => {
       if (err.response) {
-        console.log("Error en la llamada a: " + request);
-        console.log(err.response.data);
-        console.log(err.response.status);
-        if (err.response.status == 401) {
-          commit("loadLogout");
+        if (err.response.data.customError) {
+          commit("addGlobalError", err.response.data.message);
+        } else {
+          console.log("Error en la llamada a: " + request);
+          console.log(err.response.data);
+          console.log(err.response.status);
+          if (err.response.status == 401) {
+            commit("loadLogout");
+          }
+          console.log(err.response.headers);
+          commit(
+            "addGlobalError",
+            "Error, no se ha podido conectar con el servidor"
+          );
         }
-        console.log(err.response.headers);
-
-        commit(
-          "addGlobalError",
-          "Error, no se ha podido conectar con el servidor"
-        );
         commit("removeIsLoading");
         return null;
       }
     });
 
+    
     // Actualizamos el estado
     dispatch("listProgram");
     commit("removeIsLoading");

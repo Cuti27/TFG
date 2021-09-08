@@ -70,9 +70,9 @@ export default {
     add() {
       this.success = true;
       this.temporizadores.push({
-        inicio: "",
-        duracion: "",
-        post: "",
+        inicio: ["00","00","00"],
+        duracion: ["00","00","00"],
+        post: ["00","00","00"],
       });
       setTimeout(() => (this.success = false), 600);
     },

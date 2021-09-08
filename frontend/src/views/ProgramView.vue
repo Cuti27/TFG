@@ -263,6 +263,9 @@ export default {
     };
   },
   beforeMount() {
+    this.temporizador = 0;
+
+    this.horaInicio = 1;
     if (this.tempProgram != {} && this.tempProgram.name != "") {
       this.id = this.tempProgram.id;
       this.programa = this.tempProgram.active;
@@ -289,8 +292,6 @@ export default {
 
       this.map = 1;
 
-      this.temporizador = 1;
-
       this.goteo = this.tempProgram.drip ? 1 : 0;
 
       this.diasAutomatico = this.tempProgram.automaticDays;
@@ -304,6 +305,9 @@ export default {
           post: timer.postIrrigation.split(":"),
         };
       });
+
+      this.temporizadores = this.temporizadoresStart;
+      this.selectedTimer = this.temporizadoresStart;
     } else {
       this.sectors.forEach(() => {
         this.selectedSector.push(false);
@@ -312,6 +316,14 @@ export default {
         this.selectedEmitter.push(false);
       });
       this.updateAllDays([false, false, false, false, false, false, false]);
+
+      this.temporizadoresStart = [{
+        inicio: ["00","00","00"],
+        duracion: ["00","00","00"],
+        post: ["00","00","00"],
+      }]
+      this.temporizadores = this.temporizadoresStart;
+      this.selectedTimer = this.temporizadoresStart;
     }
   },
   computed: {

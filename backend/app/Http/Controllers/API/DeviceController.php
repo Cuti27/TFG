@@ -86,7 +86,8 @@ class DeviceController extends Controller
 
         
         $response = (new ClientHTTP)("GET", "/identificador", [
-            'connect_timeout' => 25,
+            'http_errors' => false,
+            'timeout' => 25,
             'query' => [
                 'id' => $waittingId->id,
             ]
@@ -846,7 +847,7 @@ class DeviceController extends Controller
                 'emitters' => $emitters,
             ];
 
-            response($response, 400);
+            return response($response, 400);
         }
 
         $device->delete();

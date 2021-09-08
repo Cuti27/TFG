@@ -577,7 +577,7 @@ export default {
     // Realizamos la petición
     const request =
       "http://josemiguel.myqnapcloud.com:41063/api/device/" + id;
-    await axios
+    let response = await axios
       .delete(request, await addAuthHeader(state.auth))
       .catch((err) => {
         if (err.response) {
@@ -606,7 +606,8 @@ export default {
         }
       });
 
+      if(!response.data.customError) router.push("Cabezales");
     commit("removeIsLoading");
-    router.push("Cabezales");
+   
   },
 };

@@ -13,7 +13,9 @@ use App\Models\Programs;
 use App\Models\Sector;
 use App\Models\Timer;
 use Hamcrest\Core\IsNull;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class ProgramController extends Controller
 {
@@ -260,13 +262,13 @@ class ProgramController extends Controller
 
 
             if (array_key_exists('programId', $fields)) {
-                $createdProgram = Programs::where('id', $fields['programId']);
+                $program = Programs::where('id', $fields['programId']);
 
                 Emitter::where('programId', $fields['programId'])->delete();
                 Sector::where('programId', $fields['programId'])->delete();
                 Timer::where('programId', $fields['programId'])->delete();
 
-                $createdProgram->update([
+                $program->update([
                     'fertigationId' => null,
                     'name' => $fields['name'],
                     'userId' =>  $request->user()->id,
@@ -341,9 +343,10 @@ class ProgramController extends Controller
             // Informamos a cada dispositivo con que salidas debe activar
             foreach ($listDevice as $device) {
 
-                $response = (new ClientHTTP)("POST", "/programar", [
-                    'connect_timeout' => 50,
-                    'form_params' => [
+                $response = [];
+
+                try {
+                    $response = Http::timeout(60)->post('http://josemiguel.myqnapcloud.com:41065/programar', [
                         'type' => array_key_exists('programId', $fields) ? 1 : 0, // 1 actualizar 0 crear
                         'deviceId' => $device['deviceId'],
                         'id' => $createdProgram->id, // Id del programa
@@ -354,64 +357,74 @@ class ProgramController extends Controller
                         'emitter' => $emitterToSend[$device['deviceId']], // Emisores del dispositivo actual
                         'sector' => $sectorToSend[$device['deviceId']], // Sector del dispositivo actual
                         'timer' => $listCreatedTimer, // All timer a enviar
-                    ]
-                ]);
-
-                if ($response->getStatusCode() == 200) {
-                    $correctSend[] = $device;
+                    ]);
+                } catch (ConnectionException $e) {
+                   error_log($e->getMessage());
                 }
+
+
+
+                // 
+                if ($response && $response->status() == 200) {
+                    $correctSend[] = $device;
+                } else
+                    break;
             }
 
             // Delete
             if (count($correctSend) != count($listDevice)) {
                 $correctDelete = [];
                 foreach ($correctSend as $actualDevice) {
-                    $response = (new ClientHTTP)("delete", "/programa", [
-                        'connect_timeout' => 50,
-                        'form_params' => [
+
+                    $response = [];
+
+                    try {
+                        $response = Http::timeout(60)->delete('http://josemiguel.myqnapcloud.com:41065/programa', [
                             'type' => 3, // 1 actualizar 0 crear
                             'deviceId' => $actualDevice,
                             'id' => $createdProgram->id,
-                        ]
-                    ]);
-
-                    if ($response->getStatusCode() == 200) {
-                        $correctDelete[] = $actualDevice;
+                        ]);
+                    } catch (ConnectionException $e) {
+                       error_log($e->getMessage());
                     }
+
+                    if ($response && $response->getStatusCode() == 200) {
+                        $correctDelete[] = $actualDevice;
+                    } else break;
                 }
                 // Delete
-                if (count($correctDelete) != count($correctSend)) {
+                if (count($correctDelete) == count($correctSend)) {
                     foreach ($correctSend as $correctDelete) {
                         $response = null;
                         while (is_null($response) || $response->getStatusCode() != 200) {
-                            $response = (new ClientHTTP)("POST", "/confirmar", [
-                                'connect_timeout' => 10,
-                                
-                                'form_params' => [
+                            try {
+                                $response = Http::timeout(15)->post('http://josemiguel.myqnapcloud.com:41065/confirmar', [
                                     'type' => 4,
                                     'deviceId' => $actualDevice,
                                     'id' => $createdProgram->id,
-                                ]
-                            ]);
+                                ]);
+                            } catch (ConnectionException $e) {
+                                error_log($e->getMessage());
+                            }
                         }
                     }
 
-                    $createdProgram->delete();
-                    foreach ($listCreatedTimer as  $timer) {
-                        $timer->delete();
-                    }
-                    $error = "No hemos podido comunicarnos con el dispositivo $device->deviceId, intentelo más tarde";
-                    return response([
-                        'customError' => true,
-                        'message' => $error
-                    ], 400);
+
+                    $error = "Algunos programadores han perdido la conexión completamente";
+                } else {
+                    $error = "No hemos podido comunicarnos con todos los dispositivos";
+                }
+                $createdProgram->delete();
+                foreach ($listCreatedTimer as  $timer) {
+                    $timer->delete();
                 }
 
-                $error = "No hemos podido comunicarnos con el dispositivo $device->deviceId, intentelo más tarde";
-                    return response([
-                        'customError' => true,
-                        'message' => $error
-                    ], 400);
+                return response([
+                    'customError' => true,
+                    'message' => $error,
+                    'comunicatedDevice' => $correctSend,
+                    'correctReset' => $correctDelete
+                ], 400);
             }
 
             // Creamos todos los emisores
@@ -588,17 +601,21 @@ class ProgramController extends Controller
         $correctDelete = [];
         // Check connection
         foreach ($listAllDevices as $actualDevice) {
-            $response = (new ClientHTTP)("delete", "/programa", [
-                'connect_timeout' => 50,
-                
-                'form_params' => [
-                    'type' => 3, // 1 actualizar 0 crear
-                    'deviceId' => $actualDevice,
-                    'id' => $program->id,
-                ]
-            ]);
 
-            if ($response->getStatusCode() == 200) {
+             $response = [];
+
+                    try {
+                        $response = Http::timeout(60)->delete('http://josemiguel.myqnapcloud.com:41065/programa', [
+                            'type' => 3, // 1 actualizar 0 crear
+                            'deviceId' => $actualDevice,
+                            'id' => $program->id,
+                        ]);
+                    } catch (ConnectionException $e) {
+                       error_log($e->getMessage());
+                    }
+
+
+            if ($response && $response->getStatusCode() == 200) {
                 $correctDelete[] = $actualDevice;
             }
         }
@@ -607,15 +624,15 @@ class ProgramController extends Controller
             foreach ($listAllDevices as $actualDevice) {
                 $response = null;
                 while (is_null($response) || $response->getStatusCode() != 200) {
-                    $response = (new ClientHTTP)("POST", "/confirmar", [
-                        'connect_timeout' => 10,
-                        
-                        'form_params' => [
+                    try {
+                        $response = Http::timeout(15)->post('http://josemiguel.myqnapcloud.com:41065/confirmar', [
                             'type' => 4,
                             'deviceId' => $actualDevice,
                             'id' => $program->id,
-                        ]
-                    ]);
+                        ]);
+                    } catch (ConnectionException $e) {
+                       error_log($e->getMessage());
+                    }
                 }
             }
 
@@ -657,10 +674,70 @@ class ProgramController extends Controller
             ], 400);
         }
 
+
         $program->active = !$program->active;
 
-        $program->save();
+        $listEmitterOutputId = Emitter::where('programId', $program->id)->pluck('digitalOutputId');
+        $listSectorOutputId = Sector::where('programId', $program->id)->pluck('digitalOutputId');
 
-        return response("", 204);
+        $listEmitterId = DigitalOutput::whereIn('id', $listEmitterOutputId)->get();
+        $listSectorId = DigitalOutput::whereIn('id', $listSectorOutputId)->get();
+
+
+        $listDevice = array();
+            $emitterToSend = array();
+            foreach ($listEmitterId as  $emitter) {
+                if (!isset($listDevice[$emitter['deviceId']]))
+                    $listDevice[$emitter['deviceId']] = $emitter;
+                $emitterToSend[$emitter['deviceId']][] = $emitter;
+            }
+            $sectorToSend = array();
+            foreach ($listSectorId as $sector) {
+                if (!isset($listDevice[$sector->deviceId]))
+                    $listDevice[$sector->deviceId] = $sector;
+                $sectorToSend[$sector->deviceId][] = $sector;
+            }
+
+        $response = [];
+        foreach ($listDevice as $actualDevice) {
+            
+
+            $response = Http::timeout(60)->post('http://josemiguel.myqnapcloud.com:41065/programar', [
+                'type' => 1, // 1 actualizar 0 crear
+                'deviceId' => $actualDevice,
+                'id' => $program->id, // Id del programa
+                'name' => $program->name, // Nombre del programa
+                'active' => $program->active, // Programa activo o inactivo
+                'drip' => $program->drip, // Goteo
+                'programDay' => [
+                    $program->mon,
+                    $program->tue,
+                    $program->wed,
+                    $program->thu,
+                    $program->fri,
+                    $program->sat,
+                    $program->sun,
+                ], // Dias activo
+                'emitter' => $emitterToSend[$actualDevice['deviceId']], // Emisores del dispositivo actual
+                        'sector' => $sectorToSend[$actualDevice['deviceId']], // Sector del dispositivo actual
+                'timer' => Timer::where('programId', $program->id)->get(), // All timer a enviar
+            ]);
+        }
+
+        if ($response && $response->getStatusCode() == 200) {
+            $program->save();
+            return response("", 204);
+        } else {
+            return response([
+                'customError' => true,
+                'message' => "No hemos podido comunicarnos con todos los dispositivos"
+            ], 400);
+        }
+
+        
+
+        
+
+        
     }
 }
